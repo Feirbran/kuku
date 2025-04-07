@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://bnwevdta6kvfr"]
+
+[ext_resource type="Texture2D" uid="uid://ce2uikqtserdj" path="res://assets/Cards (large)/card_back.png" id="1_o5qli"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(902, 407)
+texture = ExtResource("1_o5qli")
