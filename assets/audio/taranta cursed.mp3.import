@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://86ddkgl4s77n"
+path="res://.godot/imported/taranta cursed.mp3-a8a661970a9c320367c12a549f79cac8.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/taranta cursed.mp3"
+dest_files=["res://.godot/imported/taranta cursed.mp3-a8a661970a9c320367c12a549f79cac8.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

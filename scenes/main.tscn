@@ -1,9 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://bnwevdta6kvfr"]
+[gd_scene load_steps=3 format=3 uid="uid://bnwevdta6kvfr"]
 
-[ext_resource type="Texture2D" uid="uid://ce2uikqtserdj" path="res://assets/Cards (large)/card_back.png" id="1_o5qli"]
+[ext_resource type="PackedScene" uid="uid://c1dsbuxpr3ivh" path="res://scenes/card.tscn" id="1_o5qli"]
+[ext_resource type="AudioStream" uid="uid://86ddkgl4s77n" path="res://assets/audio/taranta cursed.mp3" id="2_0wfyh"]
 
 [node name="Main" type="Node2D"]
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Card" parent="." instance=ExtResource("1_o5qli")]
 position = Vector2(902, 407)
-texture = ExtResource("1_o5qli")
+
+[node name="Card2" parent="." instance=ExtResource("1_o5qli")]
+
+[node name="Card3" parent="." instance=ExtResource("1_o5qli")]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_0wfyh")
+autoplay = true
+parameters/looping = false
