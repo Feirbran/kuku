@@ -16,7 +16,7 @@ config/features=PackedStringArray("4.4", "GL Compatibility")
 
 [autoload]
 
-DeckManage="*res://scripts/DeckManager.gd"
+game_manager="*res://scripts/game_manager.gd"
 
 [display]
 
