@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="KuKu"
-run/main_scene="uid://c55io63nihf51"
+run/main_scene="uid://c0qs8vb56ouna"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 
 [autoload]
