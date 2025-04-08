@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=3 format=3 uid="uid://ntyutwlc17ot"]
+
+[ext_resource type="Script" uid="uid://irpfobdwtx4r" path="res://scripts/card_data.gd" id="1_lwnu0"]
+[ext_resource type="Texture2D" uid="uid://doe4c00u8btbj" path="res://assets/images/Cards (large)/card_spades_Q.png" id="2_lwnu0"]
+
+[resource]
+script = ExtResource("1_lwnu0")
+suit = "Picche"
+rank_name = "Cavallo"
+value = 9
+texture_front = ExtResource("2_lwnu0")
+metadata/_custom_type_script = "uid://irpfobdwtx4r"

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=3 format=3 uid="uid://c283vrfw7vg7k"]
+
+[ext_resource type="Script" uid="uid://irpfobdwtx4r" path="res://scripts/card_data.gd" id="1_07po6"]
+[ext_resource type="Texture2D" uid="uid://bwfo5el6xxess" path="res://assets/images/Cards (large)/card_clubs_06.png" id="2_07po6"]
+
+[resource]
+script = ExtResource("1_07po6")
+suit = "Bastoni"
+rank_name = "6"
+value = 6
+texture_front = ExtResource("2_07po6")
+metadata/_custom_type_script = "uid://irpfobdwtx4r"

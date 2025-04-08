@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=3 format=3 uid="uid://bva4ydyje53b1"]
+
+[ext_resource type="Script" uid="uid://irpfobdwtx4r" path="res://scripts/card_data.gd" id="1_06el8"]
+[ext_resource type="Texture2D" uid="uid://camo3vwej3tqm" path="res://assets/images/Cards (large)/card_spades_04.png" id="2_06el8"]
+
+[resource]
+script = ExtResource("1_06el8")
+suit = "Picche"
+rank_name = "4"
+value = 4
+texture_front = ExtResource("2_06el8")
+metadata/_custom_type_script = "uid://irpfobdwtx4r"

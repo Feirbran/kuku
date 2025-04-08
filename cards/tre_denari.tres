@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=3 format=3 uid="uid://d28nekurj5suk"]
+
+[ext_resource type="Script" uid="uid://irpfobdwtx4r" path="res://scripts/card_data.gd" id="1_npgex"]
+[ext_resource type="Texture2D" uid="uid://bswviy30s2chb" path="res://assets/images/Cards (large)/card_diamonds_03.png" id="2_npgex"]
+
+[resource]
+script = ExtResource("1_npgex")
+suit = "Denari"
+rank_name = "3"
+value = 3
+texture_front = ExtResource("2_npgex")
+metadata/_custom_type_script = "uid://irpfobdwtx4r"

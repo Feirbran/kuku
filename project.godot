@@ -11,7 +11,12 @@ config_version=5
 [application]
 
 config/name="KuKu"
+run/main_scene="uid://c55io63nihf51"
 config/features=PackedStringArray("4.4", "GL Compatibility")
+
+[autoload]
+
+DeckManage="*res://scripts/DeckManager.gd"
 
 [display]
 

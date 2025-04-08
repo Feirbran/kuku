@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=3 format=3 uid="uid://dc48k3ulimo4s"]
+
+[ext_resource type="Script" uid="uid://irpfobdwtx4r" path="res://scripts/card_data.gd" id="1_hgdrr"]
+[ext_resource type="Texture2D" uid="uid://dmxpaasmmwnki" path="res://assets/images/Cards (large)/card_diamonds_Q.png" id="2_hgdrr"]
+
+[resource]
+script = ExtResource("1_hgdrr")
+suit = "Denari"
+rank_name = "Cavallo"
+value = 9
+texture_front = ExtResource("2_hgdrr")
+metadata/_custom_type_script = "uid://irpfobdwtx4r"

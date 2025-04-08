@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=3 format=3 uid="uid://d0g1p645h15sl"]
+
+[ext_resource type="Script" uid="uid://irpfobdwtx4r" path="res://scripts/card_data.gd" id="1_8uqqa"]
+[ext_resource type="Texture2D" uid="uid://ctn8c2c26npjm" path="res://assets/images/Cards (large)/card_hearts_04.png" id="2_8uqqa"]
+
+[resource]
+script = ExtResource("1_8uqqa")
+suit = "Cuori"
+rank_name = "4"
+value = 4
+texture_front = ExtResource("2_8uqqa")
+metadata/_custom_type_script = "uid://irpfobdwtx4r"
