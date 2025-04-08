@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="CardData" load_steps=3 format=3 uid="uid://crwfy4pe0crnh"]
 
-[ext_resource type="Script" uid="uid://irpfobdwtx4r" path="res://scripts/card_data.gd" id="1_iiu2j"]
+[ext_resource type="Script" uid="uid://irpfobdwtx4r" path="res://card_data.gd" id="1_iiu2j"]
 [ext_resource type="Texture2D" uid="uid://duyl363jujot3" path="res://assets/images/Cards (large)/card_diamonds_02.png" id="2_iiu2j"]
 
 [resource]

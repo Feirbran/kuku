@@ -1,7 +1,7 @@
 [gd_scene load_steps=43 format=3 uid="uid://c55io63nihf51"]
 
-[ext_resource type="Script" uid="uid://citpv2tf44r7w" path="res://scripts/DeckManager.gd" id="1_5yu47"]
-[ext_resource type="Script" uid="uid://irpfobdwtx4r" path="res://scripts/card_data.gd" id="2_be4mn"]
+[ext_resource type="Script" uid="uid://citpv2tf44r7w" path="res://DeckManager.gd" id="1_5yu47"]
+[ext_resource type="Script" uid="uid://irpfobdwtx4r" path="res://card_data.gd" id="2_be4mn"]
 [ext_resource type="Resource" uid="uid://manaqh48xbfb" path="res://cards/asso_bastoni.tres" id="3_ebdxw"]
 [ext_resource type="Resource" uid="uid://cukil35232uc7" path="res://cards/asso_cuori.tres" id="4_myutg"]
 [ext_resource type="Resource" uid="uid://k8alnya5pvaw" path="res://cards/asso_denari.tres" id="5_ydnpt"]
