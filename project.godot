@@ -16,8 +16,7 @@ config/features=PackedStringArray("4.4", "GL Compatibility")
 
 [autoload]
 
-game_manager="*res://game_manager.gd"
-deck_manager="*res://DeckManager.gd"
+DeckSetupScene="*res://scenes/DeckSetupScene.tscn"
 
 [display]
 

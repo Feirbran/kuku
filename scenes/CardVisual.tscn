@@ -1,8 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://p5gasx7vsgwh"]
+[gd_scene load_steps=2 format=3 uid="uid://p5gasx7vsgwh"]
 
 [ext_resource type="Script" uid="uid://ci1albug0j6u3" path="res://card_visual.gd" id="1_n2pnx"]
-[ext_resource type="Texture2D" uid="uid://ce2uikqtserdj" path="res://assets/images/Cards (large)/card_back.png" id="2_de4qo"]
 
 [node name="CardVisual" type="Sprite3D"]
 script = ExtResource("1_n2pnx")
-texture_back = ExtResource("2_de4qo")

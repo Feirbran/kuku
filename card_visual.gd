@@ -2,11 +2,13 @@
 extends Sprite3D
 class_name CardVisual
 
-# Variabile per contenere i dati della carta (seme, valore, texture, ecc.)
-# La setter `set_card_data` verrà chiamata automaticamente quando assegnamo un valore a questa variabile
-@export var card_data: CardData:
+# Variabile esportata con setter per gestire l'aggiornamento
+@export var _card_data: CardData:
 	set(new_data):
-		set_card_data(new_data)
+		set_card_data_internal(new_data)
+
+# Variabile interna per memorizzare i dati della carta
+var card_data: CardData = null
 
 # Texture per il retro della carta (opzionale, da impostare nell'inspector)
 @export var texture_back: Texture2D
@@ -25,15 +27,15 @@ func _ready():
 		else:
 			show_back()
 
-# Funzione per impostare i dati E aggiornare la texture
-func set_card_data(new_data: CardData):
+# Funzione interna per impostare i dati E aggiornare la texture
+func set_card_data_internal(new_data: CardData):
 	if new_data == null:
 		printerr("Tentativo di assegnare dati null a CardVisual")
 		card_data = null
 		texture = texture_back # Mostra il retro se i dati sono null
 		return
 
-	card_data = new_data
+	card_data = new_data # Assegna alla variabile interna
 	# Aggiorna la texture visibile in base allo stato (coperta/scoperta)
 	if is_face_up:
 		show_front()

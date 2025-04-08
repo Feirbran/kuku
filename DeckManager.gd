@@ -2,32 +2,52 @@
 extends Node
 class_name DeckManager
 
-# Array che conterrà TUTTE le risorse CardData del nostro mazzo completo
+var instance_id = randi() # Assegna un ID casuale all'istanza
 @export var all_card_data: Array[CardData] = []
-
-# Array per il mazzo attuale (durante il gioco)
 var current_deck: Array[CardData] = []
-# Array per gli scarti
 var discard_pile: Array[CardData] = []
 
-# Chiamato quando il nodo entra nell'albero delle scene la prima volta
 func _ready():
-	print("DeckManager pronto.")
-	# All'inizio, popola il mazzo attuale con tutte le carte definite
+	print("DeckManager pronto. ID: SONO IN DECK MANAGER", instance_id)
+	print("Dimensione di all_card_data in _ready di DeckManager: ", all_card_data.size())
 	reset_and_shuffle()
-	# Stampa il mazzo mescolato per controllo (puoi rimuoverlo più tardi)
-	# print("Mazzo iniziale: ", current_deck)
-	# print("Carte nel mazzo: ", current_deck.size())
+	print("Mazzo resettato e mescolato. Carte: ", current_deck.size())
 
-# Prepara un nuovo mazzo mescolato
 func reset_and_shuffle():
-	# Copia tutte le carte definite nell'array del mazzo attuale
 	current_deck = all_card_data.duplicate()
-	# Svuota gli scarti
 	discard_pile.clear()
-	# Mescola il mazzo attuale
 	current_deck.shuffle()
 	print("Mazzo resettato e mescolato. Carte: ", current_deck.size())
+
+## Array che conterrà TUTTE le risorse CardData del nostro mazzo completo
+#@export var all_card_data: Array[CardData] = []
+#
+## Array per il mazzo attuale (durante il gioco)
+#var current_deck: Array[CardData] = []
+## Array per gli scarti
+#var discard_pile: Array[CardData] = []
+#
+## Chiamato quando il nodo entra nell'albero delle scene la prima volta
+#func _ready():
+	#print("DeckManager pronto.")
+	#print("Dimensione di all_card_data in _ready di DeckManager: ", all_card_data.size())
+	#print("PRIMA di DeckManager.reset_and_shuffle()")
+	## All'inizio, popola il mazzo attuale con tutte le carte definite
+	#reset_and_shuffle()
+	#print("DOPO di DeckManager.reset_and_shuffle()")
+	## Stampa il mazzo mescolato per controllo (puoi rimuoverlo più tardi)
+	## print("Mazzo iniziale: ", current_deck)
+	## print("Carte nel mazzo: ", current_deck.size())
+#
+## Prepara un nuovo mazzo mescolato
+#func reset_and_shuffle():
+	## Copia tutte le carte definite nell'array del mazzo attuale
+	#current_deck = all_card_data.duplicate()
+	## Svuota gli scarti
+	#discard_pile.clear()
+	## Mescola il mazzo attuale
+	#current_deck.shuffle()
+	#print("Mazzo resettato e mescolato. Carte: ", current_deck.size())
 
 # Pesca una carta dalla cima del mazzo
 func draw_card() -> CardData:
