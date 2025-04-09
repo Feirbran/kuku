@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://icv5astja74p"
-path.s3tc="res://.godot/imported/legno.png-6b81083b56b730b67665f4faf6cd9054.s3tc.ctex"
+uid="uid://ba6453cmnqx4y"
+path.s3tc="res://.godot/imported/Old_Plywood_vigjfivg_1K_BaseColor.jpg-2c29b039bd2f66f1ba9286b3aa9c0eb1.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/images/legno.png"
-dest_files=["res://.godot/imported/legno.png-6b81083b56b730b67665f4faf6cd9054.s3tc.ctex"]
+source_file="res://assets/images/Old_Plywood_vigjfivg_1K_BaseColor.jpg"
+dest_files=["res://.godot/imported/Old_Plywood_vigjfivg_1K_BaseColor.jpg-2c29b039bd2f66f1ba9286b3aa9c0eb1.s3tc.ctex"]
 
 [params]
 
