@@ -2,80 +2,68 @@
 extends Sprite3D
 class_name CardVisual
 
-# Variabile esportata con setter per gestire l'aggiornamento
 @export var _card_data: CardData:
 	set(new_data):
 		set_card_data_internal(new_data)
 
-# Variabile interna per memorizzare i dati della carta
 var card_data: CardData = null
-
-# Texture per il retro della carta (opzionale, da impostare nell'inspector)
 @export var texture_back: Texture2D
+var is_face_up: bool = false
 
-var is_face_up: bool = false # La carta è scoperta o coperta?
-
-# Chiamato quando il nodo è pronto
 func _ready():
-	# All'inizio, se non abbiamo dati, mostra il retro (se esiste)
 	if card_data == null:
 		show_back()
 	else:
-		# Se i dati sono stati assegnati prima di _ready, mostra la faccia corretta
 		if is_face_up:
 			show_front()
 		else:
 			show_back()
+	# Configura l'Area3D per la rilevazione dei clic (assicurati che esista nella scena)
+	if get_node_or_null("ClickArea"):
+		get_node("ClickArea").connect("input_event", Callable(get_parent(), "_on_card_clicked").bind([self]))
 
-# Funzione interna per impostare i dati E aggiornare la texture
 func set_card_data_internal(new_data: CardData):
 	if new_data == null:
 		printerr("Tentativo di assegnare dati null a CardVisual")
 		card_data = null
-		texture = texture_back # Mostra il retro se i dati sono null
+		texture = texture_back
 		return
 
-	card_data = new_data # Assegna alla variabile interna
-	# Aggiorna la texture visibile in base allo stato (coperta/scoperta)
+	card_data = new_data
 	if is_face_up:
 		show_front()
 	else:
-		# Se abbiamo appena ricevuto i dati, probabilmente vogliamo mostrarla coperta all'inizio
-		# o potremmo voler decidere lo stato prima di chiamare questa funzione.
-		# Per ora, la mettiamo coperta di default quando i dati vengono impostati.
 		show_back()
 
-
-# Mostra il fronte della carta
 func show_front():
 	if card_data != null and card_data.texture_front != null:
 		texture = card_data.texture_front
 		is_face_up = true
 	else:
-		# Se non c'è texture fronte, mostra il retro o nulla
 		texture = texture_back
-		is_face_up = false # Considerala coperta se non può mostrare il fronte
+		is_face_up = false
 
-# Mostra il retro della carta
 func show_back():
 	if texture_back != null:
 		texture = texture_back
 	else:
-		# Se non c'è texture per il retro, potremmo renderla invisibile o mostrare un placeholder
-		texture = null # Rende lo sprite invisibile se non ha texture
+		texture = null
 	is_face_up = false
 
-# Funzione per girare la carta
 func flip():
 	if is_face_up:
 		show_back()
 	else:
 		show_front()
 
-# Funzione utile per ottenere il valore della carta per le comparazioni
 func get_value() -> int:
 	if card_data != null:
 		return card_data.value
 	else:
 		printerr("Tentativo di ottenere valore da CardVisual senza CardData!")
-		return -1 # Un valore non valido
+		return -1
+
+func set_physics_active(active: bool):
+	if get_node_or_null("ClickArea"):
+		get_node("ClickArea").monitoring = active
+		get_node("ClickArea").mouse_filter = Control.MOUSE_FILTER_STOP if active else Control.MOUSE_FILTER_IGNORE
