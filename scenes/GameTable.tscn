@@ -22,8 +22,9 @@ size = Vector3(10, 0.2, 10)
 script = ExtResource("1_fukfw")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 10, 0)
+transform = Transform3D(1, 0, 0, 0, 0.840113, 0.542412, 0, -0.542412, 0.840113, 0.110069, 2.19336, 4.14168)
 current = true
+fov = 118.125
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_3pf80")
@@ -32,6 +33,7 @@ environment = SubResource("Environment_3pf80")
 transform = Transform3D(0.866025, 0.353553, -0.353553, 0, 0.707107, 0.707107, 0.5, -0.612372, 0.612372, 0, 0, 0)
 
 [node name="TableMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.19719, 0)
 mesh = SubResource("BoxMesh_qffgw")
 skin = SubResource("Skin_xv1iw")
 
