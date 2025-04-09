@@ -115,6 +115,11 @@ func deal_initial_cards():
 		printerr("ERRORE: player_positions_node è null in deal_initial_cards!")
 		return
 
+	var card_spawn_points = get_node("CardSpawnPoints") # Ottieni il nodo contenitore delle posizioni carta
+	if not is_instance_valid(card_spawn_points) or card_spawn_points.get_child_count() < num_players:
+		printerr("ERRORE: Nodo CardSpawnPoints non trovato o non ha abbastanza posizioni!")
+		return
+
 	for i in range(num_players):
 		var drawn_card_data: CardData = DeckSetupScene.draw_card()
 		if drawn_card_data == null:
@@ -128,18 +133,23 @@ func deal_initial_cards():
 		add_child(card_instance)
 		card_instance.card_data = drawn_card_data
 		players_data[i]["visual_card"] = card_instance
-		var player_marker: Marker3D = players_data[i]["marker"]
 
-		card_instance.global_transform.origin = player_marker.global_transform.origin + player_marker.transform.basis.z * 0.5 + Vector3(0, 0.02, 0)
-		card_instance.global_transform.basis = player_marker.global_transform.basis
-
-		# Assumi che tu abbia una variabile 'local_player_index' che indica l'indice del giocatore locale
-		if i == local_player_index:
-			card_instance.show_front() # Mostra il fronte per il giocatore locale
+		var card_spawn_point = card_spawn_points.get_child(i) as Marker3D
+		if is_instance_valid(card_spawn_point):
+			card_instance.global_transform.origin = card_spawn_point.global_transform.origin + Vector3(0, 0.02, 0) # Posiziona sopra il tavolo
+			card_instance.global_transform.basis = card_spawn_point.global_transform.basis # Mantieni l'orientamento del punto di spawn
 		else:
-			card_instance.show_back()  # Mostra il retro per gli altri giocatori
+			printerr("ERRORE: Impossibile trovare il punto di spawn della carta ", i)
 
+		# Inizialmente mostra il retro per tutti
+		card_instance.show_back()
 		active_card_instances.append(card_instance)
+
+	# Rivelare la carta del giocatore locale
+	if local_player_index >= 0 and local_player_index < players_data.size():
+		var local_player_card_visual = players_data[local_player_index].visual_card as CardVisual
+		if is_instance_valid(local_player_card_visual):
+			local_player_card_visual.show_front()
 
 	print("Distribuzione completata.")
 # Qui puoi aggiungere altre funzioni del tuo game_manager (gestione del turno, ecc.)
