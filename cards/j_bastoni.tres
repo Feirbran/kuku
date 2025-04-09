@@ -6,7 +6,7 @@
 [resource]
 script = ExtResource("1_4r76k")
 suit = "Bastoni"
-rank_name = "Fante"
+rank_name = "J"
 value = 8
 texture_front = ExtResource("2_4r76k")
 metadata/_custom_type_script = "uid://irpfobdwtx4r"

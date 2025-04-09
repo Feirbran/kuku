@@ -27,6 +27,8 @@ size = Vector3(0.121094, 0.262756, 0.236023)
 
 [node name="GameManager" type="Node3D" parent="."]
 script = ExtResource("1_fukfw")
+card_scene = null
+card_offset_z = null
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.840113, 0.542412, 0, -0.542412, 0.840113, 0.110069, 2.19336, 4.14168)
