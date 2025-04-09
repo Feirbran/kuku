@@ -10,6 +10,8 @@ var card_data: CardData = null
 @export var texture_back: Texture2D
 var is_face_up: bool = false
 
+@onready var card_animator: AnimationPlayer = $CardAnimator
+
 func _ready():
 	if card_data == null:
 		show_back()
@@ -18,7 +20,6 @@ func _ready():
 			show_front()
 		else:
 			show_back()
-	# Configura l'Area3D per la rilevazione dei clic (assicurati che esista nella scena)
 	if get_node_or_null("ClickArea"):
 		get_node("ClickArea").connect("input_event", Callable(get_parent(), "_on_card_clicked").bind([self]))
 
@@ -38,17 +39,24 @@ func set_card_data_internal(new_data: CardData):
 func show_front():
 	if card_data != null and card_data.texture_front != null:
 		texture = card_data.texture_front
+		scale.x = -1.0 # Capovolgi orizzontalmente
 		is_face_up = true
+		stop_rotation_animation()
 	else:
 		texture = texture_back
+		scale.x = 1.0
 		is_face_up = false
+		start_rotation_animation()
 
 func show_back():
 	if texture_back != null:
 		texture = texture_back
+		scale.x = 1.0
 	else:
 		texture = null
+		scale.x = 1.0
 	is_face_up = false
+	start_rotation_animation()
 
 func flip():
 	if is_face_up:
@@ -67,3 +75,11 @@ func set_physics_active(active: bool):
 	if get_node_or_null("ClickArea"):
 		get_node("ClickArea").monitoring = active
 		get_node("ClickArea").mouse_filter = Control.MOUSE_FILTER_STOP if active else Control.MOUSE_FILTER_IGNORE
+
+func start_rotation_animation():
+	if is_instance_valid(card_animator) and card_animator.has_animation("SlowRotateX"):
+		card_animator.play("SlowRotateX")
+
+func stop_rotation_animation():
+	if is_instance_valid(card_animator) and card_animator.is_playing():
+		card_animator.stop()

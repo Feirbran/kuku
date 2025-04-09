@@ -1,4 +1,4 @@
-# game_manager.gd
+# game_manager.gdpisellolollo
 extends Node3D
 class_name GameManager
 
@@ -81,7 +81,6 @@ func deal_initial_cards():
 	var card_y_offset = 0.05
 	var card_y_stack_offset = 0.01
 
-	# Ottieni un riferimento alla camera principale (assumi che ce ne sia una con tag "MainCamera")
 	var main_camera = get_viewport().get_camera_3d()
 	if not is_instance_valid(main_camera):
 		printerr("ERRORE: Camera principale non trovata!")
@@ -114,28 +113,29 @@ func deal_initial_cards():
 			card_instance.global_transform.origin = card_position
 
 			if j == num_initial_cards - 1:
-				# La carta più vicina segue la rotazione della camera e mostra il fronte
+				# Carta visibile: guarda la camera e mostra il fronte
 				card_instance.look_at(main_camera.global_transform.origin, Vector3.UP)
 				card_instance.show_front()
 				card_instance.set_physics_active(true)
 			else:
-				# Le altre carte mostrano il retro e sono ruotate
+				# Altre carte: guarda la camera e mostra il retro
 				card_instance.look_at(main_camera.global_transform.origin, Vector3.UP)
-				card_instance.rotate_y(PI)
 				card_instance.show_back()
 				card_instance.set_physics_active(false)
 
 	print("Distribuzione completata.")
 
 func _process(delta):
-	# Aggiorna la rotazione delle carte visibili per seguire la camera
 	var main_camera = get_viewport().get_camera_3d()
 	if is_instance_valid(main_camera):
 		for i in range(num_players):
-			if players_data[i].has("visual_cards") and not players_data[i]["visual_cards"].is_empty():
-				var last_card = players_data[i]["visual_cards"].back()
-				if is_instance_valid(last_card) and last_card.is_face_up:
-					last_card.look_at(main_camera.global_transform.origin, Vector3.UP)
+			if players_data[i].has("visual_cards"):
+				for k in range(players_data[i]["visual_cards"].size()):
+					var card = players_data[i]["visual_cards"][k]
+					if is_instance_valid(card):
+						card.look_at(main_camera.global_transform.origin, Vector3.UP)
+						if k < players_data[i]["visual_cards"].size() - 1:
+							card.show_back()
 
 func swap_cards(player_index: int, card_index_player: int, target_player_index: int, card_index_target: int):
 	if player_index < 0 or player_index >= num_players or \
