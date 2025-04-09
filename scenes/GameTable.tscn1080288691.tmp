@@ -1,8 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://c0qs8vb56ouna"]
+[gd_scene load_steps=10 format=3 uid="uid://c0qs8vb56ouna"]
 
 [ext_resource type="Script" uid="uid://cd3sdqm1fs1h5" path="res://game_manager.gd" id="1_fukfw"]
 [ext_resource type="Texture2D" uid="uid://ba6453cmnqx4y" path="res://assets/images/Old_Plywood_vigjfivg_1K_BaseColor.jpg" id="2_3pf80"]
-[ext_resource type="PackedScene" uid="uid://p5gasx7vsgwh" path="res://scenes/CardVisual.tscn" id="2_qffgw"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qwkia"]
 
@@ -28,7 +27,6 @@ size = Vector3(0.121094, 0.262756, 0.236023)
 
 [node name="GameManager" type="Node3D" parent="."]
 script = ExtResource("1_fukfw")
-card_scene = ExtResource("2_qffgw")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.840113, 0.542412, 0, -0.542412, 0.840113, 0.110069, 2.19336, 4.14168)

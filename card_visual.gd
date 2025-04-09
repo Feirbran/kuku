@@ -10,7 +10,7 @@ var card_data: CardData = null
 @export var texture_back: Texture2D
 var is_face_up: bool = false
 
-@onready var card_animator: AnimationPlayer = $CardAnimator
+@onready var CardAnimator: AnimationPlayer = $CardAnimator
 
 func _ready():
 	if card_data == null:
@@ -77,9 +77,9 @@ func set_physics_active(active: bool):
 		get_node("ClickArea").mouse_filter = Control.MOUSE_FILTER_STOP if active else Control.MOUSE_FILTER_IGNORE
 
 func start_rotation_animation():
-	if is_instance_valid(card_animator) and card_animator.has_animation("SlowRotateX"):
-		card_animator.play("SlowRotateX")
+	if is_instance_valid(CardAnimator) and CardAnimator.has_animation("SlowRotateX"):
+		CardAnimator.play("SlowRotateX")
 
 func stop_rotation_animation():
-	if is_instance_valid(card_animator) and card_animator.is_playing():
-		card_animator.stop()
+	if is_instance_valid(CardAnimator) and CardAnimator.is_playing():
+		CardAnimator.stop()
