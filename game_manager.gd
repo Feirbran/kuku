@@ -4,7 +4,11 @@ class_name GameManager
 
 # Assegna la scena CardVisual.tscn qui nell'Inspector!
 @export var card_scene: PackedScene
-
+# Aggiungi queste righe vicino agli altri @export all'inizio
+@export var swap_button: Button
+@export var pass_button: Button
+# Se avrai un bottone specifico per il mazziere (es. "Scambia con Mazzo") aggiungilo qui
+# @export var swap_deck_button: Button
 var player_positions_node: Node3D = null
 var num_players: int = 4
 var dealer_index: int = 0
@@ -64,6 +68,8 @@ func _start_round():
 	if current_player_index == -1: printerr("ERRORE: Nessun giocatore attivo!"); _handle_game_over(0); return
 	current_state = GameState.PLAYER_TURN; print("Carte distribuite. Tocca a player %d." % current_player_index)
 	if players_data[current_player_index].is_cpu: call_deferred("_make_cpu_turn")
+	# Aggiorna stato bottoni alla fine dell'inizio round
+	_update_player_action_buttons()
 func _deal_initial_cards():
 	print("Distribuzione..."); var main_camera = get_viewport().get_camera_3d()
 	if not is_instance_valid(main_camera): printerr("ERRORE: Camera non trovata!"); current_state = GameState.GAME_OVER; return
@@ -98,6 +104,7 @@ func _advance_turn():
 		# --- GESTIONE SALTO CAVALLO (Q) MANCANTE ---
 		if players_data[current_player_index].is_cpu: call_deferred("_make_cpu_turn")
 	else: _go_to_dealer_phase()
+
 func _go_to_dealer_phase():
 	if dealer_index < 0 or dealer_index >= players_data.size() or players_data[dealer_index].is_out:
 		print("Mazziere %d non valido/fuori." % dealer_index); call_deferred("_end_round"); return
@@ -220,20 +227,60 @@ func reveal_all_cards():
 		if not players_data[i].is_out and not players_data[i].visual_cards.is_empty():
 			var card_visual = players_data[i].visual_cards[0] as CardVisual
 			if is_instance_valid(card_visual): card_visual.show_front()
+# Sostituisci questa funzione in game_manager.gd
+
 func determine_loser_and_update_lives():
-	var lowest_card_value = 100; var losers_indices: Array[int] = []
-	print("Valutazione carte:")
+	var lowest_card_value = 100 # Valore iniziale alto
+	var losers_indices: Array[int] = []
+
+	print("--- Valutazione Carte Fine Round ---") # Intestazione per chiarezza
+
+	# 1. Stampa le carte di tutti i giocatori attivi
 	for i in range(players_data.size()):
-		if not players_data[i].is_out:
-			var card_to_evaluate: CardData = _get_valid_carddata_from_player(i, "determine_loser")
-			if card_to_evaluate == null: continue
-			if card_to_evaluate.rank_name == "K": print("Player %d ha Re. Salvo." % i); continue
+		if not players_data[i].is_out: # Solo giocatori in gioco
+			var card_to_evaluate: CardData = _get_valid_carddata_from_player(i, "determine_loser_log")
+			if card_to_evaluate:
+				# Stampa indice giocatore, tipo (CPU/Umano), nome carta e valore base
+				print("  Player %d (%s): %s (Valore base: %d)" % [
+					i,
+					"CPU" if players_data[i].is_cpu else "Umano",
+					get_card_name(card_to_evaluate),
+					get_card_value(card_to_evaluate)
+				])
+			else:
+				# Se non riusciamo a leggere la carta, segnalalo
+				printerr("  ERRORE: Impossibile leggere carta per Player %d!" % i)
+
+	# 2. Determina chi perde (ignorando chi ha il Re)
+	print("--- Calcolo Perdente ---")
+	for i in range(players_data.size()):
+		if not players_data[i].is_out: # Solo giocatori in gioco
+			var card_to_evaluate: CardData = _get_valid_carddata_from_player(i, "determine_loser_calc")
+			if card_to_evaluate == null: continue # Salta se dati corrotti
+
+			# Controllo Re (K) - Chi ha il Re è salvo
+			if card_to_evaluate.rank_name == "K":
+				print("  -> Player %d è salvo (ha il Re)." % i)
+				continue # Passa al prossimo giocatore
+
+			# Calcola valore per confronto (solo per chi NON ha il Re)
 			var card_value = get_card_value(card_to_evaluate)
-			print("Player %d ha %s (Val: %d)" % [i, get_card_name(card_to_evaluate), card_value])
-			if card_value < lowest_card_value: lowest_card_value = card_value; losers_indices.clear(); losers_indices.append(i)
-			elif card_value == lowest_card_value: losers_indices.append(i)
-	if losers_indices.is_empty(): print("Nessun perdente.")
-	else: print("Perdente/i (Val %d): %s" % [lowest_card_value, str(losers_indices)]); for loser_index in losers_indices: if loser_index >= 0: lose_life(loser_index)
+			if card_value < lowest_card_value:
+				lowest_card_value = card_value
+				losers_indices.clear()
+				losers_indices.append(i) # Nuovo minimo trovato
+			elif card_value == lowest_card_value:
+				losers_indices.append(i) # Aggiungi a pari merito
+
+	# 3. Applica penalità
+	if losers_indices.is_empty():
+		print("Nessun perdente determinato in questo round (tutti salvi?).")
+	else:
+		# Stampa chi perde prima di applicare
+		print("Perdente/i determinato/i (Valore più basso %d): Giocatore/i %s" % [lowest_card_value, str(losers_indices)])
+		for loser_index in losers_indices:
+			if loser_index >= 0: # Sicurezza
+				lose_life(loser_index) # Applica la perdita di vita
 func lose_life(player_index: int):
 	if player_index >= 0 and player_index < players_data.size() and not players_data[player_index].is_out:
 		players_data[player_index].lives -= 1; print("Player %d perde vita! Vite: %d" % [player_index, players_data[player_index].lives])
@@ -330,3 +377,64 @@ func _update_player_card_visuals(player_index: int):
 	else: card_visual.show_back()
 
 #endregion
+
+
+# Funzione chiamata quando il bottone "Scambia" viene premuto
+func _on_swap_button_pressed():
+	# --- DEBUG AGGIUNTO ---
+	# Stampa lo stato corrente ESATTO quando il bottone viene premuto
+	print(">> Swap Button Pressed: State=%s, CurrentPlayer=%d, HasSwapped=%s" % [
+		GameState.keys()[current_state],
+		current_player_index,
+		str(players_data[current_player_index].has_swapped_this_round) if current_player_index >= 0 and current_player_index < players_data.size() else "N/A"
+	])
+	# --- FINE DEBUG ---
+
+	# Controlli: è il mio turno? Posso agire?
+	# Assumiamo che il giocatore umano sia sempre l'indice 0
+	if current_state == GameState.PLAYER_TURN and current_player_index == 0 and not players_data[0].is_cpu and not players_data[0].has_swapped_this_round:
+		print("Bottone 'Scambia' premuto dall'umano.")
+		var target_player_index = get_player_to_right(0)
+		if target_player_index != -1:
+			# --- CONTROLLO RE/CAVALLO MANCANTE QUI ---
+			print("Tentativo scambio (via bottone) tra Player 0 e Player %d (a destra)" % target_player_index)
+			_player_action(0, "swap", target_player_index)
+			 # Disabilita/Nascondi i bottoni azione dopo aver agito (da fare meglio dopo)
+		else:
+			print("Nessun giocatore valido a destra con cui scambiare.")
+		# Stampa perché il bottone non è attivo (basato sullo stato stampato sopra)
+			print("   -> Azione bottone Scambia non valida in questo stato/turno.")
+			
+			# Funzione per abilitare/disabilitare i bottoni azione del giocatore umano
+func _update_player_action_buttons():
+	# Controlla che i riferimenti ai bottoni siano validi (impostati nell'inspector)
+	if not is_instance_valid(swap_button) or not is_instance_valid(pass_button):
+		# Stampa un errore solo la prima volta o se cambiano da validi a invalidi
+		# per non intasare il log.
+		# printerr("ATTENZIONE: Riferimenti a SwapButton o PassButton non validi!")
+		return # Non fare nulla se i bottoni non sono collegati
+
+	# Determina se i bottoni devono essere attivi
+	var enable_buttons = false # Default: disabilitati
+	# Condizioni per abilitarli:
+	# 1. È la fase del turno del giocatore
+	# 2. È il turno del giocatore umano (indice 0)
+	# 3. Il giocatore 0 non è una CPU (controllo di sicurezza)
+	# 4. Il giocatore 0 non ha già agito in questo turno
+	if current_state == GameState.PLAYER_TURN and \
+	   current_player_index == 0 and \
+	   not players_data[0].is_cpu and \
+	   not players_data[0].has_swapped_this_round:
+		enable_buttons = true
+
+	# Applica lo stato ai bottoni
+	swap_button.disabled = not enable_buttons
+	pass_button.disabled = not enable_buttons
+
+	# Qui potresti aggiungere logica per altri bottoni, come quello del mazziere
+	# Esempio: Gestione bottone "Scambia con Mazzo" (se esiste)
+	# if is_instance_valid(swap_deck_button):
+	#    var enable_dealer_button = (current_state == GameState.DEALER_SWAP and current_player_index == 0 and not players_data[0].is_cpu)
+	#    swap_deck_button.disabled = not enable_dealer_button
+	#    # Potresti volerlo anche nascondere/mostrare invece che solo disabilitare
+	#    # swap_deck_button.visible = enable_dealer_button

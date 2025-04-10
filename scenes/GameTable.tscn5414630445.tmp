@@ -26,11 +26,9 @@ size = Vector3(0.121094, 0.262756, 0.236023)
 
 [node name="GameTable" type="Node3D"]
 
-[node name="GameManager" type="Node3D" parent="." node_paths=PackedStringArray("swap_button", "pass_button")]
+[node name="GameManager" type="Node3D" parent="."]
 script = ExtResource("1_fukfw")
 card_scene = ExtResource("2_qffgw")
-swap_button = NodePath("../HUD/SwapButton")
-pass_button = NodePath("../HUD/PassaTurno")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-0.978509, -0.0932939, 0.183892, 0, 0.891798, 0.452435, -0.206204, 0.442711, -0.872632, 1.04543, 1.66749, -5.94828)
