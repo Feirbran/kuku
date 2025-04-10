@@ -42,6 +42,7 @@ func _ready():
 	print("+++ GameManager pronto +++")
 	call_deferred("start_game", num_players) # Chiama start_game dopo che la scena è completamente pronta
 
+
 func start_game(p_num_players: int):
 	print("Richiesta partita con %d giocatori." % p_num_players); current_state = GameState.SETUP; num_players = p_num_players
 	_reset_game(); if players_data.is_empty(): printerr("Reset fallito."); return
@@ -144,10 +145,9 @@ func _deal_initial_cards():
 		active_card_instances.append(card_instance)
 
 		# Posiziona e orienta
-		
-		var card_position = player_marker.global_transform.origin + Vector3(0, 0.5, 0)
+		var card_position = player_marker.global_transform.origin + Vector3(0, 0.1, 0)
 		card_instance.global_transform.origin = card_position
-		card_instance.look_at(main_camera.global_transform.origin, Vector3.UP); card_instance.rotation.x = deg_to_rad(0)
+		card_instance.look_at(main_camera.global_transform.origin, Vector3.UP); card_instance.rotation.x = deg_to_rad(-90)
 
 		# Mostra fronte/retro
 		if i == 0: card_instance.show_front(); card_instance.set_physics_active(true) # Umano
