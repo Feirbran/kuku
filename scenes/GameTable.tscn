@@ -35,10 +35,11 @@ swap_to_deck_button = NodePath("../HUD/SwapToDeck")
 pass_as_dealer_button = NodePath("../HUD/PassAsDealer")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.978509, -0.0932939, 0.183892, 0, 0.891798, 0.452435, -0.206204, 0.442711, -0.872632, 1.04543, 1.66749, -5.94828)
+transform = Transform3D(-0.999986, -0.00135519, 0.00505762, 0, 0.965926, 0.258819, -0.00523604, 0.258815, -0.965913, 0.006, 1.5, -7)
 current = true
-fov = 65.8626
+fov = 51.6
 near = 0.01
+far = 23.75
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_3pf80")
@@ -47,7 +48,7 @@ environment = SubResource("Environment_3pf80")
 transform = Transform3D(0.590165, 0.708395, -0.387146, 0.335197, 0.221244, 0.915802, 0.734404, -0.670245, -0.106882, -5.29868, 5.42724, 3.22907)
 
 [node name="TableMesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.19719, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.154156, 0)
 mesh = SubResource("BoxMesh_qffgw")
 skin = SubResource("Skin_xv1iw")
 surface_material_override/0 = SubResource("StandardMaterial3D_qffgw")
