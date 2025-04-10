@@ -26,13 +26,16 @@ size = Vector3(0.121094, 0.262756, 0.236023)
 
 [node name="GameTable" type="Node3D"]
 
-[node name="GameManager" type="Node3D" parent="." node_paths=PackedStringArray("swap_button", "pass_button", "swap_to_deck_button", "pass_as_dealer_button")]
+[node name="GameManager" type="Node3D" parent="." node_paths=PackedStringArray("swap_button", "pass_button", "swap_to_deck_button", "pass_as_dealer_button", "player_lives_labels", "last_hand_labels", "last_hand_textures")]
 script = ExtResource("1_fukfw")
 card_scene = ExtResource("2_qffgw")
-swap_button = NodePath("../HUD/SwapButton")
-pass_button = NodePath("../HUD/PassaTurno")
-swap_to_deck_button = NodePath("../HUD/SwapToDeck")
-pass_as_dealer_button = NodePath("../HUD/PassAsDealer")
+swap_button = NodePath("../HUD/UIMainContainer/HBoxContainer/SwapButton")
+pass_button = NodePath("../HUD/UIMainContainer/HBoxContainer/PassaTurno")
+swap_to_deck_button = NodePath("../HUD/UIMainContainer/HBoxContainer/SwapToDeck")
+pass_as_dealer_button = NodePath("../HUD/UIMainContainer/HBoxContainer/PassAsDealer")
+player_lives_labels = [NodePath("../HUD/UIMainContainer/HBoxContainer2/Player0_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player1_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player2_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player3_Lives")]
+last_hand_labels = [NodePath("../HUD/UIMainContainer/LastHandDisplay/P0_LastHand/P0_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P1_LastHand/P1_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P2_LastHand/P2_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P3_LastHand/P3_LastHand_Label")]
+last_hand_textures = [NodePath("../HUD/UIMainContainer/LastHandDisplay/P0_LastHand/P0_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P1_LastHand/P1_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P2_LastHand/P3_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P3_LastHand/P3_LastHand_Texture")]
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-0.999986, -0.00135519, 0.00505762, 0, 0.965926, 0.258819, -0.00523604, 0.258815, -0.965913, 0.006, 1.5, -7)
@@ -69,35 +72,115 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
 
 [node name="HUD" type="CanvasLayer" parent="."]
 
-[node name="PassaTurno" type="Button" parent="HUD"]
-offset_left = 846.0
-offset_top = 984.0
-offset_right = 953.0
-offset_bottom = 1015.0
+[node name="UIMainContainer" type="Control" parent="HUD"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 788.0
+offset_top = 958.0
+offset_right = 828.0
+offset_bottom = 998.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HUD/UIMainContainer"]
+layout_mode = 0
+offset_top = 8.0
+offset_right = 466.0
+offset_bottom = 40.0
+
+[node name="PassaTurno" type="Button" parent="HUD/UIMainContainer/HBoxContainer"]
+layout_mode = 2
 action_mode = 0
 text = "Passa Turno "
 
-[node name="SwapButton" type="Button" parent="HUD"]
-offset_left = 978.0
-offset_top = 984.0
-offset_right = 1052.0
-offset_bottom = 1015.0
+[node name="SwapButton" type="Button" parent="HUD/UIMainContainer/HBoxContainer"]
+layout_mode = 2
 action_mode = 0
 text = "Scambia"
 
-[node name="SwapToDeck" type="Button" parent="HUD"]
-offset_left = 972.0
-offset_top = 932.0
-offset_right = 1119.0
-offset_bottom = 969.0
+[node name="SwapToDeck" type="Button" parent="HUD/UIMainContainer/HBoxContainer"]
+layout_mode = 2
 text = "Mazziere Scambio"
 
-[node name="PassAsDealer" type="Button" parent="HUD"]
-offset_left = 831.0
-offset_top = 931.0
-offset_right = 957.0
-offset_bottom = 968.0
+[node name="PassAsDealer" type="Button" parent="HUD/UIMainContainer/HBoxContainer"]
+layout_mode = 2
 text = "Mazziere Passa"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="HUD/UIMainContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = -0.7
+anchor_right = 5.117
+offset_left = -774.0
+offset_top = -50.0
+offset_right = -592.68
+offset_bottom = 58.0
+
+[node name="Player0_Lives" type="Label" parent="HUD/UIMainContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="Player1_Lives" type="Label" parent="HUD/UIMainContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="Player2_Lives" type="Label" parent="HUD/UIMainContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="Player3_Lives" type="Label" parent="HUD/UIMainContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="LastHandDisplay" type="VBoxContainer" parent="HUD/UIMainContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 26.737
+anchor_top = -2.275
+anchor_right = 26.737
+anchor_bottom = -2.275
+offset_left = -130.48
+offset_top = -221.0
+offset_right = 112.52
+offset_bottom = 151.0
+
+[node name="P0_LastHand" type="HBoxContainer" parent="HUD/UIMainContainer/LastHandDisplay"]
+layout_mode = 2
+
+[node name="P0_LastHand_Label" type="Label" parent="HUD/UIMainContainer/LastHandDisplay/P0_LastHand"]
+layout_mode = 2
+text = "P0"
+
+[node name="P0_LastHand_Texture" type="TextureRect" parent="HUD/UIMainContainer/LastHandDisplay/P0_LastHand"]
+custom_minimum_size = Vector2(60, 90)
+layout_mode = 2
+
+[node name="P1_LastHand" type="HBoxContainer" parent="HUD/UIMainContainer/LastHandDisplay"]
+layout_mode = 2
+
+[node name="P1_LastHand_Label" type="Label" parent="HUD/UIMainContainer/LastHandDisplay/P1_LastHand"]
+layout_mode = 2
+text = "P1"
+
+[node name="P1_LastHand_Texture" type="TextureRect" parent="HUD/UIMainContainer/LastHandDisplay/P1_LastHand"]
+custom_minimum_size = Vector2(60, 90)
+layout_mode = 2
+
+[node name="P2_LastHand" type="HBoxContainer" parent="HUD/UIMainContainer/LastHandDisplay"]
+layout_mode = 2
+
+[node name="P2_LastHand_Label" type="Label" parent="HUD/UIMainContainer/LastHandDisplay/P2_LastHand"]
+layout_mode = 2
+text = "P2"
+
+[node name="P3_LastHand_Texture" type="TextureRect" parent="HUD/UIMainContainer/LastHandDisplay/P2_LastHand"]
+custom_minimum_size = Vector2(60, 90)
+layout_mode = 2
+
+[node name="P3_LastHand" type="HBoxContainer" parent="HUD/UIMainContainer/LastHandDisplay"]
+layout_mode = 2
+
+[node name="P3_LastHand_Label" type="Label" parent="HUD/UIMainContainer/LastHandDisplay/P3_LastHand"]
+layout_mode = 2
+text = "P3"
+
+[node name="P3_LastHand_Texture" type="TextureRect" parent="HUD/UIMainContainer/LastHandDisplay/P3_LastHand"]
+custom_minimum_size = Vector2(60, 90)
+layout_mode = 2
 
 [node name="CardVisual" type="Sprite3D" parent="."]
 
@@ -110,7 +193,7 @@ transform = Transform3D(0.998637, -0.0521965, 0, 0.0521965, 0.998637, 0, 0, 0, 1
 shape = SubResource("BoxShape3D_3pf80")
 
 [connection signal="ready" from="." to="GameManager" method="_on_game_table_ready"]
-[connection signal="pressed" from="HUD/PassaTurno" to="GameManager" method="_on_pass_turn_button_pressed"]
-[connection signal="pressed" from="HUD/SwapButton" to="GameManager" method="_on_swap_button_pressed"]
-[connection signal="pressed" from="HUD/SwapToDeck" to="GameManager" method="_on_swap_to_deck_pressed"]
-[connection signal="pressed" from="HUD/PassAsDealer" to="GameManager" method="_on_pass_as_dealer_pressed"]
+[connection signal="pressed" from="HUD/UIMainContainer/HBoxContainer/PassaTurno" to="GameManager" method="_on_pass_turn_button_pressed"]
+[connection signal="pressed" from="HUD/UIMainContainer/HBoxContainer/SwapButton" to="GameManager" method="_on_swap_button_pressed"]
+[connection signal="pressed" from="HUD/UIMainContainer/HBoxContainer/SwapToDeck" to="GameManager" method="_on_swap_to_deck_pressed"]
+[connection signal="pressed" from="HUD/UIMainContainer/HBoxContainer/PassAsDealer" to="GameManager" method="_on_pass_as_dealer_pressed"]
