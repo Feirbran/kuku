@@ -26,7 +26,10 @@ size = Vector3(0.121094, 0.262756, 0.236023)
 
 [node name="GameTable" type="Node3D"]
 
-[node name="GameManager" type="Node3D" parent="." node_paths=PackedStringArray("swap_button", "pass_button", "swap_to_deck_button", "pass_as_dealer_button", "player_lives_labels", "last_hand_labels", "last_hand_textures")]
+[node name="DeckPositionMarker" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00376326, 0.00255762, 0)
+
+[node name="GameManager" type="Node3D" parent="." node_paths=PackedStringArray("swap_button", "pass_button", "swap_to_deck_button", "pass_as_dealer_button", "player_lives_labels", "last_hand_labels", "last_hand_textures", "deck_position_marker")]
 script = ExtResource("1_fukfw")
 card_scene = ExtResource("2_qffgw")
 swap_button = NodePath("../HUD/UIMainContainer/HBoxContainer/SwapButton")
@@ -35,7 +38,8 @@ swap_to_deck_button = NodePath("../HUD/UIMainContainer/HBoxContainer/SwapToDeck"
 pass_as_dealer_button = NodePath("../HUD/UIMainContainer/HBoxContainer/PassAsDealer")
 player_lives_labels = [NodePath("../HUD/UIMainContainer/HBoxContainer2/Player0_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player1_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player2_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player3_Lives")]
 last_hand_labels = [NodePath("../HUD/UIMainContainer/LastHandDisplay/P0_LastHand/P0_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P1_LastHand/P1_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P2_LastHand/P2_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P3_LastHand/P3_LastHand_Label")]
-last_hand_textures = [NodePath("../HUD/UIMainContainer/LastHandDisplay/P0_LastHand/P0_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P1_LastHand/P1_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P2_LastHand/P3_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P3_LastHand/P3_LastHand_Texture")]
+last_hand_textures = [NodePath("../HUD/UIMainContainer/LastHandDisplay/P0_LastHand/P0_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P1_LastHand/P1_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P2_LastHand/P2_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P3_LastHand/P3_LastHand_Texture")]
+deck_position_marker = NodePath("../DeckPositionMarker")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-0.999986, -0.00135519, 0.00505762, 0, 0.965926, 0.258819, -0.00523604, 0.258815, -0.965913, 0.006, 1.5, -7)
@@ -107,12 +111,11 @@ text = "Mazziere Passa"
 [node name="HBoxContainer2" type="HBoxContainer" parent="HUD/UIMainContainer"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = -0.7
-anchor_right = 5.117
-offset_left = -774.0
-offset_top = -50.0
-offset_right = -592.68
-offset_bottom = 58.0
+anchor_left = -19.35
+anchor_top = -1.95
+anchor_right = -9.7
+anchor_bottom = 1.45
+offset_right = 3.05176e-05
 
 [node name="Player0_Lives" type="Label" parent="HUD/UIMainContainer/HBoxContainer2"]
 layout_mode = 2
@@ -167,7 +170,7 @@ layout_mode = 2
 layout_mode = 2
 text = "P2"
 
-[node name="P3_LastHand_Texture" type="TextureRect" parent="HUD/UIMainContainer/LastHandDisplay/P2_LastHand"]
+[node name="P2_LastHand_Texture" type="TextureRect" parent="HUD/UIMainContainer/LastHandDisplay/P2_LastHand"]
 custom_minimum_size = Vector2(60, 90)
 layout_mode = 2
 
@@ -183,6 +186,7 @@ custom_minimum_size = Vector2(60, 90)
 layout_mode = 2
 
 [node name="CardVisual" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.0712711, 0.997457, 0, -0.997457, 0.0712711, 0, -0.00125334, 0.00763856)
 
 [node name="CardAnimator" type="AnimationPlayer" parent="."]
 
