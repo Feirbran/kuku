@@ -26,11 +26,13 @@ size = Vector3(0.121094, 0.262756, 0.236023)
 
 [node name="GameTable" type="Node3D"]
 
-[node name="GameManager" type="Node3D" parent="." node_paths=PackedStringArray("swap_button", "pass_button")]
+[node name="GameManager" type="Node3D" parent="." node_paths=PackedStringArray("swap_button", "pass_button", "swap_to_deck_button", "pass_as_dealer_button")]
 script = ExtResource("1_fukfw")
 card_scene = ExtResource("2_qffgw")
 swap_button = NodePath("../HUD/SwapButton")
 pass_button = NodePath("../HUD/PassaTurno")
+swap_to_deck_button = NodePath("../HUD/SwapToDeck")
+pass_as_dealer_button = NodePath("../HUD/PassAsDealer")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-0.978509, -0.0932939, 0.183892, 0, 0.891798, 0.452435, -0.206204, 0.442711, -0.872632, 1.04543, 1.66749, -5.94828)
@@ -82,6 +84,20 @@ offset_bottom = 1015.0
 action_mode = 0
 text = "Scambia"
 
+[node name="SwapToDeck" type="Button" parent="HUD"]
+offset_left = 972.0
+offset_top = 932.0
+offset_right = 1119.0
+offset_bottom = 969.0
+text = "Mazziere Scambio"
+
+[node name="PassAsDealer" type="Button" parent="HUD"]
+offset_left = 831.0
+offset_top = 931.0
+offset_right = 957.0
+offset_bottom = 968.0
+text = "Mazziere Passa"
+
 [node name="CardVisual" type="Sprite3D" parent="."]
 
 [node name="CardAnimator" type="AnimationPlayer" parent="."]
@@ -95,3 +111,5 @@ shape = SubResource("BoxShape3D_3pf80")
 [connection signal="ready" from="." to="GameManager" method="_on_game_table_ready"]
 [connection signal="pressed" from="HUD/PassaTurno" to="GameManager" method="_on_pass_turn_button_pressed"]
 [connection signal="pressed" from="HUD/SwapButton" to="GameManager" method="_on_swap_button_pressed"]
+[connection signal="pressed" from="HUD/SwapToDeck" to="GameManager" method="_on_swap_to_deck_pressed"]
+[connection signal="pressed" from="HUD/PassAsDealer" to="GameManager" method="_on_pass_as_dealer_pressed"]
