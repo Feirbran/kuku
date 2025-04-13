@@ -14,6 +14,7 @@ class_name GameManager
 @export var last_hand_labels: Array[Label]			# Opzionale: Array per Label nomi ultima mano (Size 4)
 @export var last_hand_textures: Array[TextureRect]	# Array per TextureRect ultima mano (Size 4)
 @export var deck_position_marker: Marker3D			# Marker per posizione mazzo centrale
+@export var notification_popup_scene: PackedScene # Scena per il popup "Cucù" (Blocco Re)
 # --- Fine Export ---
 
 var player_positions_node: Node3D = null
@@ -23,7 +24,8 @@ var current_player_index: int = 0
 var players_data: Array[Dictionary] = []
 var active_card_instances: Array[CardVisual] = []
 var last_clicked_player_index: int = -1
-var deck_visual_instance: Node3D = null # Nodo per visual mazzo centrale
+const DECK_STACK_COUNT = 5 # Quante carte "visive" per la pila (puoi aggiustare 3, 5, 7...)
+var deck_visual_instances: Array[Node3D] = [] # Array per contenere le istanze della pila
 
 enum GameState { SETUP, DEALING, PLAYER_TURN, DEALER_SWAP, REVEALING, END_ROUND, GAME_OVER }
 var current_state: GameState = GameState.SETUP
@@ -40,7 +42,24 @@ func _ready():
 	# Controllo label vite (opzionale)
 	if player_lives_labels.size() != num_players and player_lives_labels.size() > 0:
 		printerr("!!! ATTENZIONE: Numero Label vite (%d) non corrisponde a num_players (%d)!" % [player_lives_labels.size(), num_players])
+ # Inizializza il generatore di numeri casuali (fallo solo una volta)
+	randomize()
 
+	# --- Controlli essenziali all'avvio (codice esistente) ---
+	if card_scene == null: printerr("!!! ERRORE: 'Card Scene' non assegnata!"); get_tree().quit(); return
+	# ... (altri controlli in _ready) ...
+
+	# --- Recupero PlayerPositions (codice esistente) ---
+	player_positions_node = get_node_or_null("../PlayerPositions") # Adatta path se necessario
+	if player_positions_node == null: printerr("!!! ERRORE: Impossibile trovare PlayerPositions!"); get_tree().quit(); return
+
+	print("+++ GameManager pronto +++")
+
+	# --- CREA VISUALE MAZZO (codice esistente) ---
+	# ... (codice per creare la pila del mazzo) ...
+
+	# --- Avvio gioco (codice esistente) ---
+	call_deferred("start_game", num_players)
 	# Controllo marker mazzo
 	if deck_position_marker == null:
 		printerr("!!! ATTENZIONE: 'Deck Position Marker' non assegnato nell'Inspector!")
@@ -51,56 +70,162 @@ func _ready():
 	print("+++ GameManager pronto +++")
 
 	# --- CREA VISUALE MAZZO (se possibile) ---
+	# Pulisci vecchie istanze (ora dall'array) se presenti da esecuzioni precedenti in editor?
+	for instance in deck_visual_instances:
+		if is_instance_valid(instance):
+			instance.queue_free()
+	deck_visual_instances.clear() # Svuota l'array
+
+	# Crea la pila visuale del mazzo se il marker è valido
 	if is_instance_valid(deck_position_marker) and card_scene != null:
-		if is_instance_valid(deck_visual_instance): deck_visual_instance.queue_free() # Libera vecchia
-		deck_visual_instance = card_scene.instantiate()
-		if deck_visual_instance is CardVisual:
-			var visual = deck_visual_instance as CardVisual
-			add_child(visual)
-			visual.global_transform = deck_position_marker.global_transform
-			visual.position.y += 0.01 # Offset Y
-			visual.show_back()
-			visual.set_physics_active(false)
-			print("Visuale mazzo creata.")
-		else:
-			printerr("ERRORE: Impossibile istanziare visuale mazzo come CardVisual."); deck_visual_instance = null
+		print("Creazione pila mazzo (%d istanze)..." % DECK_STACK_COUNT)
+		# Ciclo per creare N istanze una sopra l'altra
+		for i in range(DECK_STACK_COUNT):
+			var instance = card_scene.instantiate() # Istanzia una carta visuale
+			if instance is CardVisual:
+				var visual = instance as CardVisual
+				add_child(visual) # Aggiungi come figlio di GameManager
+
+				# Imposta posizione base dal marker
+				visual.global_position = deck_position_marker.global_position
+				# Applica offset verticale CRESCENTE per creare la pila
+				# Aggiusta il moltiplicatore (es. 0.002 o 0.003) per cambiare la spaziatura
+				visual.global_position.y += 0.01 + i * 0.002
+
+				# Applica la rotazione che hai trovato funzionare per sdraiarla!
+				# Assicurati sia corretta (es. X=90, Y=90, Z=0?)
+				visual.rotation_degrees = Vector3(90, 90, 0) # <-- USA LA TUA ROTAZIONE!
+
+				visual.show_back() # Mostra dorso
+				visual.set_physics_active(false) # Non cliccabile
+				deck_visual_instances.append(visual) # Aggiungi all'array
+			else:
+				# Gestione errore se l'istanza non è del tipo giusto
+				printerr("ERRORE: Istanza %d non è CardVisual." % i)
+				if is_instance_valid(instance): instance.queue_free() # Pulisci istanza fallita
+
+		# Controlla se sono state create istanze valide
+		if not deck_visual_instances.is_empty(): print("Visuale mazzo (pila) creata.")
+		else: printerr("ERRORE: Nessuna istanza valida creata per la pila del mazzo.")
+	elif not is_instance_valid(deck_position_marker):
+		printerr("ERRORE: deck_position_marker non valido in _ready!") # Log se marker non valido
 	# --- FINE CREAZIONE VISUALE MAZZO ---
 
 	call_deferred("start_game", num_players)
 
+func _on_game_table_ready():
+	print("Segnale ready da GameTable ricevuto!")
+	# Aggiungi qui eventuale codice necessario
+	pass
 
 func start_game(p_num_players: int):
-	print("Richiesta partita con %d giocatori." % p_num_players); current_state = GameState.SETUP; num_players = p_num_players
-	_reset_game(); if players_data.is_empty(): printerr("Reset fallito."); return
-	dealer_index = 0; print("Inizio partita. Mazziere: %d" % dealer_index); call_deferred("_start_round")
+	print("Richiesta partita con %d giocatori." % p_num_players)
+	current_state = GameState.SETUP
+	num_players = p_num_players # Imposta num_players PRIMA di chiamare _reset_game
 
+	_reset_game() # Chiama il reset che ora popola players_data
 
+	# Controlla DOPO il reset se è andato a buon fine
+	if players_data.is_empty():
+		printerr("Reset fallito. players_data è ancora vuoto dopo _reset_game(). Controllare errori precedenti.")
+		return # Esce da start_game
+
+	# --- MODIFICA QUI: ASSEGNAZIONE MAZZIERE CASUALE ---
+	if num_players > 0:
+		dealer_index = randi() % num_players # Indice casuale da 0 a num_players-1
+	else:
+		dealer_index = 0 # Sicurezza nel caso improbabile che num_players sia 0
+		printerr("ATTENZIONE: num_players è 0 o meno in start_game!")
+
+	# Aggiorna il messaggio di log per riflettere la casualità
+	print("Inizio partita. Mazziere Casuale: Player %d" % dealer_index)
+	# ------------------------------------------------------
+
+	call_deferred("_start_round") # Usa call_deferred per assicurare che _ready sia completato
+	
 func _reset_game():
 	print("Resetting game...")
-	for card_instance in active_card_instances: if is_instance_valid(card_instance): card_instance.queue_free()
-	active_card_instances.clear(); players_data.clear()
-	if DeckSetupScene == null: printerr("ERRORE: DeckSetupScene non trovato!"); return
-	DeckSetupScene.reset_and_shuffle()
-	if not player_positions_node: printerr("ERRORE: player_positions_node è null!"); return
-	var available_spots = player_positions_node.get_child_count()
-	if num_players <= 0: num_players = min(1, available_spots); if num_players <= 0: return
-	if num_players > available_spots: num_players = available_spots
-	print("Inizializzazione di %d giocatori..." % num_players)
-	for i in range(num_players):
-		var player_marker = player_positions_node.get_child(i) as Marker3D
-		if not player_marker: printerr("ERRORE: Figlio %d non è Marker3D!" % i); continue
-		players_data.append({ "card_data": [], "lives": 5, "marker": player_marker, "visual_cards": [], "has_swapped_this_round": false, "is_cpu": (i != 0), "is_out": false, "last_card": null })
-	print("Giocatori inizializzati:", players_data.size())
+	# Pulisci istanze carte GIOCATORI (codice esistente OK)
+	for card_instance in active_card_instances:
+		if is_instance_valid(card_instance):
+			card_instance.queue_free()
+	active_card_instances.clear()
+	players_data.clear() # Svuota i dati vecchi
 
+	# --- NUOVO/MODIFICATO: Pulisci visuale mazzo (ARRAY) ---
+	for instance in deck_visual_instances: # Itera sull'array
+		if is_instance_valid(instance):
+			instance.queue_free() # Cancella ogni istanza
+	deck_visual_instances.clear() # Svuota l'array
+
+	# --- NUOVO: INIZIALIZZAZIONE DATI GIOCATORI ---
+	print("Inizializzazione dati per %d giocatori..." % num_players)
+	if not is_instance_valid(player_positions_node):
+		printerr("ERRORE CRITICO: PlayerPositions non valido durante il reset!")
+		# Non possiamo continuare senza posizioni, quindi players_data resterà vuoto
+		# e l'errore "Reset fallito" verrà giustamente stampato in start_game.
+		return # Esce dalla funzione _reset_game
+
+	var markers = player_positions_node.get_children()
+	if markers.size() < num_players:
+		printerr("ERRORE CRITICO: Non ci sono abbastanza Marker3D in PlayerPositions (%d) per %d giocatori!" % [markers.size(), num_players])
+		# Anche qui, non possiamo inizializzare correttamente.
+		return # Esce dalla funzione _reset_game
+
+	for i in range(num_players):
+		var player_marker = markers[i] if i < markers.size() else null
+		if not player_marker is Marker3D:
+			printerr("ATTENZIONE: Elemento %d in PlayerPositions non è un Marker3D!" % i)
+			player_marker = null # Non usare un nodo non valido
+
+		var new_player_data = {
+			"id": i,
+			"marker": player_marker, # Assegna il marker trovato (o null se c'è stato un problema)
+			"lives": 3, # Numero iniziale di vite (puoi cambiarlo)
+			"is_out": false,
+			"is_cpu": (i != 0), # Giocatore 0 è umano, gli altri CPU (puoi cambiarlo)
+			"card_data": [], # Array per i dati della carta (inizialmente vuoto)
+			"visual_cards": [], # Array per le istanze CardVisual (inizialmente vuoto)
+			"has_swapped_this_round": false,
+			"last_card": null # Carta tenuta alla fine del round precedente
+		}
+		players_data.append(new_player_data)
+
+	# Piccolo controllo per sicurezza
+	if players_data.size() != num_players:
+		printerr("ERRORE INASPETTATO: Dopo l'inizializzazione, players_data ha %d elementi invece di %d!" % [players_data.size(), num_players])
+		# Potrebbe indicare un problema nel loop sopra o nei controlli marker
+		# Non svuotiamo players_data qui, ma segnaliamo il problema grave.
+
+	print("Dati giocatori inizializzati. Numero elementi in players_data: %d" % players_data.size())
+	# --- FINE INIZIALIZZAZIONE DATI GIOCATORI ---
+
+	# Ora l'aggiornamento dell'UI può funzionare perché players_data è popolato
 	# Inizializza UI Vite
-	if player_lives_labels.size() == players_data.size():
+	if player_lives_labels.size() == players_data.size(): # Ora size() dovrebbe essere > 0
+		print("Aggiornamento label vite...")
 		for i in range(players_data.size()):
-			if is_instance_valid(player_lives_labels[i]): player_lives_labels[i].text = "Vite P%d: %d" % [i, players_data[i].lives]; player_lives_labels[i].visible = true
+			if is_instance_valid(player_lives_labels[i]):
+				player_lives_labels[i].text = "Vite P%d: %d" % [i, players_data[i].lives]
+				player_lives_labels[i].visible = true
+	elif player_lives_labels.size() > 0: # Logga solo se le label esistono ma non corrispondono
+		printerr("ATTENZIONE: Numero Label vite (%d) non corrisponde ai giocatori inizializzati (%d)!" % [player_lives_labels.size(), players_data.size()])
+
+
 	# Inizializza UI Ultima Mano
-	if last_hand_textures.size() == players_data.size():
+	if last_hand_textures.size() == players_data.size(): # Ora size() dovrebbe essere > 0
+		print("Resetting UI ultima mano...")
 		for i in range(last_hand_textures.size()):
-			if is_instance_valid(last_hand_textures[i]): last_hand_textures[i].visible = false
-			if i < last_hand_labels.size() and is_instance_valid(last_hand_labels[i]): last_hand_labels[i].text = "P%d:" % i
+			if is_instance_valid(last_hand_textures[i]):
+				last_hand_textures[i].visible = false
+			# Assicurati che l'indice sia valido anche per l'array delle label nomi
+			if i < last_hand_labels.size() and is_instance_valid(last_hand_labels[i]):
+				last_hand_labels[i].text = "P%d:" % i # Resetta anche il nome
+	elif last_hand_textures.size() > 0: # Logga solo se le texture esistono ma non corrispondono
+		printerr("ATTENZIONE: Numero TextureRect ultima mano (%d) non corrisponde ai giocatori inizializzati (%d)!" % [last_hand_textures.size(), players_data.size()])
+
+	# Aggiungiamo un print finale per confermare che _reset_game è completato
+	print("Reset game completato. Players_data size: %d" % players_data.size())
 
 
 # --- Gestione Round ---
@@ -191,84 +316,240 @@ func _on_pass_as_dealer_pressed():
 	if current_state == GameState.DEALER_SWAP and current_player_index == 0 and not players_data[0].is_cpu:
 		print("Bottone 'Passa (Mazziere)' premuto."); _dealer_action("pass")
 	else: print("   -> Azione 'Passa (Mazziere)' non valida ora.")
-func _on_card_clicked(card_visual: CardVisual): print("Click su carta ignorato (usare bottoni).")
+func _on_card_clicked(_card_visual: CardVisual): print("Click su carta ignorato (usare bottoni).")
 
 # --- Azioni Gioco (Logica Interna) ---
+#AZIONI GIOCATORE UMANO
 func _player_action(player_index: int, action: String, target_player_index: int = -1):
-	if player_index < 0 or player_index >= players_data.size() or players_data[player_index].is_out: return
-	if players_data[player_index].has_swapped_this_round: return
+	if player_index < 0 or player_index >= players_data.size() or players_data[player_index].is_out:
+		print("Azione annullata: Giocatore %d non valido o fuori." % player_index)
+		return
+	if players_data[player_index].has_swapped_this_round:
+		print("Azione annullata: Giocatore %d ha già agito." % player_index)
+		return # Già agito
+
 	var my_card: CardData = _get_valid_carddata_from_player(player_index, "_pa my")
-	var performed_action = false
+	if my_card == null:
+		printerr("ERRORE CRITICO (_player_action): Giocatore %d non ha dati carta validi!" % player_index)
+		# Forse forzare un 'hold' o gestire l'errore in modo più robusto?
+		# Per ora, terminiamo l'azione per evitare crash.
+		return
+
+	var performed_action = false # Flag per sapere se avanzare il turno
+
 	if action == "swap":
-		var target_card: CardData = null
-		if target_player_index < 0 or target_player_index >= players_data.size() or players_data[target_player_index].is_out or target_player_index == player_index:
-			printerr("ERRORE: Target scambio non valido: %d" % target_player_index)
+		# --- CONTROLLO 1: Non puoi scambiare SE HAI il Re ---
+		if my_card.rank_name == "K":
+			print("Player %d ha il Re (K)! Non può scambiare. Azione forzata a 'hold'." % player_index)
+			action = "hold" # Forza l'azione a tenere la carta
 		else:
-			target_card = _get_valid_carddata_from_player(target_player_index, "_pa target")
-			if my_card == null or target_card == null: printerr("ERRORE: Dati carta mancanti!")
-			# --- CONTROLLO RE VA QUI ---
-			# elif my_card.rank_name == "K": print("Hai Re, non puoi."); return
-			# elif target_card.rank_name == "K": print("Target ha Re, non puoi."); return
+			# Prosegui solo se non hai il Re
+			var target_card: CardData = null
+			# Controlla se il target è valido
+			if target_player_index < 0 or target_player_index >= players_data.size() or players_data[target_player_index].is_out or target_player_index == player_index:
+				printerr("ERRORE: Target scambio non valido: %d" % target_player_index)
+				# Se il target non è valido, l'azione di scambio fallisce, ma il giocatore deve comunque passare?
+				# Decidiamo che se il target è invalido, il giocatore passa automaticamente.
+				action = "hold"
 			else:
-				print("Player %d scambia con %d" % [player_index, target_player_index])
-				players_data[player_index].card_data[0] = target_card
-				players_data[target_player_index].card_data[0] = my_card
-				_update_player_card_visuals(player_index); _update_player_card_visuals(target_player_index)
-				players_data[player_index].has_swapped_this_round = true; performed_action = true
-	elif action == "hold":
-		print("Player %d tiene la carta." % player_index)
-		players_data[player_index].has_swapped_this_round = true; performed_action = true
-	if performed_action:
-		if player_index == 0: _update_player_action_buttons()
-		# --- GESTIONE EFFETTO CAVALLO (Q) MANCANTE ---
-		call_deferred("_advance_turn")
-func _dealer_action(action: String):
-	if dealer_index < 0 or dealer_index >= players_data.size() or players_data[dealer_index].is_out: call_deferred("_end_round"); return
-	if action == "swap_deck":
-		if DeckSetupScene == null or DeckSetupScene.cards_remaining() <= 0:
-			print("Mazzo vuoto (%d carte)." % DeckSetupScene.cards_remaining()); action = "pass"
-		else:
-			var discarded_card: CardData = _get_valid_carddata_from_player(dealer_index, "_da discard")
-			if discarded_card == null: printerr("ERRORE: Dati mazziere corrotti!"); action = "pass"
-			# --- CONTROLLO RE MAZZIERE MANCANTE ---
-			# elif discarded_card.rank_name == "K": print("Mazziere ha Re, non scambia."); action = "pass"
-			else:
-				print("Mazziere (%d) scambia col mazzo." % dealer_index); players_data[dealer_index].card_data.pop_front()
-				var new_card: CardData = DeckSetupScene.draw_card()
-				if new_card == null: printerr("ERRORE: Mazzo finito!"); players_data[dealer_index].card_data.append(discarded_card); action = "pass"
-				elif not new_card is CardData: printerr("ERRORE: Mazzo tipo non valido!"); players_data[dealer_index].card_data.append(discarded_card); action = "pass"
+				target_card = _get_valid_carddata_from_player(target_player_index, "_pa target")
+				if target_card == null:
+					printerr("ERRORE CRITICO (_player_action): Giocatore target %d non ha dati carta validi!" % target_player_index)
+					# Anche qui, forziamo hold per sicurezza
+					action = "hold"
+				# --- CONTROLLO 2: Non puoi scambiare SE IL TARGET HA il Re ---
+				elif target_card.rank_name == "K": # Blocco perché il TARGET ha il Re
+					print("Tentativo di scambio fallito! Player %d ha il Re (K)." % target_player_index)
+					players_data[player_index].has_swapped_this_round = true
+					performed_action = true
+
+					# --- AGGIUNTA CHIAMATA UI ---
+					_show_cucu_king_notification(target_player_index)
+					# --- FINE AGGIUNTA ---
 				else:
-					if DeckSetupScene.has_method("discard_card"): DeckSetupScene.discard_card(discarded_card)
-					players_data[dealer_index].card_data.append(new_card); _update_player_card_visuals(dealer_index)
-	if action == "pass": print("Mazziere (%d) non scambia." % dealer_index)
-	_update_deck_visual(); _update_player_action_buttons(); call_deferred("_end_round")
+					# --- SCAMBIO EFFETTIVO --- (Solo se entrambi i controlli Re passano)
+					print("Player %d scambia con %d" % [player_index, target_player_index])
+					# Esegui lo scambio dei dati carta
+					players_data[player_index].card_data[0] = target_card
+					players_data[target_player_index].card_data[0] = my_card
+					# Aggiorna la visuale per entrambi
+					_update_player_card_visuals(player_index)
+					_update_player_card_visuals(target_player_index)
+					players_data[player_index].has_swapped_this_round = true # Scambio avvenuto
+					performed_action = true
+					# --- Qui andrà la logica del Cavallo (Q) se lo scambio avviene ---
+
+	# Se l'azione (originale o forzata) è "hold"
+	if action == "hold":
+		print("Player %d tiene la carta." % player_index)
+		players_data[player_index].has_swapped_this_round = true # Passare conta come azione
+		performed_action = true
+
+	# Avanza il turno solo se un'azione valida (o un tentativo fallito ma valido) è stata eseguita
+	if performed_action:
+		# Aggiorna i bottoni se è il giocatore umano
+		if player_index == 0:
+			call_deferred("_update_player_action_buttons") # Defer per sicurezza
+
+		# --- GESTIONE EFFETTO CAVALLO (Q) MANCANTE --- (Andrà qui, controllando my_card/target_card se c'è stato scambio)
+
+		call_deferred("_advance_turn") # Avanza al prossimo giocatore
+	else:
+		# Questo non dovrebbe accadere se la logica sopra è corretta, ma è una sicurezza
+		printerr("ATTENZIONE (_player_action): Nessuna azione eseguita per player %d. Controllare logica." % player_index)
+
+#AZIONI MAZZIERE
+func _dealer_action(action: String):
+	# Validazione iniziale mazziere
+	if dealer_index < 0 or dealer_index >= players_data.size() or players_data[dealer_index].is_out:
+		printerr("Azione mazziere annullata: Indice %d non valido o fuori." % dealer_index)
+		call_deferred("_end_round") # Termina il round se il mazziere non è valido
+		return
+
+	var dealer_card: CardData = _get_valid_carddata_from_player(dealer_index, "_da get")
+	if dealer_card == null:
+		printerr("ERRORE CRITICO (_dealer_action): Mazziere %d non ha dati carta validi!" % dealer_index)
+		action = "pass" # Forza 'pass' se mancano i dati
+
+	# Se l'azione è scambiare col mazzo...
+	if action == "swap_deck":
+		# --- CONTROLLO RE MAZZIERE ---
+		if dealer_card != null and dealer_card.rank_name == "K":
+			print("Mazziere (%d) ha il Re (K)! Non può scambiare col mazzo. Azione forzata a 'pass'." % dealer_index)
+			action = "pass" # Forza l'azione a passare
+		else:
+			# Prosegui solo se il mazziere non ha il Re
+			if DeckSetupScene == null or not DeckSetupScene.has_method("cards_remaining") or DeckSetupScene.cards_remaining() <= 0:
+				print("Mazzo vuoto o non accessibile. Mazziere (%d) passa." % dealer_index)
+				action = "pass" # Forza 'pass' se il mazzo è vuoto/invalido
+			else:
+				# --- SCAMBIO EFFETTIVO COL MAZZO ---
+				# Rimuovi la carta vecchia (già recuperata in dealer_card)
+				players_data[dealer_index].card_data.pop_front() # Assumendo ci sia sempre una sola carta
+
+				# Pesca la nuova
+				var new_card: CardData = DeckSetupScene.draw_card()
+
+				# Controlli sulla carta pescata
+				if new_card == null:
+					printerr("ERRORE: Mazzo finito durante lo scambio del mazziere!")
+					# Rimetto la vecchia carta al mazziere per sicurezza
+					players_data[dealer_index].card_data.append(dealer_card)
+					action = "pass" # Fallback a passare
+				elif not new_card is CardData:
+					printerr("ERRORE: Mazzo ha restituito un tipo non valido!")
+					# Rimetto la vecchia carta al mazziere per sicurezza
+					players_data[dealer_index].card_data.append(dealer_card)
+					action = "pass" # Fallback a passare
+				else:
+					# Scambio riuscito
+					print("Mazziere (%d) scambia col mazzo. Scarta %s, Pesca %s." % [dealer_index, get_card_name(dealer_card), get_card_name(new_card)])
+					# Aggiungi la nuova carta ai dati del mazziere
+					players_data[dealer_index].card_data.append(new_card)
+					# Aggiorna la visuale del mazziere
+					_update_player_card_visuals(dealer_index)
+					# Scarta la vecchia nel mazzo degli scarti (se esiste la funzione)
+					if DeckSetupScene.has_method("discard_card"):
+						DeckSetupScene.discard_card(dealer_card)
+
+					# L'azione "swap_deck" è completata con successo qui.
+
+	# Se l'azione (originale o forzata) è "pass"
+	if action == "pass":
+		print("Mazziere (%d) non scambia (passa)." % dealer_index)
+		# Nessuna modifica alle carte richiesta
+
+	# Azioni finali comuni ad entrambi i casi (swap o pass)
+	_update_deck_visual() # Aggiorna la visuale del mazzo (potrebbe essere cambiata)
+	_update_player_action_buttons() # Nascondi i bottoni azione
+	call_deferred("_end_round") # Passa alla fase di fine round
+
+func _make_cpu_dealer_turn():
+	# Controlli iniziali validità stato e giocatore
+	if current_state != GameState.DEALER_SWAP or current_player_index != dealer_index or current_player_index < 0 or current_player_index >= players_data.size() or not players_data[dealer_index].is_cpu or players_data[dealer_index].is_out:
+		return # Esce se non è il turno della CPU mazziere valida
+
+	var cpu_dealer_index = dealer_index
+	print("CPU Mazziere (%d) pensa..." % cpu_dealer_index)
+	if get_tree(): # Aggiunto controllo esistenza albero scene
+		await get_tree().create_timer(randf_range(0.8, 1.5)).timeout
+
+	var card_to_evaluate: CardData = _get_valid_carddata_from_player(cpu_dealer_index, "_mcdt")
+	if card_to_evaluate == null:
+		printerr("ERRORE (_make_cpu_dealer_turn): CPU Mazziere %d non ha dati carta validi!" % cpu_dealer_index)
+		_dealer_action("pass") # Passa per sicurezza
+		return
+
+	var my_card_value = get_card_value(card_to_evaluate)
+	# Controllo disponibilità mazzo migliorato
+	var deck_available = (DeckSetupScene != null and DeckSetupScene.has_method("cards_remaining") and DeckSetupScene.cards_remaining() > 0)
+
+	var should_swap_deck = false
+	# --- CONTROLLO RE CPU MAZZIERE ---
+	if card_to_evaluate.rank_name == "K":
+		print("CPU Mazziere (%d) ha il Re (K). Non scambia col mazzo." % cpu_dealer_index)
+		should_swap_deck = false # Non scambiare MAI col mazzo se hai il Re
+	elif not deck_available:
+		print("CPU Mazziere (%d) non può scambiare (mazzo vuoto/invalido)." % cpu_dealer_index)
+		should_swap_deck = false # Non può scambiare se il mazzo non è disponibile
+	# Logica di scambio (semplice: scambia se la carta è <= 4 e il mazzo è disponibile)
+	elif my_card_value <= 4:
+		print("CPU Mazziere (%d) ha carta bassa (%d) e mazzo disponibile. Scambia col mazzo." % [cpu_dealer_index, my_card_value])
+		should_swap_deck = true
+	else:
+		print("CPU Mazziere (%d) ha carta alta (%d) o mazzo non disponibile. Passa." % [cpu_dealer_index, my_card_value])
+		should_swap_deck = false
+
+	# Esegui l'azione decisa
+	if should_swap_deck:
+		_dealer_action("swap_deck")
+	else:
+		_dealer_action("pass")
 
 # --- Logica CPU ---
 func _make_cpu_turn():
-	if current_state != GameState.PLAYER_TURN or current_player_index < 0 or current_player_index >= players_data.size() or not players_data[current_player_index].is_cpu or players_data[current_player_index].is_out: return
-	var cpu_player_index = current_player_index
-	print("CPU (%d) pensa..." % cpu_player_index); if get_tree(): await get_tree().create_timer(randf_range(0.8, 1.5)).timeout
-	var card_to_evaluate: CardData = _get_valid_carddata_from_player(cpu_player_index, "_mct")
-	if card_to_evaluate == null: _player_action(cpu_player_index, "hold"); return
-	var my_card_value = get_card_value(card_to_evaluate)
-	var target_player_index = get_player_to_left(cpu_player_index)
-	var should_swap = false
-	if my_card_value <= 5 and target_player_index != -1: should_swap = true # --- MANCA CONTROLLO RE ---
-	if should_swap: _player_action(cpu_player_index, "swap", target_player_index)
-	else: _player_action(cpu_player_index, "hold")
-func _make_cpu_dealer_turn():
-	if current_state != GameState.DEALER_SWAP or current_player_index != dealer_index or not players_data[dealer_index].is_cpu or players_data[dealer_index].is_out: return
-	var cpu_dealer_index = dealer_index
-	print("CPU Mazziere (%d) pensa..." % cpu_dealer_index); if get_tree(): await get_tree().create_timer(randf_range(0.8, 1.5)).timeout
-	var card_to_evaluate: CardData = _get_valid_carddata_from_player(cpu_dealer_index, "_mcdt")
-	if card_to_evaluate == null: _dealer_action("pass"); return
-	var my_card_value = get_card_value(card_to_evaluate)
-	var deck_available = (DeckSetupScene != null and DeckSetupScene.cards_remaining() > 0)
-	var should_swap_deck = false
-	if my_card_value <= 4 and deck_available: should_swap_deck = true # --- MANCA CONTROLLO RE ---
-	if should_swap_deck: _dealer_action("swap_deck")
-	else: _dealer_action("pass")
+	# Controlli iniziali validità stato e giocatore
+	if current_state != GameState.PLAYER_TURN or current_player_index < 0 or current_player_index >= players_data.size() or not players_data[current_player_index].is_cpu or players_data[current_player_index].is_out:
+		return # Esce se non è il turno di una CPU valida
 
+	var cpu_player_index = current_player_index
+	print("CPU (%d) pensa..." % cpu_player_index)
+	if get_tree(): # Aggiunto controllo esistenza albero scene
+		await get_tree().create_timer(randf_range(0.8, 1.5)).timeout
+
+	var card_to_evaluate: CardData = _get_valid_carddata_from_player(cpu_player_index, "_mct")
+	if card_to_evaluate == null:
+		printerr("ERRORE (_make_cpu_turn): CPU %d non ha dati carta validi!" % cpu_player_index)
+		_player_action(cpu_player_index, "hold") # Passa per sicurezza
+		return
+
+	var my_card_value = get_card_value(card_to_evaluate)
+	var target_player_index = get_player_to_left(cpu_player_index) # Confermiamo: scambia a SINISTRA
+
+	var should_swap = false
+	# --- CONTROLLO RE CPU ---
+	if card_to_evaluate.rank_name == "K":
+		print("CPU (%d) ha il Re (K). Non scambia." % cpu_player_index)
+		should_swap = false # Non scambiare MAI se hai il Re
+	elif target_player_index == -1:
+		print("CPU (%d) non ha un target valido a sinistra. Passa." % cpu_player_index)
+		should_swap = false # Non può scambiare se non c'è un target
+	# Logica di scambio (semplice: scambia se la carta è <= 5)
+	elif my_card_value <= 5:
+		print("CPU (%d) ha carta bassa (%d). Tenta lo scambio con P%d." % [cpu_player_index, my_card_value, target_player_index])
+		should_swap = true
+		# NOTA: La CPU non sa se il target ha un Re. Tenterà lo scambio,
+		# ma sarà la funzione _player_action a bloccarlo se necessario.
+	else:
+		print("CPU (%d) ha carta alta (%d). Passa." % [cpu_player_index, my_card_value])
+		should_swap = false
+
+	# Esegui l'azione decisa
+	if should_swap:
+		_player_action(cpu_player_index, "swap", target_player_index)
+	else:
+		_player_action(cpu_player_index, "hold")
+		
 # --- Fine Round e Punteggio ---
 func _end_round():
 	if current_state == GameState.GAME_OVER: return
@@ -336,8 +617,28 @@ func _handle_game_over(active_count: int):
 
 # --- Funzioni Utilità Giocatori ---
 func get_player_to_left(player_index: int) -> int:
-	var current = player_index; var size = players_data.size(); if size <= 1: return -1
-	for _i in range(size): current = (current - 1 + size) % size; if current == player_index: return -1; if not players_data[current].is_out: return current
+	var size = players_data.size()
+	if size <= 1:
+		# print("DEBUG (get_left): Size <= 1, return -1") # Debug opzionale
+		return -1
+
+	var current = player_index
+	# Iteriamo al massimo 'size - 1' volte, perché non serve controllare subito il giocatore di partenza
+	for _i in range(size - 1):
+		current = (current - 1 + size) % size # Calcola indice a sinistra
+		# print("DEBUG (get_left): Checking index %d" % current) # Debug opzionale
+
+		# Controlliamo se l'indice è valido e se il giocatore non è fuori
+		# Aggiunto controllo 'has("is_out")' per sicurezza extra
+		if current < players_data.size() and players_data[current].has("is_out"):
+			if not players_data[current].is_out:
+				# print("DEBUG (get_left): Found active player %d, returning." % current) # Debug opzionale
+				return current # Trovato giocatore attivo
+			# else: print("DEBUG (get_left): Player %d is out." % current) # Debug opzionale
+		# else: print("DEBUG (get_left): Index %d invalid or missing 'is_out'." % current) # Debug opzionale
+
+	# Se il loop finisce, significa che non abbiamo trovato nessun altro giocatore attivo
+	# print("DEBUG (get_left): Loop finished, no active player found, return -1") # Debug opzionale
 	return -1
 func get_player_to_right(player_index: int) -> int:
 	# Aggiunto Debug dettagliato per chiarezza
@@ -412,45 +713,32 @@ func _update_player_card_visuals(player_index: int):
 	else: card_visual.show_back()
 
 # --- Funzione Aggiornamento Visual Mazzo ---
+# --- Funzione Aggiornamento Visual Mazzo (STACK) ---
 func _update_deck_visual():
-	# print("--- DEBUG: _update_deck_visual chiamato ---") # Rimuovi o commenta se non serve più
-	if not is_instance_valid(deck_visual_instance):
-		# print("  -> DEBUG: deck_visual_instance non è valido.")
+	# Se non abbiamo istanze nella pila, non fare nulla
+	if deck_visual_instances.is_empty():
+		# print("Nessuna istanza visuale per il mazzo.") # Debug opzionale
 		return
 
+	# Controlla quante carte reali sono rimaste
 	var cards_left = 0
 	if DeckSetupScene != null and DeckSetupScene.has_method("cards_remaining"):
 		cards_left = DeckSetupScene.cards_remaining()
-		# print("  -> DEBUG: DeckSetupScene.cards_remaining() = %d" % cards_left)
 	else:
-		printerr("ERRORE: Impossibile chiamare cards_remaining()!");
-		deck_visual_instance.visible = false
-		# print("  -> DEBUG: Errore accesso DeckSetupScene, visible = false")
+		printerr("ERRORE in _update_deck_visual: Impossibile chiamare cards_remaining()!")
+		# Nascondi tutte le istanze in caso di errore
+		for instance in deck_visual_instances:
+			if is_instance_valid(instance): instance.visible = false
 		return
 
-	# Mostra/Nascondi
-	deck_visual_instance.visible = (cards_left > 0)
-	# print("  -> DEBUG: Impostato deck_visual_instance.visible = %s" % deck_visual_instance.visible)
+	# Determina se la pila intera deve essere visibile
+	var show_stack = (cards_left > 0)
+	# Applica la visibilità a TUTTE le istanze nella pila
+	for instance in deck_visual_instances:
+		if is_instance_valid(instance):
+			instance.visible = show_stack
 
-	# --- NUOVA PARTE: SCALA Y PER SPESSORE ---
-	if deck_visual_instance.visible:
-		# Mappa il numero di carte (es. da 1 a 40) a una scala Y desiderata
-		# Esempio: scala da 0.05 (quasi piatto) a 0.5 (mezzo spessore di una carta standard?)
-		var min_scale_y = 0.05 # Scala minima con 1 carta
-		var max_scale_y = 0.5  # Scala massima con 40 carte
-		# Normalizza il conteggio carte (valore tra 0.0 e 1.0)
-		var normalized_count = clamp(float(cards_left) / 40.0, 0.0, 1.0)
-		# Calcola la scala Y interpolando linearmente
-		var target_scale_y = lerp(min_scale_y, max_scale_y, normalized_count)
-
-		# Applica la scala (assicurati che deck_visual_instance sia Node3D o discendente)
-		deck_visual_instance.scale.y = target_scale_y
-		# print("  -> DEBUG: Impostato deck_visual_instance.scale.y = %f" % target_scale_y) # Debug Scala
-	else:
-		# Opzionale: Resetta la scala quando è invisibile
-		deck_visual_instance.scale.y = 1.0
-		
-		
+	# --- OPZIONALE: Scalare o mostrare meno carte (COME PRIMA) ---
 # --- Funzione Aggiornamento Bottoni UI ---
 func _update_player_action_buttons():
 	# Assicura che le variabili export siano state assegnate nell'inspector
@@ -525,5 +813,89 @@ func _update_last_hand_display():
 			texture_rect.texture = null
 			texture_rect.visible = false
 			# if label: label.text += " -"
+# Funzione per mostrare la notifica "Cucù" (Blocco Re)
+# Funzione per mostrare la notifica "Cucù" (Blocco Re) - VERSIONE CON CANVASLAYER
+func _show_cucu_king_notification(king_holder_index: int):
+	# Controlla se la scena per il popup è stata assegnata nell'inspector
+	if notification_popup_scene == null:
+		printerr("ATTENZIONE: Notification Popup Scene non assegnata in GameManager!")
+		return
 
+	# --- TROVA IL CANVASLAYER ---
+	# ADATTA QUESTO PERCORSO al punto in cui hai messo il tuo CanvasLayer!
+	# Esempio: se UILayer è figlio di GameTable, che è fratello di GameManager:
+	var ui_layer_path = "res://scenes/NotificationPopup.tscn"
+	# Esempio: se UILayer è figlio della radice della scena e la radice è "/root/MainScene":
+	# var ui_layer_path = "/root/MainScene/UILayer"
+	# Trova il percorso corretto nella tua struttura di scena!
+	var ui_layer = get_node_or_null(ui_layer_path)
+
+	if ui_layer == null:
+		printerr("ERRORE CRITICO: Non trovo il nodo CanvasLayer a '%s'!" % ui_layer_path)
+		printerr("Assicurati di aver creato un CanvasLayer e che il percorso sia corretto.")
+		return # Non possiamo continuare senza il layer UI
+	# ---------------------------
+
+	# Istanzia la scena del popup
+	var popup_instance = notification_popup_scene.instantiate()
+
+	# --- AGGIUNGI AL CANVASLAYER ---
+	# Rimuovi la vecchia riga 'add_child(popup_instance)' se presente
+	ui_layer.add_child(popup_instance)
+	print("DEBUG: Aggiunto popup al nodo: %s" % ui_layer.name)
+	# ------------------------------
+
+	# --- Posizionamento (ora relativo al CanvasLayer/Viewport) ---
+	if popup_instance is Control:
+		var viewport_rect = get_viewport().get_visible_rect()
+		var popup_size = popup_instance.size # Potrebbe ancora servire min size
+		popup_instance.position = viewport_rect.position + viewport_rect.size / 2.0 - popup_size / 2.0
+		print("DEBUG: Posizionato popup (in UILayer) a ", popup_instance.position)
+	else:
+		print("DEBUG: L'istanza del popup non è un nodo Control, non posso centrarla automaticamente.")
+	# --------------------------------
+
+	# Prepara il messaggio da mostrare
+	var message = "CUCÙ!\nGiocatore %d è protetto dal Re!" % king_holder_index
+
+	# Chiama la funzione dello script del popup per mostrare il messaggio
+	if popup_instance.has_method("show_message"):
+		popup_instance.show_message(message, 2.5) # Mostra per 2.5 secondi
+	else:
+		printerr("ERRORE: Lo script di NotificationPopup.tscn non ha il metodo show_message()!")
+		# Rimuovi l'istanza se non funziona correttamente e pulisci
+		popup_instance.queue_free()
+
+
+	# --- DOVE AGGIUNGERE IL POPUP? ---
+	# Aggiungi l'istanza alla scena. Idealmente dovresti avere un nodo
+	# CanvasLayer dedicato alle UI per assicurarti che appaia sopra tutto.
+	# Se non ce l'hai, aggiungilo come figlio di GameManager.
+	# Esempio (se hai un CanvasLayer chiamato UILayer):
+	# var ui_layer = get_node_or_null("/root/GameTable/UILayer") # Adatta il percorso!
+	# if ui_layer:
+	#     ui_layer.add_child(popup_instance)
+	# else:
+	#     printerr("UILayer non trovato, aggiungo a GameManager.")
+	#     add_child(popup_instance) # Fallback: aggiungi a GameManager
+	add_child(popup_instance) # Semplificato: aggiungi come figlio di GameManager
+
+	# --- OPZIONALE: Posizionamento ---
+	# Se il tuo popup è un nodo Control, puoi provare a centrarlo.
+	if popup_instance is Control:
+		var viewport_rect = get_viewport().get_visible_rect()
+		# Calcola la posizione centrale. Potrebbe servire aggiustare se il pivot è diverso.
+		popup_instance.position = viewport_rect.size / 2 - popup_instance.size / 2
+		print("DEBUG: Posizionato popup a ", popup_instance.position)
+	# --------------------------------
+
+
+
+	# Chiama la funzione dello script del popup per mostrare il messaggio
+	if popup_instance.has_method("show_message"):
+		popup_instance.show_message(message, 2.5) # Mostra per 2.5 secondi
+	else:
+		printerr("ERRORE: Lo script di NotificationPopup.tscn non ha il metodo show_message()!")
+		popup_instance.queue_free() # Rimuovi se non funziona
+		
 #endregion

@@ -1,9 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://c0qs8vb56ouna"]
+[gd_scene load_steps=11 format=3 uid="uid://c0qs8vb56ouna"]
 
 [ext_resource type="Script" uid="uid://cd3sdqm1fs1h5" path="res://game_manager.gd" id="1_fukfw"]
 [ext_resource type="Texture2D" uid="uid://ba6453cmnqx4y" path="res://assets/images/Old_Plywood_vigjfivg_1K_BaseColor.jpg" id="2_3pf80"]
 [ext_resource type="PackedScene" uid="uid://p5gasx7vsgwh" path="res://scenes/CardVisual.tscn" id="2_qffgw"]
-[ext_resource type="PackedScene" uid="uid://cui5xuolpro1o" path="res://scenes/NotificationPopup.tscn" id="3_xv1iw"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qwkia"]
 
@@ -30,7 +29,7 @@ size = Vector3(0.121094, 0.262756, 0.236023)
 [node name="DeckPositionMarker" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.00376326, 0.00255762, 0)
 
-[node name="GameManager" type="Node3D" parent="." node_paths=PackedStringArray("swap_button", "pass_button", "swap_to_deck_button", "pass_as_dealer_button", "player_lives_labels", "last_hand_labels", "last_hand_textures", "deck_position_marker")]
+[node name="GameManager" type="Node3D" parent="." node_paths=PackedStringArray("swap_button", "pass_button", "swap_to_deck_button", "pass_as_dealer_button", "player_lives_labels", "last_hand_labels", "last_hand_textures", "effect_label", "deck_position_marker")]
 script = ExtResource("1_fukfw")
 card_scene = ExtResource("2_qffgw")
 swap_button = NodePath("../HUD/UIMainContainer/HBoxContainer/SwapButton")
@@ -40,8 +39,8 @@ pass_as_dealer_button = NodePath("../HUD/UIMainContainer/HBoxContainer/PassAsDea
 player_lives_labels = [NodePath("../HUD/UIMainContainer/HBoxContainer2/Player0_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player1_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player2_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player3_Lives")]
 last_hand_labels = [NodePath("../HUD/UIMainContainer/LastHandDisplay/P0_LastHand/P0_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P1_LastHand/P1_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P2_LastHand/P2_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P3_LastHand/P3_LastHand_Label")]
 last_hand_textures = [NodePath("../HUD/UIMainContainer/LastHandDisplay/P0_LastHand/P0_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P1_LastHand/P1_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P2_LastHand/P2_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P3_LastHand/P3_LastHand_Texture")]
+effect_label = NodePath("../HUD/EffectLabelKUKU")
 deck_position_marker = NodePath("../DeckPositionMarker")
-notification_popup_scene = ExtResource("3_xv1iw")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-0.999986, -0.00135519, 0.00505762, 0, 0.965926, 0.258819, -0.00523604, 0.258815, -0.965913, 0.006, 1.5, -7)

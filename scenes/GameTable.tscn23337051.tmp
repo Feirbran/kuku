@@ -30,16 +30,13 @@ size = Vector3(0.121094, 0.262756, 0.236023)
 [node name="DeckPositionMarker" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.00376326, 0.00255762, 0)
 
-[node name="GameManager" type="Node3D" parent="." node_paths=PackedStringArray("swap_button", "pass_button", "swap_to_deck_button", "pass_as_dealer_button", "player_lives_labels", "last_hand_labels", "last_hand_textures", "deck_position_marker")]
+[node name="GameManager" type="Node3D" parent="." node_paths=PackedStringArray("swap_button", "pass_button", "swap_to_deck_button", "pass_as_dealer_button", "deck_position_marker")]
 script = ExtResource("1_fukfw")
 card_scene = ExtResource("2_qffgw")
 swap_button = NodePath("../HUD/UIMainContainer/HBoxContainer/SwapButton")
 pass_button = NodePath("../HUD/UIMainContainer/HBoxContainer/PassaTurno")
 swap_to_deck_button = NodePath("../HUD/UIMainContainer/HBoxContainer/SwapToDeck")
 pass_as_dealer_button = NodePath("../HUD/UIMainContainer/HBoxContainer/PassAsDealer")
-player_lives_labels = [NodePath("../HUD/UIMainContainer/HBoxContainer2/Player0_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player1_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player2_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player3_Lives")]
-last_hand_labels = [NodePath("../HUD/UIMainContainer/LastHandDisplay/P0_LastHand/P0_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P1_LastHand/P1_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P2_LastHand/P2_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P3_LastHand/P3_LastHand_Label")]
-last_hand_textures = [NodePath("../HUD/UIMainContainer/LastHandDisplay/P0_LastHand/P0_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P1_LastHand/P1_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P2_LastHand/P2_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P3_LastHand/P3_LastHand_Texture")]
 deck_position_marker = NodePath("../DeckPositionMarker")
 notification_popup_scene = ExtResource("3_xv1iw")
 
