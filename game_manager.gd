@@ -272,7 +272,8 @@ func _deal_initial_cards():
 		players_data[i]["visual_cards"] = [card_instance]; active_card_instances.append(card_instance)
 		var card_position = player_marker.global_transform.origin + Vector3(0,0.5, 0)
 		card_instance.global_transform.origin = card_position
-		card_instance.look_at(main_camera.global_transform.origin, Vector3.UP); card_instance.rotation.x = deg_to_rad(-180)
+		card_instance.look_at(main_camera.global_transform.origin, Vector3.UP); card_instance.rotation.x = deg_to_rad(180)
+		card_instance.look_at(main_camera.global_transform.origin, Vector3.UP); card_instance.rotation.y = deg_to_rad(180)
 		
 		if i == 0: card_instance.show_front(); card_instance.set_physics_active(true)
 		else: card_instance.show_back(); card_instance.set_physics_active(false)
