@@ -14,7 +14,9 @@ class_name GameManager
 @export var last_hand_labels: Array[Label]			# Opzionale: Array per Label nomi ultima mano (Size 4)
 @export var last_hand_textures: Array[TextureRect]	# Array per TextureRect ultima mano (Size 4)
 @export var deck_position_marker: Marker3D			# Marker per posizione mazzo centrale
-@export var notification_popup_scene: PackedScene # Scena per il popup "Cucù" (Blocco Re)
+# REDATTO @export var notification_popup_scene: PackedScene # Scena per il popup "Cucù" (Blocco Re)
+@onready var cucu_notification_label: Label = %CucuNotificationLabel
+@onready var notification_timer: Timer = %NotificationTimer
 # --- Fine Export ---
 
 var player_positions_node: Node3D = null
@@ -29,7 +31,6 @@ var deck_visual_instances: Array[Node3D] = [] # Array per contenere le istanze d
 
 enum GameState { SETUP, DEALING, PLAYER_TURN, DEALER_SWAP, REVEALING, END_ROUND, GAME_OVER }
 var current_state: GameState = GameState.SETUP
-
 # Assicurati che DeckSetupScene sia un Autoload
 
 
@@ -44,6 +45,15 @@ func _ready():
 		printerr("!!! ATTENZIONE: Numero Label vite (%d) non corrisponde a num_players (%d)!" % [player_lives_labels.size(), num_players])
  # Inizializza il generatore di numeri casuali (fallo solo una volta)
 	randomize()
+	if cucu_notification_label == null:
+		printerr("ATTENZIONE _ready: Nodo CucuNotificationLabel non trovato! Controllare percorso in @onready.")
+	if notification_timer == null:
+		printerr("ATTENZIONE _ready: Nodo NotificationTimer non trovato! Controllare percorso in @onready.")
+	else:
+		# Connetti il segnale timeout del timer alla funzione che nasconderà la label
+		if not notification_timer.is_connected("timeout", Callable(self, "_on_notification_timer_timeout")):
+			notification_timer.connect("timeout", Callable(self, "_on_notification_timer_timeout"))
+	# ----------------------------------
 
 	# --- Controlli essenziali all'avvio (codice esistente) ---
 	if card_scene == null: printerr("!!! ERRORE: 'Card Scene' non assegnata!"); get_tree().quit(); return
@@ -814,88 +824,44 @@ func _update_last_hand_display():
 			texture_rect.visible = false
 			# if label: label.text += " -"
 # Funzione per mostrare la notifica "Cucù" (Blocco Re)
-# Funzione per mostrare la notifica "Cucù" (Blocco Re) - VERSIONE CON CANVASLAYER
-func _show_cucu_king_notification(king_holder_index: int):
-	# Controlla se la scena per il popup è stata assegnata nell'inspector
-	if notification_popup_scene == null:
-		printerr("ATTENZIONE: Notification Popup Scene non assegnata in GameManager!")
-		return
 
-	# --- TROVA IL CANVASLAYER ---
-	# ADATTA QUESTO PERCORSO al punto in cui hai messo il tuo CanvasLayer!
-	# Esempio: se UILayer è figlio di GameTable, che è fratello di GameManager:
-	var ui_layer_path = "res://scenes/NotificationPopup.tscn"
-	# Esempio: se UILayer è figlio della radice della scena e la radice è "/root/MainScene":
-	# var ui_layer_path = "/root/MainScene/UILayer"
-	# Trova il percorso corretto nella tua struttura di scena!
-	var ui_layer = get_node_or_null(ui_layer_path)
-
-	if ui_layer == null:
-		printerr("ERRORE CRITICO: Non trovo il nodo CanvasLayer a '%s'!" % ui_layer_path)
-		printerr("Assicurati di aver creato un CanvasLayer e che il percorso sia corretto.")
-		return # Non possiamo continuare senza il layer UI
-	# ---------------------------
-
-	# Istanzia la scena del popup
-	var popup_instance = notification_popup_scene.instantiate()
-
-	# --- AGGIUNGI AL CANVASLAYER ---
-	# Rimuovi la vecchia riga 'add_child(popup_instance)' se presente
-	ui_layer.add_child(popup_instance)
-	print("DEBUG: Aggiunto popup al nodo: %s" % ui_layer.name)
-	# ------------------------------
-
-	# --- Posizionamento (ora relativo al CanvasLayer/Viewport) ---
-	if popup_instance is Control:
-		var viewport_rect = get_viewport().get_visible_rect()
-		var popup_size = popup_instance.size # Potrebbe ancora servire min size
-		popup_instance.position = viewport_rect.position + viewport_rect.size / 2.0 - popup_size / 2.0
-		print("DEBUG: Posizionato popup (in UILayer) a ", popup_instance.position)
+func _on_notification_timer_timeout():
+	if cucu_notification_label != null:
+		cucu_notification_label.visible = false # Nasconde la label
+		print("DEBUG: Timeout notifica, CucuNotificationLabel nascosta.")
 	else:
-		print("DEBUG: L'istanza del popup non è un nodo Control, non posso centrarla automaticamente.")
-	# --------------------------------
+		printerr("ERRORE Timeout: CucuNotificationLabel è null!")
 
-	# Prepara il messaggio da mostrare
+# Funzione per mostrare la notifica "Cucù" (Blocco Re) - VERSIONE CON LABEL/TIMER (Indentato con Tab)
+func _show_cucu_king_notification(king_holder_index: int):
+	# Controllo 1: I riferimenti alla Label e al Timer sono validi?
+	if cucu_notification_label == null or notification_timer == null:
+		printerr("ERRORE ShowNotify: CucuNotificationLabel o NotificationTimer non trovati/validi.")
+		return # Non possiamo mostrare la notifica
+
+	# Prepara il messaggio
 	var message = "CUCÙ!\nGiocatore %d è protetto dal Re!" % king_holder_index
 
-	# Chiama la funzione dello script del popup per mostrare il messaggio
-	if popup_instance.has_method("show_message"):
-		popup_instance.show_message(message, 2.5) # Mostra per 2.5 secondi
-	else:
-		printerr("ERRORE: Lo script di NotificationPopup.tscn non ha il metodo show_message()!")
-		# Rimuovi l'istanza se non funziona correttamente e pulisci
-		popup_instance.queue_free()
+	# Imposta il testo nella Label
+	cucu_notification_label.text = message
 
+	# Rendi la Label VISIBILE
+	cucu_notification_label.visible = true
 
-	# --- DOVE AGGIUNGERE IL POPUP? ---
-	# Aggiungi l'istanza alla scena. Idealmente dovresti avere un nodo
-	# CanvasLayer dedicato alle UI per assicurarti che appaia sopra tutto.
-	# Se non ce l'hai, aggiungilo come figlio di GameManager.
-	# Esempio (se hai un CanvasLayer chiamato UILayer):
-	# var ui_layer = get_node_or_null("/root/GameTable/UILayer") # Adatta il percorso!
-	# if ui_layer:
-	#     ui_layer.add_child(popup_instance)
-	# else:
-	#     printerr("UILayer non trovato, aggiungo a GameManager.")
-	#     add_child(popup_instance) # Fallback: aggiungi a GameManager
-	add_child(popup_instance) # Semplificato: aggiungi come figlio di GameManager
-
-	# --- OPZIONALE: Posizionamento ---
-	# Se il tuo popup è un nodo Control, puoi provare a centrarlo.
-	if popup_instance is Control:
+	# --- Posizionamento (Opzionale, ma utile se la vuoi centrata) ---
+	# Assicurati che la label (o il suo contenitore Panel) sia un nodo Control
+	if cucu_notification_label is Control:
 		var viewport_rect = get_viewport().get_visible_rect()
-		# Calcola la posizione centrale. Potrebbe servire aggiustare se il pivot è diverso.
-		popup_instance.position = viewport_rect.size / 2 - popup_instance.size / 2
-		print("DEBUG: Posizionato popup a ", popup_instance.position)
-	# --------------------------------
+		 # Nota: .size potrebbe essere (0,0) se non impostato, centra il punto in alto a sx
+		cucu_notification_label.position = viewport_rect.position + viewport_rect.size / 2.0 - cucu_notification_label.size / 2.0
+		print("DEBUG: Posizionata CucuNotificationLabel a ", cucu_notification_label.position)
+	# ----------------------------------------------------------------
 
+	# Avvia il timer per nascondere la label dopo un po'
+	var display_duration = 2.5 # Secondi
+	notification_timer.wait_time = display_duration
+	notification_timer.start()
 
-
-	# Chiama la funzione dello script del popup per mostrare il messaggio
-	if popup_instance.has_method("show_message"):
-		popup_instance.show_message(message, 2.5) # Mostra per 2.5 secondi
-	else:
-		printerr("ERRORE: Lo script di NotificationPopup.tscn non ha il metodo show_message()!")
-		popup_instance.queue_free() # Rimuovi se non funziona
-		
+	print("DEBUG: Mostrata notifica Cucù su CucuNotificationLabel.")
+	
 #endregion
