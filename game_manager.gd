@@ -15,8 +15,8 @@ class_name GameManager
 @export var last_hand_textures: Array[TextureRect]	# Array per TextureRect ultima mano (Size 4)
 @export var deck_position_marker: Marker3D			# Marker per posizione mazzo centrale
 # REDATTO @export var notification_popup_scene: PackedScene # Scena per il popup "Cucù" (Blocco Re)
-@onready var cucu_notification_label: Label = %CucuNotificationLabel
-@onready var notification_timer: Timer = %NotificationTimer
+@onready var cucu_notification_label: Label = %EffectLabelKUKU
+@onready var notification_timer: Timer = %KukuTimer
 # --- Fine Export ---
 
 var player_positions_node: Node3D = null
