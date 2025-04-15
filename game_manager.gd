@@ -404,7 +404,7 @@ func _player_action(player_index: int, action: String, target_player_index: int 
 			call_deferred("_update_player_action_buttons") # Defer per sicurezza
 
 		# --- GESTIONE EFFETTO CAVALLO (Q) MANCANTE --- (Andrà qui, controllando my_card/target_card se c'è stato scambio)
-
+		if get_tree(): await get_tree().create_timer(0.5).timeout # Es: Pausa di mezzo secondo
 		call_deferred("_advance_turn") # Avanza al prossimo giocatore
 	else:
 		# Questo non dovrebbe accadere se la logica sopra è corretta, ma è una sicurezza
@@ -474,6 +474,7 @@ func _dealer_action(action: String):
 	# Azioni finali comuni ad entrambi i casi (swap o pass)
 	_update_deck_visual() # Aggiorna la visuale del mazzo (potrebbe essere cambiata)
 	_update_player_action_buttons() # Nascondi i bottoni azione
+	if get_tree(): await get_tree().create_timer(0.5).timeout # Es: Pausa di mezzo secondo
 	call_deferred("_end_round") # Passa alla fase di fine round
 
 func _make_cpu_dealer_turn():
@@ -484,7 +485,7 @@ func _make_cpu_dealer_turn():
 	var cpu_dealer_index = dealer_index
 	print("CPU Mazziere (%d) pensa..." % cpu_dealer_index)
 	if get_tree(): # Aggiunto controllo esistenza albero scene
-		await get_tree().create_timer(randf_range(0.8, 1.5)).timeout
+		await get_tree().create_timer(randf_range(1.5, 3.0)).timeout # Pausa più lunga
 
 	var card_to_evaluate: CardData = _get_valid_carddata_from_player(cpu_dealer_index, "_mcdt")
 	if card_to_evaluate == null:
@@ -527,7 +528,7 @@ func _make_cpu_turn():
 	var cpu_player_index = current_player_index
 	print("CPU (%d) pensa..." % cpu_player_index)
 	if get_tree(): # Aggiunto controllo esistenza albero scene
-		await get_tree().create_timer(randf_range(0.8, 1.5)).timeout
+		await get_tree().create_timer(randf_range(1.5, 3.0)).timeout # Pausa più lunga
 
 	var card_to_evaluate: CardData = _get_valid_carddata_from_player(cpu_player_index, "_mct")
 	if card_to_evaluate == null:
