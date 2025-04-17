@@ -20,7 +20,7 @@ class_name GameManager
 # --- Fine Export ---
 
 var player_positions_node: Node3D = null
-var num_players: int = 4
+var num_players: int = 10
 var dealer_index: int = 0
 var current_player_index: int = 0
 var players_data: Array[Dictionary] = []
@@ -282,19 +282,31 @@ func _deal_initial_cards():
 
 # --- Gestione Turni e Azioni ---
 func _advance_turn():
-	var next_player_candidate = -1; var current_check = current_player_index
-	for _i in range(players_data.size()):
-		current_check = (current_check + 1) % players_data.size()
-		if current_check != dealer_index and not players_data[current_check].is_out and not players_data[current_check].has_swapped_this_round:
-			next_player_candidate = current_check; break
-		if current_check == current_player_index: break
+	var next_player_candidate = -1
+	var current_check = current_player_index
+	for _i in range(players_data.size()): # Ciclo limitato
+		current_check = (current_check + 1) % players_data.size() # Avanza ANTI-ORARIO
+		# Condizioni per essere il prossimo: Non mazziere, Non fuori, Non ha agito
+		if current_check != dealer_index and \
+		   not players_data[current_check].is_out and \
+		   not players_data[current_check].has_swapped_this_round:
+			next_player_candidate = current_check
+			break # Trovato
+		# Sicurezza anti-loop
+		if current_check == current_player_index:
+			break # Fatto giro completo
+
+	# Se trovato, passa turno
 	if next_player_candidate != -1:
 		current_player_index = next_player_candidate
-		print("Avanzamento turno. Tocca a player %d." % current_player_index); current_state = GameState.PLAYER_TURN
+		print("Avanzamento turno. Tocca a player %d." % current_player_index)
+		current_state = GameState.PLAYER_TURN
 		_update_player_action_buttons(); _update_deck_visual()
-		# --- GESTIONE SALTO CAVALLO (Q) MANCANTE ---
 		if players_data[current_player_index].is_cpu: call_deferred("_make_cpu_turn")
-	else: _go_to_dealer_phase()
+	# Se non trovato, vai a fase mazziere
+	else:
+		_go_to_dealer_phase()
+		
 func _go_to_dealer_phase():
 	if dealer_index < 0 or dealer_index >= players_data.size() or players_data[dealer_index].is_out:
 		print("Mazziere %d non valido/fuori." % dealer_index); call_deferred("_end_round"); return
@@ -333,83 +345,90 @@ func _on_card_clicked(_card_visual: CardVisual): print("Click su carta ignorato 
 # --- Azioni Gioco (Logica Interna) ---
 #AZIONI GIOCATORE UMANO
 func _player_action(player_index: int, action: String, target_player_index: int = -1):
-	if player_index < 0 or player_index >= players_data.size() or players_data[player_index].is_out:
-		print("Azione annullata: Giocatore %d non valido o fuori." % player_index)
-		return
-	if players_data[player_index].has_swapped_this_round:
-		print("Azione annullata: Giocatore %d ha già agito." % player_index)
-		return # Già agito
-
+	# print(">>> ENTERING _player_action (P%d, Act:%s, Tgt:%d)" % [player_index, action, target_player_index]) # Debug
+	if player_index < 0 or player_index >= players_data.size() or players_data[player_index].is_out: return
+	if players_data[player_index].has_swapped_this_round: return # Già agito
 	var my_card: CardData = _get_valid_carddata_from_player(player_index, "_pa my")
-	if my_card == null:
-		printerr("ERRORE CRITICO (_player_action): Giocatore %d non ha dati carta validi!" % player_index)
-		# Forse forzare un 'hold' o gestire l'errore in modo più robusto?
-		# Per ora, terminiamo l'azione per evitare crash.
-		return
+	var performed_action = false
 
-	var performed_action = false # Flag per sapere se avanzare il turno
-
+	# --- Logica per azione SWAP ---
 	if action == "swap":
-		# --- CONTROLLO 1: Non puoi scambiare SE HAI il Re ---
-		if my_card.rank_name == "K":
-			print("Player %d ha il Re (K)! Non può scambiare. Azione forzata a 'hold'." % player_index)
-			action = "hold" # Forza l'azione a tenere la carta
+		var target_card: CardData = null
+		# 1. Validazione target INIZIALE (Player B)
+		if target_player_index < 0 or target_player_index >= players_data.size() or players_data[target_player_index].is_out or target_player_index == player_index:
+			printerr("ERRORE: Target scambio iniziale non valido: %d" % target_player_index)
+			# Azione fallita, performed_action resta false
 		else:
-			# Prosegui solo se non hai il Re
-			var target_card: CardData = null
-			# Controlla se il target è valido
-			if target_player_index < 0 or target_player_index >= players_data.size() or players_data[target_player_index].is_out or target_player_index == player_index:
-				printerr("ERRORE: Target scambio non valido: %d" % target_player_index)
-				# Se il target non è valido, l'azione di scambio fallisce, ma il giocatore deve comunque passare?
-				# Decidiamo che se il target è invalido, il giocatore passa automaticamente.
-				action = "hold"
-			else:
-				target_card = _get_valid_carddata_from_player(target_player_index, "_pa target")
-				if target_card == null:
-					printerr("ERRORE CRITICO (_player_action): Giocatore target %d non ha dati carta validi!" % target_player_index)
-					# Anche qui, forziamo hold per sicurezza
-					action = "hold"
-				# --- CONTROLLO 2: Non puoi scambiare SE IL TARGET HA il Re ---
-				elif target_card.rank_name == "K": # Blocco perché il TARGET ha il Re
-					print("Tentativo di scambio fallito! Player %d ha il Re (K)." % target_player_index)
-					players_data[player_index].has_swapped_this_round = true
-					performed_action = true
-
-					# --- AGGIUNTA CHIAMATA UI ---
-					_show_cucu_king_notification(target_player_index)
-					# --- FINE AGGIUNTA ---
+			# Target iniziale valido, ottieni le carte
+			target_card = _get_valid_carddata_from_player(target_player_index, "_pa target")
+			if my_card == null or target_card == null:
+				printerr("ERRORE: Dati carta mancanti per swap!")
+				# Azione fallita
+			# 2. Controlla se TU (Player A) hai il Re
+			elif my_card.rank_name == "K":
+				print("Azione Bloccata: Hai il Re (K), non puoi iniziare uno scambio!")
+				# Azione fallita, l'umano dovrà passare
+			# 3. Controlla se il TARGET INIZIALE (Player B) ha il Re
+			elif target_card.rank_name == "K":
+				print("!!! KUKU !!! Player %d ha il Re (K)! Scambio fallito." % target_player_index)
+				_show_effect_label("KUKU!", 1.5)
+				players_data[player_index].has_swapped_this_round = true # Considera azione fatta
+				performed_action = true # Avanza turno
+			# 4. Controlla se il TARGET INIZIALE (Player B) ha la Regina
+			elif target_card.rank_name == "Q":
+				print("!!! SALTA!!! Player %d ha la Regina (Q)! Scambio obbligato col successivo." % target_player_index)
+				_show_effect_label("SALTA!", 1.5) # Feedback visivo
+				# Trova il NUOVO target (Player C), cioè quello SUCCESSIVO a B (DESTRA di B)
+				var new_target_index = get_player_to_right(target_player_index) # <-- Usa Destra
+				print("   -> Nuovo target calcolato: Player %d" % new_target_index)
+				# Validazione NUOVO target (Player C)
+				if new_target_index == -1 or new_target_index == player_index:
+					printerr("ERRORE: Nuovo target (%d) non valido o è il giocatore stesso. Scambio annullato." % new_target_index)
+					players_data[player_index].has_swapped_this_round = true # Azione fatta
+					performed_action = true # Avanza turno
 				else:
-					# --- SCAMBIO EFFETTIVO --- (Solo se entrambi i controlli Re passano)
-					print("Player %d scambia con %d" % [player_index, target_player_index])
-					# Esegui lo scambio dei dati carta
-					players_data[player_index].card_data[0] = target_card
-					players_data[target_player_index].card_data[0] = my_card
-					# Aggiorna la visuale per entrambi
-					_update_player_card_visuals(player_index)
-					_update_player_card_visuals(target_player_index)
-					players_data[player_index].has_swapped_this_round = true # Scambio avvenuto
-					performed_action = true
-					# --- Qui andrà la logica del Cavallo (Q) se lo scambio avviene ---
+					# Nuovo target valido, prendi la sua carta
+					var new_target_card = _get_valid_carddata_from_player(new_target_index, "_pa new_target")
+					if new_target_card == null:
+						printerr("ERRORE: Dati carta mancanti per NUOVO target %d!" % new_target_index)
+						players_data[player_index].has_swapped_this_round = true; performed_action = true # Avanza
+					# CONTROLLO RE SUL NUOVO TARGET (Player C)
+					elif new_target_card.rank_name == "K":
+						print("!!! KUKU (Dopo Salta)!!! Player %d ha il Re! Scambio fallito." % new_target_index)
+						_show_effect_label("KUKU!", 1.5)
+						players_data[player_index].has_swapped_this_round = true; performed_action = true # Avanza
+					else:
+						# Esegui lo scambio A <-> C
+						print("Player %d scambia con NUOVO target %d (dopo Salta)" % [player_index, new_target_index])
+						players_data[player_index].card_data[0] = new_target_card       # A prende carta C
+						players_data[new_target_index].card_data[0] = my_card           # C prende carta A
+						_update_player_card_visuals(player_index); _update_player_card_visuals(new_target_index)
+						players_data[player_index].has_swapped_this_round = true; performed_action = true
+			# 5. Se nessun caso speciale, esegui lo scambio normale A <-> B
+			else:
+				print("Player %d scambia con %d" % [player_index, target_player_index])
+				players_data[player_index].card_data[0] = target_card
+				players_data[target_player_index].card_data[0] = my_card
+				_update_player_card_visuals(player_index); _update_player_card_visuals(target_player_index)
+				players_data[player_index].has_swapped_this_round = true; performed_action = true
 
-	# Se l'azione (originale o forzata) è "hold"
-	if action == "hold":
+	# --- Logica per azione HOLD ---
+	elif action == "hold":
 		print("Player %d tiene la carta." % player_index)
-		players_data[player_index].has_swapped_this_round = true # Passare conta come azione
+		players_data[player_index].has_swapped_this_round = true
 		performed_action = true
 
-	# Avanza il turno solo se un'azione valida (o un tentativo fallito ma valido) è stata eseguita
+	# --- Azioni Comuni se un'azione valida è stata eseguita ---
 	if performed_action:
+		# Imposta il flag che il giocatore ha agito (fatto sopra, ma ri-assicura)
+		players_data[player_index].has_swapped_this_round = true
 		# Aggiorna i bottoni se è il giocatore umano
-		if player_index == 0:
-			call_deferred("_update_player_action_buttons") # Defer per sicurezza
+		if player_index == 0: _update_player_action_buttons()
+		# NON c'è più la logica per _skip_next_player qui
+		call_deferred("_advance_turn") # Avanza al prossimo turno
+	# else: print("Azione non completata, turno non avanza.") # Debug opzionale
 
-		# --- GESTIONE EFFETTO CAVALLO (Q) MANCANTE --- (Andrà qui, controllando my_card/target_card se c'è stato scambio)
-		if get_tree(): await get_tree().create_timer(0.5).timeout # Es: Pausa di mezzo secondo
-		call_deferred("_advance_turn") # Avanza al prossimo giocatore
-	else:
-		# Questo non dovrebbe accadere se la logica sopra è corretta, ma è una sicurezza
-		printerr("ATTENZIONE (_player_action): Nessuna azione eseguita per player %d. Controllare logica." % player_index)
-
+	# print(">>> EXITING _player_action") # Debug rimosso
 #AZIONI MAZZIERE
 func _dealer_action(action: String):
 	# Validazione iniziale mazziere
@@ -866,5 +885,21 @@ func _show_cucu_king_notification(king_holder_index: int):
 	notification_timer.start()
 
 	print("DEBUG: Mostrata notifica Cucù su CucuNotificationLabel.")
+	
+func _show_effect_label(text_to_show: String, _duration: float = 1.5):
+	print(">>> DEBUG: Chiamata _show_effect_label (minimal) con testo: ", text_to_show)
+
+	# --- CORREZIONE: Usa la variabile membro 'effect_label' qui ---
+	# Controlla se la VARIABILE effect_label (collegata via @export) è valida
+	if not is_instance_valid(cucu_notification_label):
+		printerr("EffectLabel (variabile @export) non assegnato o non valido!") # Messaggio più chiaro
+		print(">>> EFFETTO TESTUALE: %s <<<" % text_to_show) # Fallback nel log
+		return # Esce se non abbiamo un label valido a cui scrivere
+
+	# --- CORREZIONE: Ora possiamo usare la variabile membro ---
+	cucu_notification_label.text = text_to_show
+	cucu_notification_label.visible = true
+	print(">>> DEBUG: effect_label reso visibile.")
+	# NOTA BENE: Questa versione minimalista NON nasconde la label!
 	
 #endregion
