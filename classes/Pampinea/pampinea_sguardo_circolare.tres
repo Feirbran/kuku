@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActiveAbilityData" load_steps=2 format=3 uid="uid://d3ajufud1ennt"]
+
+[ext_resource type="Script" uid="uid://b48u8osnloib3" path="res://scripts/active_ability_data.gd" id="1_5l14a"]
+
+[resource]
+script = ExtResource("1_5l14a")
+ability_name = "Sguardo Circolare"
+description = "Rivela istantaneamente la categoria di rango delle carte dei giocatori adiacenti."
+sanity_cost = 10
+cooldown_rounds = 3
+target_type = 4
+activation_phase = 1
+special_requirements = Array[String]([])
+metadata/_custom_type_script = "uid://b48u8osnloib3"

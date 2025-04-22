@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActiveAbilityData" load_steps=2 format=3 uid="uid://d3jex3laf1ciy"]
+
+[ext_resource type="Script" uid="uid://b48u8osnloib3" path="res://scripts/active_ability_data.gd" id="1_4js3j"]
+
+[resource]
+script = ExtResource("1_4js3j")
+ability_name = "Interrogatorio Diretto"
+description = "Rivela se la carta del bersaglio è una Figura (K, Q, J) o Altro."
+sanity_cost = 15
+cooldown_rounds = 3
+target_type = 1
+activation_phase = 1
+special_requirements = Array[String]([])
+metadata/_custom_type_script = "uid://b48u8osnloib3"

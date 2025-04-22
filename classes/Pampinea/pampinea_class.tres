@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharacterClassData" load_steps=5 format=3 uid="uid://bvqlaqs5doo5d"]
+
+[ext_resource type="Script" uid="uid://7estnaxfnoe1" path="res://scripts/character_class_data.gd" id="1_eo8xk"]
+[ext_resource type="Resource" uid="uid://d3ajufud1ennt" path="res://classes/Pampinea/pampinea_sguardo_circolare.tres" id="1_wyljh"]
+[ext_resource type="Resource" uid="uid://d3jex3laf1ciy" path="res://classes/Pampinea/pampinea_interrogatorio_diretto.tres" id="2_q5dgx"]
+[ext_resource type="Resource" uid="uid://c368hyb4pcehk" path="res://classes/Pampinea/pampinea_prima_voce.tres" id="3_cr4ky"]
+
+[resource]
+script = ExtResource("1_eo8xk")
+display_name = "La Comandante"
+character_name = "Pampinea"
+class_description = "Leader naturale, raccoglie informazioni ed esercita controllo."
+active_ability_1 = ExtResource("1_wyljh")
+active_ability_2 = ExtResource("2_q5dgx")
+passive_ability = ExtResource("3_cr4ky")
+metadata/_custom_type_script = "uid://7estnaxfnoe1"

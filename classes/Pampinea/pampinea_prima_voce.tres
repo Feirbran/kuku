@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="PassiveAbilityData" load_steps=2 format=3 uid="uid://c368hyb4pcehk"]
+
+[ext_resource type="Script" uid="uid://8c70c423wr1x" path="res://scripts/passive_ability_data.gd" id="1_oanvk"]
+
+[resource]
+script = ExtResource("1_oanvk")
+ability_name = "Prima Voce"
+description = "All'inizio di ogni Giorno, sceglie il primo Mazziere."
+trigger_event = 1
+passive_parameters = {
+"sanity_gain_on_kq_safe": 5
+}
+metadata/_custom_type_script = "uid://8c70c423wr1x"

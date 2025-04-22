@@ -14,9 +14,8 @@ class_name GameManager
 @export var last_hand_labels: Array[Label]			# Opzionale: Array per Label nomi ultima mano (Size 4)
 @export var last_hand_textures: Array[TextureRect]	# Array per TextureRect ultima mano (Size 4)
 @export var deck_position_marker: Marker3D			# Marker per posizione mazzo centrale
-# REDATTO @export var notification_popup_scene: PackedScene # Scena per il popup "Cucù" (Blocco Re)
 @onready var cucu_notification_label: Label = %EffectLabelKUKU
-@onready var notification_timer: Timer = %KukuTimer
+@onready var notification_timer: Timer = %Timer
 # --- Fine Export ---
 
 var player_positions_node: Node3D = null
@@ -121,7 +120,6 @@ func _ready():
 		printerr("ERRORE: deck_position_marker non valido in _ready!") # Log se marker non valido
 	# --- FINE CREAZIONE VISUALE MAZZO ---
 
-	call_deferred("start_game", num_players)
 
 func _on_game_table_ready():
 	print("Segnale ready da GameTable ricevuto!")
@@ -845,14 +843,6 @@ func _update_last_hand_display():
 			texture_rect.texture = null
 			texture_rect.visible = false
 			# if label: label.text += " -"
-# Funzione per mostrare la notifica "Cucù" (Blocco Re)
-
-func _on_notification_timer_timeout():
-	if cucu_notification_label != null:
-		cucu_notification_label.visible = false # Nasconde la label
-		print("DEBUG: Timeout notifica, CucuNotificationLabel nascosta.")
-	else:
-		printerr("ERRORE Timeout: CucuNotificationLabel è null!")
 
 # Funzione per mostrare la notifica "Cucù" (Blocco Re) - VERSIONE CON LABEL/TIMER (Indentato con Tab)
 func _show_cucu_king_notification(king_holder_index: int):
@@ -886,20 +876,36 @@ func _show_cucu_king_notification(king_holder_index: int):
 
 	print("DEBUG: Mostrata notifica Cucù su CucuNotificationLabel.")
 	
-func _show_effect_label(text_to_show: String, _duration: float = 1.5):
-	print(">>> DEBUG: Chiamata _show_effect_label (minimal) con testo: ", text_to_show)
+# Rinomina il parametro da _duration a duration se non l'hai già fatto
+func _show_effect_label(text_to_show: String, duration: float = 1.5):
+	print(">>> DEBUG: Chiamata _show_effect_label con testo: ", text_to_show, " per ", duration, " sec.")
 
-	# --- CORREZIONE: Usa la variabile membro 'effect_label' qui ---
-	# Controlla se la VARIABILE effect_label (collegata via @export) è valida
 	if not is_instance_valid(cucu_notification_label):
-		printerr("EffectLabel (variabile @export) non assegnato o non valido!") # Messaggio più chiaro
-		print(">>> EFFETTO TESTUALE: %s <<<" % text_to_show) # Fallback nel log
-		return # Esce se non abbiamo un label valido a cui scrivere
+		printerr("EffectLabel (cucu_notification_label) non assegnato o non valido!")
+		print(">>> EFFETTO TESTUALE: %s <<<" % text_to_show)
+		return
 
-	# --- CORREZIONE: Ora possiamo usare la variabile membro ---
 	cucu_notification_label.text = text_to_show
 	cucu_notification_label.visible = true
-	print(">>> DEBUG: effect_label reso visibile.")
-	# NOTA BENE: Questa versione minimalista NON nasconde la label!
+	print(">>> DEBUG: cucu_notification_label reso visibile.")
+
+	# --- AGGIUNTA LOGICA TIMER (usando notification_timer) ---
+	if notification_timer: # Assicurati che il timer esista
+		# Ferma il timer se per caso era già attivo
+		notification_timer.stop()
+		# Imposta la durata (wait_time) e avvia il timer
+		notification_timer.wait_time = duration
+		notification_timer.start()
+		print(">>> DEBUG: notification_timer avviato per ", duration, " sec.")
+	else:
+		printerr("Impossibile avviare notification_timer!")
+	# --- FINE AGGIUNTA ---
 	
+func _on_notification_timer_timeout():
+	# Assicurati che la label esista ancora prima di provare a nasconderla
+	if is_instance_valid(cucu_notification_label):
+		cucu_notification_label.visible = false
+		print(">>> DEBUG: cucu_notification_label nascosta dal timer.")
+	else:
+		print(">>> DEBUG: Tentativo di nascondere cucu_notification_label, ma non è più valida.")
 #endregion
