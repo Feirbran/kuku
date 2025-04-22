@@ -16,6 +16,8 @@ class_name GameManager
 @export var deck_position_marker: Marker3D			# Marker per posizione mazzo centrale
 @onready var cucu_notification_label: Label = %EffectLabelKUKU
 @onready var notification_timer: Timer = %Timer
+@export var player_nodes: Array[Node] # Array per contenere i nodi Player0..9
+@export var test_class_data: CharacterClassData # Assegna pampinea_class.tres qui nell'editor
 # --- Fine Export ---
 
 var player_positions_node: Node3D = null
@@ -150,91 +152,148 @@ func start_game(p_num_players: int):
 	# ------------------------------------------------------
 
 	call_deferred("_start_round") # Usa call_deferred per assicurare che _ready sia completato
-	
+
+
+# DENTRO GameManager.gd - SOSTITUISCI LA TUA VECCHIA FUNZIONE _reset_game CON QUESTA:
+
 func _reset_game():
 	print("Resetting game...")
-	# Pulisci istanze carte GIOCATORI (codice esistente OK)
+	
+	# 1. Pulisci le istanze delle carte dei giocatori precedenti
 	for card_instance in active_card_instances:
 		if is_instance_valid(card_instance):
 			card_instance.queue_free()
 	active_card_instances.clear()
-	players_data.clear() # Svuota i dati vecchi
+	
+	# 2. Pulisci i dati dei giocatori precedenti
+	players_data.clear() 
 
-	# --- NUOVO/MODIFICATO: Pulisci visuale mazzo (ARRAY) ---
-	for instance in deck_visual_instances: # Itera sull'array
+	# 3. Pulisci la visuale del mazzo precedente
+	for instance in deck_visual_instances: 
 		if is_instance_valid(instance):
-			instance.queue_free() # Cancella ogni istanza
-	deck_visual_instances.clear() # Svuota l'array
+			instance.queue_free() 
+	deck_visual_instances.clear() 
 
-	# --- NUOVO: INIZIALIZZAZIONE DATI GIOCATORI ---
-	print("Inizializzazione dati per %d giocatori..." % num_players)
-	if not is_instance_valid(player_positions_node):
+	# 4. Inizializza i dati base per ogni giocatore nell'array players_data
+	print("Inizializzazione dati (senza vite) per %d giocatori..." % num_players)
+	if not is_instance_valid(player_positions_node): 
 		printerr("ERRORE CRITICO: PlayerPositions non valido durante il reset!")
-		# Non possiamo continuare senza posizioni, quindi players_data resterà vuoto
-		# e l'errore "Reset fallito" verrà giustamente stampato in start_game.
-		return # Esce dalla funzione _reset_game
-
+		return 
 	var markers = player_positions_node.get_children()
-	if markers.size() < num_players:
+	if markers.size() < num_players: 
 		printerr("ERRORE CRITICO: Non ci sono abbastanza Marker3D in PlayerPositions (%d) per %d giocatori!" % [markers.size(), num_players])
-		# Anche qui, non possiamo inizializzare correttamente.
-		return # Esce dalla funzione _reset_game
+		return 
 
+	# Loop per creare la struttura dati base in players_data
 	for i in range(num_players):
 		var player_marker = markers[i] if i < markers.size() else null
 		if not player_marker is Marker3D:
 			printerr("ATTENZIONE: Elemento %d in PlayerPositions non è un Marker3D!" % i)
-			player_marker = null # Non usare un nodo non valido
+			player_marker = null 
 
+		# Crea il dizionario SENZA "lives"
 		var new_player_data = {
 			"id": i,
-			"marker": player_marker, # Assegna il marker trovato (o null se c'è stato un problema)
-			"lives": 3, # Numero iniziale di vite (puoi cambiarlo)
-			"is_out": false,
-			"is_cpu": (i != 0), # Giocatore 0 è umano, gli altri CPU (puoi cambiarlo)
-			"card_data": [], # Array per i dati della carta (inizialmente vuoto)
-			"visual_cards": [], # Array per le istanze CardVisual (inizialmente vuoto)
+			"marker": player_marker,
+			"is_out": false, # Stato iniziale. Verrà poi letto/aggiornato da Player.gd idealmente.
+			"is_cpu": (i != 0),
+			"card_data": [],
+			"visual_cards": [],
 			"has_swapped_this_round": false,
-			"last_card": null # Carta tenuta alla fine del round precedente
+			"last_card": null,
+			# Potremmo aggiungere il riferimento al nodo qui, SE player_nodes è già popolato
+			# "node": player_nodes[i] if i < player_nodes.size() else null 
 		}
 		players_data.append(new_player_data)
+		
+		# IMPORTANTE: Chiamare assign_class qui se player_nodes è già pronto,
+		# altrimenti va chiamata in start_game dopo che i nodi sono sicuramente pronti.
+		# Esempio: (Assumendo player_nodes sia pronto)
+		# if i < player_nodes.size() and is_instance_valid(player_nodes[i]):
+		#     var classe_scelta = _scegli_classe_casuale() # Funzione ipotetica da creare
+		#     player_nodes[i].assign_class(classe_scelta, i) 
+		# else:
+		#     printerr("Nodo Player %d non disponibile durante reset per assign_class" % i)
 
-	# Piccolo controllo per sicurezza
+	# Controllo sicurezza
 	if players_data.size() != num_players:
 		printerr("ERRORE INASPETTATO: Dopo l'inizializzazione, players_data ha %d elementi invece di %d!" % [players_data.size(), num_players])
-		# Potrebbe indicare un problema nel loop sopra o nei controlli marker
-		# Non svuotiamo players_data qui, ma segnaliamo il problema grave.
+		return # Esce se l'array non ha la dimensione giusta
 
-	print("Dati giocatori inizializzati. Numero elementi in players_data: %d" % players_data.size())
-	# --- FINE INIZIALIZZAZIONE DATI GIOCATORI ---
+	print("Dati base giocatori inizializzati. Numero elementi in players_data: %d" % players_data.size())
 
-	# Ora l'aggiornamento dell'UI può funzionare perché players_data è popolato
-	# Inizializza UI Vite
-	if player_lives_labels.size() == players_data.size(): # Ora size() dovrebbe essere > 0
+	# 5. Aggiorna l'UI delle Vite (ORA DOPO AVER CREATO TUTTI I DATI BASE)
+	#    Questo presuppone che l'array 'player_nodes' sia stato popolato nell'editor o in codice precedentemente.
+	if player_lives_labels.size() == player_nodes.size(): 
 		print("Aggiornamento label vite...")
-		for i in range(players_data.size()):
-			if is_instance_valid(player_lives_labels[i]):
-				player_lives_labels[i].text = "Vite P%d: %d" % [i, players_data[i].lives]
-				player_lives_labels[i].visible = true
-	elif player_lives_labels.size() > 0: # Logga solo se le label esistono ma non corrispondono
-		printerr("ATTENZIONE: Numero Label vite (%d) non corrisponde ai giocatori inizializzati (%d)!" % [player_lives_labels.size(), players_data.size()])
+		for j in range(player_nodes.size()): # <-- USA 'j' qui
+			var player_node = player_nodes[j] # Usa 'j'
+			var label = player_lives_labels[j] if j < player_lives_labels.size() and is_instance_valid(player_lives_labels[j]) else null # Usa 'j'
+			
+			if label and is_instance_valid(player_node) and player_node.has_method("get_fingers_remaining"):
+				var current_lives = player_node.get_fingers_remaining() # Chiede le vite al Nodo Player
+				label.text = "Vite P%d: %d" % [j, current_lives] # Usa 'j' per l'ID
+				# Usa lo stato 'is_out' letto dal nodo Player per la visibilità
+				# (Assicurati che Player.gd abbia la proprietà is_out)
+				label.visible = not player_node.is_out 
+			elif label:
+				label.visible = false # Nascondi se il nodo o la label non sono validi
+				
+	elif player_lives_labels.size() > 0:
+		printerr("ATTENZIONE: Numero Label vite (%d) non corrisponde ai nodi Player (%d)!" % [player_lives_labels.size(), player_nodes.size()])
 
-
-	# Inizializza UI Ultima Mano
-	if last_hand_textures.size() == players_data.size(): # Ora size() dovrebbe essere > 0
+	# 6. Aggiorna l'UI dell'Ultima Mano (ORA DOPO AVER CREATO TUTTI I DATI BASE)
+	if last_hand_textures.size() == players_data.size(): # Confronta con players_data per coerenza
 		print("Resetting UI ultima mano...")
-		for i in range(last_hand_textures.size()):
-			if is_instance_valid(last_hand_textures[i]):
-				last_hand_textures[i].visible = false
-			# Assicurati che l'indice sia valido anche per l'array delle label nomi
-			if i < last_hand_labels.size() and is_instance_valid(last_hand_labels[i]):
-				last_hand_labels[i].text = "P%d:" % i # Resetta anche il nome
-	elif last_hand_textures.size() > 0: # Logga solo se le texture esistono ma non corrispondono
+		for k in range(last_hand_textures.size()): # <-- USA 'k' qui
+			var texture_rect = last_hand_textures[k] if k < last_hand_textures.size() and is_instance_valid(last_hand_textures[k]) else null
+			if texture_rect:
+				texture_rect.visible = false # Nascondi texture di default
+				
+			# Aggiorna label nome se presente
+			var name_label = last_hand_labels[k] if k < last_hand_labels.size() and is_instance_valid(last_hand_labels[k]) else null
+			if name_label:
+				name_label.text = "P%d:" % k # Usa 'k' per l'ID
+				
+	elif last_hand_textures.size() > 0:
 		printerr("ATTENZIONE: Numero TextureRect ultima mano (%d) non corrisponde ai giocatori inizializzati (%d)!" % [last_hand_textures.size(), players_data.size()])
 
-	# Aggiungiamo un print finale per confermare che _reset_game è completato
+	# 7. Fine Reset
 	print("Reset game completato. Players_data size: %d" % players_data.size())
 
+# --- NUOVO: Assegna Classe e ID ai Nodi Player + Connetti Segnali ---
+	print("Assegnazione classi e connessione segnali ai nodi Player...")
+	if player_nodes.size() == num_players:
+		if test_class_data == null:
+			printerr("ERRORE: test_class_data non assegnata nell'Inspector del GameManager!")
+
+		for i in range(num_players):
+			var player_node = player_nodes[i]
+			if is_instance_valid(player_node) and player_node.has_method("assign_class"):
+				# Assegna la classe di test e l'ID corretto (i)
+				if test_class_data != null:
+					player_node.assign_class(test_class_data, i) 
+				else:
+					# Se manca la classe test, assegna almeno l'ID
+					player_node.player_id = i 
+					printerr("Assegnata solo ID a Player ", i, " perché test_class_data manca.")
+
+				# Connetti il segnale per l'aggiornamento delle vite
+				if player_node.has_signal("fingers_updated") and not player_node.is_connected("fingers_updated", Callable(self, "_on_player_fingers_updated")):
+					var err = player_node.connect("fingers_updated", Callable(self, "_on_player_fingers_updated"))
+					if err != OK:
+						printerr("Errore nel connettere fingers_updated per Player ", i, ": Codice ", err)
+
+				# TODO: Connetti qui altri segnali se necessario (es. player_eliminated, sanity_updated?)
+
+			else:
+				printerr("Nodo Player ", i, " non valido o manca metodo assign_class durante l'assegnazione.")
+	else:
+		printerr("ERRORE: Numero di player_nodes (%d) non corrisponde a num_players (%d) durante l'assegnazione classi!" % [player_nodes.size(), num_players])
+
+	print("Reset game completato. Players_data size: %d" % players_data.size())
+
+# FINE DELLA FUNZIONE _reset_game
 
 # --- Gestione Round ---
 func _start_round():
@@ -622,16 +681,27 @@ func determine_loser_and_update_lives():
 			elif card_value == lowest_card_value: losers_indices.append(i)
 	if losers_indices.is_empty(): print("Nessun perdente.")
 	else: print("Perdente/i (Val %d): %s" % [lowest_card_value, str(losers_indices)]); for loser_index in losers_indices: if loser_index >= 0: lose_life(loser_index)
+
 func lose_life(player_index: int):
-	if player_index >= 0 and player_index < players_data.size() and not players_data[player_index].is_out:
-		players_data[player_index].lives -= 1; print("Player %d perde vita! Vite: %d" % [player_index, players_data[player_index].lives])
-		if player_lives_labels.size() > player_index and is_instance_valid(player_lives_labels[player_index]):
-			player_lives_labels[player_index].text = "Vite P%d: %d" % [player_index, players_data[player_index].lives]
-		if players_data[player_index].lives <= 0:
-			players_data[player_index].is_out = true; players_data[player_index].lives = 0; print(">>> Player %d eliminato! <<<" % player_index)
-			if not players_data[player_index].visual_cards.is_empty():
-				var card_visual = players_data[player_index].visual_cards[0]
-				if is_instance_valid(card_visual): card_visual.hide()
+	# Controlla se l'indice è valido e se abbiamo un riferimento valido al nodo Player
+	if player_index >= 0 and player_index < player_nodes.size():
+		var player_node = player_nodes[player_index] # Ottieni il nodo Player dall'array
+		if is_instance_valid(player_node) and player_node.has_method("lose_finger"):
+			print("GameManager dice a Player ", player_index, " di perdere un dito.")
+			player_node.lose_finger() # Chiama la funzione sul nodo Player
+
+			# AGGIORNAMENTO OPZIONALE: Se manteniamo is_out in players_data, aggiorniamolo qui
+			# leggendo lo stato aggiornato dal nodo Player.
+			if player_node.has_method("get_fingers_remaining"): # Assumendo che player_node.is_out sia ora la verità
+				if player_node.is_out: # Leggiamo lo stato is_out dal nodo Player
+					if player_index < players_data.size(): # Sicurezza
+						players_data[player_index].is_out = true
+						print(">>> GameManager ha registrato Player ", player_index, " come eliminato. <<<")
+
+		else:
+			printerr("ERRORE in lose_life: Nodo Player ", player_index, " non valido o non ha il metodo lose_finger().")
+	else:
+		printerr("ERRORE in lose_life: Indice giocatore non valido: ", player_index)
 func _handle_game_over(active_count: int):
 	print("\n=== PARTITA FINITA! ==="); current_state = GameState.GAME_OVER
 	_update_player_action_buttons()
@@ -908,4 +978,19 @@ func _on_notification_timer_timeout():
 		print(">>> DEBUG: cucu_notification_label nascosta dal timer.")
 	else:
 		print(">>> DEBUG: Tentativo di nascondere cucu_notification_label, ma non è più valida.")
+		
+		
+func _on_player_fingers_updated(p_id: int, p_fingers: int):
+	print("HANDLER: Ricevuto fingers_updated da Player ", p_id, ". Dita rimaste: ", p_fingers)
+	# Aggiorna la label corrispondente
+	if p_id >= 0 and p_id < player_lives_labels.size():
+		var label = player_lives_labels[p_id]
+		if is_instance_valid(label):
+			label.text = "Vite P%d: %d" % [p_id, p_fingers]
+			# Aggiorna visibilità se necessario (basata su p_fingers <= 0?)
+			# label.visible = (p_fingers > 0) 
+		else:
+			printerr("HANDLER: Label vite per Player ", p_id, " non valida!")
+	else:
+		printerr("HANDLER: ID Player ", p_id, " non valido per l'array delle label vite.")
 #endregion

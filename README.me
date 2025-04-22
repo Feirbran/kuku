@@ -1,40 +1,35 @@
-# README - Debugging del Progetto Godot
+Fix Effetti Visivi Persistenti:
 
-Questo file riassume i problemi incontrati durante la sessione di debugging del progetto Godot e le azioni correttive intraprese.
+Corretto il bug per cui le label "SALTA!" e "KUKU!" rimanevano a schermo, implementando un Timer (notification_timer) per nasconderle automaticamente dopo una durata definita (_show_effect_label, _on_notification_timer_timeout in GameManager.gd).
+Risolto errore di connessione duplicata del segnale timeout del timer in _ready.
+Introduzione Sistema Classi/Abilità (Base):
 
-## Problema Iniziale: Impossibile trovare il nodo "PlayerPositions"
+Definiti gli script base per le Risorse (.gd) necessarie al sistema:
+AbilityBaseData (opzionale, per dati comuni abilità)
+ActiveAbilityData (per abilità attive con costo, cooldown, ecc.)
+PassiveAbilityData (per abilità passive e trigger)
+CharacterClassData (per definire una classe e collegare le sue abilità)
+Corretto un errore di parsing in CharacterClassData.gd rinominando la variabile class_name (es. in display_name) per evitare conflitti con la direttiva class_name.
+Creazione Dati Esempio (Pampinea):
 
-**Descrizione del Problema:**
+Creati i file risorsa .tres per le 3 abilità specifiche di Pampinea (pampinea_sguardo_circolare.tres, pampinea_interrogatorio_diretto.tres, pampinea_prima_voce.tres) usando ActiveAbilityData e PassiveAbilityData.
+Creato il file risorsa .tres per la classe (pampinea_class.tres) usando CharacterClassData e collegando al suo interno i 3 file .tres delle abilità.
+Refactoring Gestione Stato Giocatore:
 
-All'avvio del gioco, veniva generato un errore critico che indicava l'impossibilità di trovare il nodo "PlayerPositions" all'interno dello script `game_manager.gd`. Questo nodo era necessario per posizionare i giocatori e distribuire le carte.
-
-**Azioni Correttive:**
-
-1.  **Verifica della gerarchia della scena:** È stata verificata la gerarchia della scena `GameTable.tscn`, scoprendo che il nodo "PlayerPositions" non era un figlio diretto di `GameManager`, ma un fratello.
-2.  **Modifica del percorso `get_node()`:** Nello script `game_manager.gd`, la riga `player_positions_node = get_node("PlayerPositions")` è stata modificata in `player_positions_node = get_node("../PlayerPositions")` per risalire al nodo padre (`GameTable`) e quindi accedere al fratello "PlayerPositions".
-3.  **Gestione del segnale `ready`:** La funzione `_ready()` in `game_manager.gd` è stata modificata per connettere il segnale `ready` del nodo `GameTable` a una nuova funzione `_on_game_table_ready()`. L'assegnazione di `player_positions_node` e l'avvio del gioco sono stati spostati in questa funzione per assicurarsi che l'intera scena fosse pronta.
-4.  **Prevenzione di connessioni multiple del segnale `ready`:** È stato aggiunto un controllo in `_ready()` per verificare se il segnale `ready` era già connesso per evitare potenziali ricorsioni.
-
-## Problema: Ricorsione Infinita (Stack Overflow)
-
-**Descrizione del Problema:**
-
-Dopo le prime correzioni, si è verificato un errore di "stack overflow", indicando una ricorsione infinita nello script `card_visual.gd`.
-
-**Azioni Correttive:**
-
-1.  **Identificazione della ricorsione:** L'errore si verificava nella proprietà `card_data` e nel suo setter `set(new_data)`, che chiamava direttamente la funzione `set_card_data(new_data)`, creando un ciclo infinito.
-2.  **Rinominazione e variabile interna:** La variabile esportata `card_data` è stata rinominata in `_card_data` e introdotta una variabile interna chiamata `card_data`. Il setter della proprietà esportata ora chiama una nuova funzione `set_card_data_internal(new_data)` che assegna il valore alla variabile interna, interrompendo la ricorsione.
-
-## Problema Attuale: Carte non visibili a schermo
-
-**Descrizione del Problema:**
-
-Dopo aver risolto gli errori critici, il gioco sembra avviarsi senza problemi, ma le carte non sono visibili a schermo.
-
-**Potenziali Cause (da investigare):**
-
-1.  **Posizione dei nodi `Marker3D`:** I nodi figli di `PlayerPositions` (es. `Player1`, `Player2`, ecc.) potrebbero essere posizionati in un'area non visibile dalla telecamera (sotto il tavolo, troppo distanti, ecc.).
-2.  **Scala delle carte:** Il prefab della carta (`CardVisual.tscn`) potrebbe avere una scala troppo piccola o troppo grande.
-3.  **Visibilità delle carte:** Potrebbe esserci un problema con la visibilità iniziale delle carte o con l'assegnazione della texture del retro.
-4.  **Posizione e orientamento della telecamera:** La telecamera nella scena `GameTable.tscn` potrebbe non essere posizionata o orientata correttamente
+Creato Player.tscn e Player.gd: Definita una scena generica Player.tscn (con Node3D come root) e creato/collegato lo script Player.gd come "cervello" del giocatore.
+Istanziati Player Nodes: Create 10 istanze di Player.tscn nella scena principale (Player0...Player9).
+Spostata Responsabilità Stato: Deciso di rendere Player.gd responsabile del proprio stato (vite, sanità, cooldown) invece di GameManager.gd.
+Aggiornato Player.gd:
+Aggiunte/confermate variabili di stato: fingers_remaining (default 10), is_out, player_id.
+Implementata la funzione assign_class(data, id) per ricevere la classe, l'ID e resettare lo stato iniziale (incluse le dita a 10).
+Implementata la funzione lose_finger() per decrementare fingers_remaining e gestire l'eliminazione (_handle_elimination).
+Aggiunta la funzione get_fingers_remaining().
+Aggiunto il segnale fingers_updated(player_id, remaining_fingers).
+Aggiornato GameManager.gd:
+Aggiunto @export var player_nodes: Array[Node] per i riferimenti ai nodi Player (popolato nell'editor).
+Aggiunto @export var test_class_data: CharacterClassData per assegnare una classe di test (popolato nell'editor).
+Rimosso il campo "lives" dall'inizializzazione dell'array players_data in _reset_game.
+Modificata la funzione lose_life(player_index) per chiamare player_nodes[player_index].lose_finger() invece di modificare players_data.
+Aggiunta la funzione handler _on_player_fingers_updated(p_id, p_fingers) per aggiornare le label delle vite quando riceve il segnale da Player.gd.
+Aggiunto un blocco alla fine di _reset_game per ciclare sui player_nodes, chiamare assign_class (assegnando ID e classe di test) e connettere il segnale fingers_updated di ogni player all'handler _on_player_fingers_updated del GameManager.
+Modificato l'aggiornamento iniziale delle label vite in _reset_game per leggere le vite usando player_node.get_fingers_remaining().
