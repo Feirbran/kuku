@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActiveAbilityData" load_steps=2 format=3 uid="uid://h3esm8hg4w5j"]
+
+[ext_resource type="Script" uid="uid://b48u8osnloib3" path="res://scripts/active_ability_data.gd" id="1_f7iqn"]
+
+[resource]
+script = ExtResource("1_f7iqn")
+ability_name = "Ritocco Vitale"
+description = "Aumenta il valore effettivo della sua carta di +2 ranghi per l'intero round."
+sanity_cost = 30
+cooldown_rounds = 7
+target_type = 0
+activation_phase = 0
+special_requirements = Array[String](["[\"REQUIRES_CARD_A_2_3_4\"]"])
+metadata/_custom_type_script = "uid://b48u8osnloib3"

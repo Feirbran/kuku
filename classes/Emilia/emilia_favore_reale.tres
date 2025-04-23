@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="PassiveAbilityData" load_steps=2 format=3 uid="uid://lme5x6ndqroo"]
+
+[ext_resource type="Script" uid="uid://8c70c423wr1x" path="res://scripts/passive_ability_data.gd" id="1_vigpm"]
+
+[resource]
+script = ExtResource("1_vigpm")
+ability_name = "Favore Reale"
+description = "Se Emilia termina un round senza perdere un dito e possiede un Re o una Regina, recupera +10 Sanità."
+trigger_event = 2
+passive_parameters = {
+"sanity_gain_on_kq_safe": 5,
+"{ \"condition_ranks\": [\"K\", \"Q\"], \"sanity_gain\": 5 }": null
+}
+metadata/_custom_type_script = "uid://8c70c423wr1x"

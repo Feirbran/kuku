@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActiveAbilityData" load_steps=2 format=3 uid="uid://dinq2tg4tpif8"]
+
+[ext_resource type="Script" uid="uid://b48u8osnloib3" path="res://scripts/active_ability_data.gd" id="1_3v5bf"]
+
+[resource]
+script = ExtResource("1_3v5bf")
+ability_name = "Puntura Cinica"
+description = "Il giocatore bersaglio perde immediatamente 25 Sanità."
+sanity_cost = 25
+cooldown_rounds = 6
+target_type = 1
+activation_phase = 0
+special_requirements = Array[String]([])
+metadata/_custom_type_script = "uid://b48u8osnloib3"

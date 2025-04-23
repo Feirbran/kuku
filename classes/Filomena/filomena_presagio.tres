@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActiveAbilityData" load_steps=2 format=3 uid="uid://dmhilmiuxt2nw"]
+
+[ext_resource type="Script" uid="uid://b48u8osnloib3" path="res://scripts/active_ability_data.gd" id="1_q3lpq"]
+
+[resource]
+script = ExtResource("1_q3lpq")
+ability_name = "Presagio"
+description = "Filomena predice se il bersaglio scambierà o terrà la carta. Se corretto guadagna 1 token Intuizione."
+sanity_cost = 10
+cooldown_rounds = 2
+target_type = 1
+activation_phase = 1
+special_requirements = Array[String]([])
+metadata/_custom_type_script = "uid://b48u8osnloib3"

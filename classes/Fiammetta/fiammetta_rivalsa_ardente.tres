@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActiveAbilityData" load_steps=2 format=3 uid="uid://3jsqiv37u34k"]
+
+[ext_resource type="Script" uid="uid://b48u8osnloib3" path="res://scripts/active_ability_data.gd" id="1_aue8c"]
+
+[resource]
+script = ExtResource("1_aue8c")
+ability_name = "Rivalsa Ardente"
+description = "Al prossimo scambio volontario iniziato da Fiammetta, il bersaglio è forzato ad accettare lo scambio (a meno che non abbia Re e usi Cucù). Consuma 1 Token Vengeance."
+sanity_cost = 0
+cooldown_rounds = 0
+target_type = 6
+activation_phase = 1
+special_requirements = Array[String](["[\"REQUIRES_VENGEANCE_TOKEN\"]"])
+metadata/_custom_type_script = "uid://b48u8osnloib3"

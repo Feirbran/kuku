@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActiveAbilityData" load_steps=2 format=3 uid="uid://b8fksxvlnrb7f"]
+
+[ext_resource type="Script" uid="uid://b48u8osnloib3" path="res://scripts/active_ability_data.gd" id="1_tewn0"]
+
+[resource]
+script = ExtResource("1_tewn0")
+ability_name = "Catena Infernale"
+description = "Attivandola, tutti i giocatori ancora in gioco scambiano forzatamente la propria carta con quella del giocatore alla propria destra, seguendo il giro del tavolo."
+sanity_cost = 35
+cooldown_rounds = 8
+target_type = 5
+activation_phase = 1
+special_requirements = Array[String]([])
+metadata/_custom_type_script = "uid://b48u8osnloib3"

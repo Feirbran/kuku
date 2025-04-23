@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="PassiveAbilityData" load_steps=2 format=3 uid="uid://ci8a2i5yvc3m"]
+
+[ext_resource type="Script" uid="uid://8c70c423wr1x" path="res://scripts/passive_ability_data.gd" id="1_jjsjo"]
+
+[resource]
+script = ExtResource("1_jjsjo")
+ability_name = "Intuito Macabro"
+description = "Filomena può tentare di indovinare chi perderà il dito nel round. Se indovina, guadagna +10 Sanità. Guadagna Token Intuizione sopravvivendo con carte basse (es. A, 2, 3, 4)."
+trigger_event = 2
+passive_parameters = {
+"{ \"guess_sanity_reward\": 10, \"token_gain_on_survival_ranks\": [1, 2, 3, 4] }": null
+}
+metadata/_custom_type_script = "uid://8c70c423wr1x"

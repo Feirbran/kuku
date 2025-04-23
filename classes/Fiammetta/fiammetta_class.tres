@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharacterClassData" load_steps=5 format=3 uid="uid://dl5l5kkyckwdw"]
+
+[ext_resource type="Resource" uid="uid://bn427asxj8qqx" path="res://classes/Fiammetta/fiammetta_atto_disperato.tres" id="1_lkujh"]
+[ext_resource type="Resource" uid="uid://3jsqiv37u34k" path="res://classes/Fiammetta/fiammetta_rivalsa_ardente.tres" id="2_36uhy"]
+[ext_resource type="Resource" uid="uid://bjcq37wk1equl" path="res://classes/Fiammetta/fiammetta_animo_ardente.tres" id="3_vshmn"]
+[ext_resource type="Script" uid="uid://7estnaxfnoe1" path="res://scripts/character_class_data.gd" id="4_wc4l2"]
+
+[resource]
+script = ExtResource("4_wc4l2")
+display_name = "La Tempesta"
+character_name = "Fiammetta"
+class_description = "Un'anima ardente consumata dalla paura e dalla rabbia. Reagisce agli eventi con intensità esplosiva, ricorrendo ad atti disperati o vendette improvvise pur di sfuggire al colpo fatale."
+active_ability_1 = ExtResource("1_lkujh")
+active_ability_2 = ExtResource("2_36uhy")
+passive_ability = ExtResource("3_vshmn")
+metadata/_custom_type_script = "uid://7estnaxfnoe1"

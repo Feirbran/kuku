@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharacterClassData" load_steps=5 format=3 uid="uid://kah83v481o6b"]
+
+[ext_resource type="Resource" uid="uid://b8fksxvlnrb7f" path="res://classes/Dioneo/dioneo_catena_infernale.tres" id="1_kl110"]
+[ext_resource type="Resource" uid="uid://dinq2tg4tpif8" path="res://classes/Dioneo/dioneo_puntura_cinica.tres" id="2_3xu1r"]
+[ext_resource type="Resource" uid="uid://ymskgrmgfrnj" path="res://classes/Dioneo/dioneo_risata_finale.tres" id="3_pbg0c"]
+[ext_resource type="Script" uid="uid://7estnaxfnoe1" path="res://scripts/character_class_data.gd" id="4_a46uu"]
+
+[resource]
+script = ExtResource("4_a46uu")
+display_name = "Il Provocatore"
+character_name = "Dioneo"
+class_description = "Leader naturale, raccoglie informazioni ed esercita controllo."
+active_ability_1 = ExtResource("1_kl110")
+active_ability_2 = ExtResource("2_3xu1r")
+passive_ability = ExtResource("3_pbg0c")
+metadata/_custom_type_script = "uid://7estnaxfnoe1"

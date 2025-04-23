@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharacterClassData" load_steps=5 format=3 uid="uid://daniyx5u04em6"]
+
+[ext_resource type="Resource" uid="uid://dldrlie4g7605" path="res://classes/Emilia/emilia_messa_in_scena.tres" id="1_kc7ib"]
+[ext_resource type="Resource" uid="uid://h3esm8hg4w5j" path="res://classes/Emilia/emilia_ritocco_vitale.tres" id="2_lwksy"]
+[ext_resource type="Resource" uid="uid://lme5x6ndqroo" path="res://classes/Emilia/emilia_favore_reale.tres" id="3_31gp0"]
+[ext_resource type="Script" uid="uid://7estnaxfnoe1" path="res://scripts/character_class_data.gd" id="4_aijmt"]
+
+[resource]
+script = ExtResource("4_aijmt")
+display_name = "L'Osservatrice"
+character_name = "Filomena"
+class_description = "Osserva in silenzio, cercando schemi nella follia. Accumula intuizioni per prevedere il futuro o bloccare le mosse altrui, sopravvivendo grazie a una mente fredda e calcolatrice."
+active_ability_1 = ExtResource("1_kc7ib")
+active_ability_2 = ExtResource("2_lwksy")
+passive_ability = ExtResource("3_31gp0")
+metadata/_custom_type_script = "uid://7estnaxfnoe1"

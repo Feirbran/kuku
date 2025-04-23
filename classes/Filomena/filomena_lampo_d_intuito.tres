@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActiveAbilityData" load_steps=2 format=3 uid="uid://bypj2x2gtlpho"]
+
+[ext_resource type="Script" uid="uid://b48u8osnloib3" path="res://scripts/active_ability_data.gd" id="1_cnc2h"]
+
+[resource]
+script = ExtResource("1_cnc2h")
+ability_name = "Lampo d'Intuito"
+description = "Filomena sceglie uno tra 3 effetti: 1) Vede la carta in cima al mazzo; 2) Ottiene immunità al prossimo effetto negativo Jolly \"Matto\" o \"Destino\" nel round; 3) Bersaglia un giocatore che non potrà iniziare scambi volontari nel round."
+sanity_cost = 0
+cooldown_rounds = 2
+target_type = 6
+activation_phase = 0
+special_requirements = Array[String](["[\"REQUIRES_INTUITION_TOKEN\"]"])
+metadata/_custom_type_script = "uid://b48u8osnloib3"

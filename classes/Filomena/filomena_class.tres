@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharacterClassData" load_steps=5 format=3 uid="uid://7mpbtb2wq4f8"]
+
+[ext_resource type="Resource" uid="uid://bypj2x2gtlpho" path="res://classes/Filomena/filomena_lampo_d_intuito.tres" id="1_kddbk"]
+[ext_resource type="Resource" uid="uid://dmhilmiuxt2nw" path="res://classes/Filomena/filomena_presagio.tres" id="2_nq5f1"]
+[ext_resource type="Resource" uid="uid://ci8a2i5yvc3m" path="res://classes/Filomena/filomena_intuito_macabro.tres" id="3_sy1xf"]
+[ext_resource type="Script" uid="uid://7estnaxfnoe1" path="res://scripts/character_class_data.gd" id="4_7rs0y"]
+
+[resource]
+script = ExtResource("4_7rs0y")
+display_name = "L'Osservatrice"
+character_name = "Filomena"
+class_description = "Osserva in silenzio, cercando schemi nella follia. Accumula intuizioni per prevedere il futuro o bloccare le mosse altrui, sopravvivendo grazie a una mente fredda e calcolatrice."
+active_ability_1 = ExtResource("1_kddbk")
+active_ability_2 = ExtResource("2_nq5f1")
+passive_ability = ExtResource("3_sy1xf")
+metadata/_custom_type_script = "uid://7estnaxfnoe1"
