@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActiveAbilityData" load_steps=2 format=3 uid="uid://plevjllmhqbj"]
+
+[ext_resource type="Script" uid="uid://b48u8osnloib3" path="res://scripts/active_ability_data.gd" id="1_htvy5"]
+
+[resource]
+script = ExtResource("1_htvy5")
+ability_name = "Riscatto Nobile"
+description = "Recupera immediatamente +25 Sanità subito dopo che Elissa perde un dito."
+sanity_cost = 0
+cooldown_rounds = 0
+target_type = 0
+activation_phase = 5
+special_requirements = Array[String](["[\"AUTOMATIC_ON_FINGER_LOSS\"]"])
+metadata/_custom_type_script = "uid://b48u8osnloib3"

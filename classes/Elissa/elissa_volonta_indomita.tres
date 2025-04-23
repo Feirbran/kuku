@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActiveAbilityData" load_steps=2 format=3 uid="uid://ba6fk08ccyx1v"]
+
+[ext_resource type="Script" uid="uid://b48u8osnloib3" path="res://scripts/active_ability_data.gd" id="1_vw6id"]
+
+[resource]
+script = ExtResource("1_vw6id")
+ability_name = "Volontà Indomita"
+description = "Per la fase di scambio del round, Elissa non può essere forzata a scambiare da abilità/Jolly.	"
+sanity_cost = 25
+cooldown_rounds = 5
+target_type = 0
+activation_phase = 1
+special_requirements = Array[String]([])
+metadata/_custom_type_script = "uid://b48u8osnloib3"

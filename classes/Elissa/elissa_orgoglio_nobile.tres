@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="PassiveAbilityData" load_steps=2 format=3 uid="uid://btn5b0uhpoow8"]
+
+[ext_resource type="Script" uid="uid://8c70c423wr1x" path="res://scripts/passive_ability_data.gd" id="1_p4iwq"]
+
+[resource]
+script = ExtResource("1_p4iwq")
+ability_name = "Orgoglio Nobile"
+description = "Elissa subisce meno danno alla Sanità (-3 punti in meno) quando è costretta a scambiare via una carta K, Q, o J."
+trigger_event = 8
+passive_parameters = {
+"Passive Parameters": "{ \"condition\": \"forced_swap_lost_kqj\", \"sanity_damage_reduction\": 3 }",
+"sanity_gain_on_kq_safe": 5
+}
+metadata/_custom_type_script = "uid://8c70c423wr1x"
