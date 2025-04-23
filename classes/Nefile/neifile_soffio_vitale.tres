@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActiveAbilityData" load_steps=2 format=3 uid="uid://c4whf44vrf1hu"]
+
+[ext_resource type="Script" uid="uid://b48u8osnloib3" path="res://scripts/active_ability_data.gd" id="1_xugnc"]
+
+[resource]
+script = ExtResource("1_xugnc")
+ability_name = "Soffio Vitale"
+description = "Il bersaglio recupera immediatamente +20 Sanità."
+sanity_cost = 10
+cooldown_rounds = 5
+target_type = 5
+activation_phase = 0
+special_requirements = Array[String]([])
+metadata/_custom_type_script = "uid://b48u8osnloib3"

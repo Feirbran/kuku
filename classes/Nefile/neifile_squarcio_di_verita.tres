@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActiveAbilityData" load_steps=2 format=3 uid="uid://cx2np0ywlbgld"]
+
+[ext_resource type="Script" uid="uid://b48u8osnloib3" path="res://scripts/active_ability_data.gd" id="1_fx8hp"]
+
+[resource]
+script = ExtResource("1_fx8hp")
+ability_name = "Squarcio di Verità"
+description = "Rivela a tutti per 1 secondo il rango di tutte le carte in gioco."
+sanity_cost = 70
+cooldown_rounds = 10
+target_type = 6
+activation_phase = 0
+special_requirements = Array[String]([])
+metadata/_custom_type_script = "uid://b48u8osnloib3"

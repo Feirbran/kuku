@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharacterClassData" load_steps=5 format=3 uid="uid://dky84nd5k5571"]
+
+[ext_resource type="Script" uid="uid://7estnaxfnoe1" path="res://scripts/character_class_data.gd" id="1_plku0"]
+[ext_resource type="Resource" uid="uid://cx2np0ywlbgld" path="res://classes/Nefile/neifile_squarcio_di_verita.tres" id="1_sukjb"]
+[ext_resource type="Resource" uid="uid://c4whf44vrf1hu" path="res://classes/Nefile/neifile_soffio_vitale.tres" id="2_nsnp6"]
+[ext_resource type="Resource" uid="uid://vqr1buiblhsm" path="res://classes/Nefile/neifile_amuleto_speranza.tres" id="3_dedgn"]
+
+[resource]
+script = ExtResource("1_plku0")
+display_name = "L'Anima Gentile"
+character_name = "Nefile"
+class_description = "Un'innocenza infranta che cerca ancora un barlume di luce nell'oscurità. Può offrire un fragile sollievo agli altri o cercare una verità totalizzante, pagando un prezzo altissimo sulla sua stessa anima."
+active_ability_1 = ExtResource("1_sukjb")
+active_ability_2 = ExtResource("2_nsnp6")
+passive_ability = ExtResource("3_dedgn")
+metadata/_custom_type_script = "uid://7estnaxfnoe1"
