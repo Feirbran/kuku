@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PassiveAbilityData" load_steps=2 format=3 uid="uid://bfist5jh6xker"]
+
+[ext_resource type="Script" uid="uid://8c70c423wr1x" path="res://scripts/passive_ability_data.gd" id="1_ilwvy"]
+
+[resource]
+script = ExtResource("1_ilwvy")
+ability_name = "Flusso Narrativo"
+description = "Ogni 3 round consecutivi in cui Panfilo non perde un dito ottiene 1 uso gratuito (costo 0 Sanità) della sua abilità \"Imposizione Storica\" o \"Eco del Passato\" (a sua scelta) la prossima volta che la usa. Bonus accumulabile una sola volta."
+trigger_event = 3
+passive_parameters = {
+"bonus_effect": "next_active_free",
+"max_charges": "1",
+"peaceful_rounds_needed": 3,
+"sanity_gain_on_kq_safe": 5
+}
+metadata/_custom_type_script = "uid://8c70c423wr1x"

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActiveAbilityData" load_steps=2 format=3 uid="uid://b6oop57axyo2v"]
+
+[ext_resource type="Script" uid="uid://b48u8osnloib3" path="res://scripts/active_ability_data.gd" id="1_0pcls"]
+
+[resource]
+script = ExtResource("1_0pcls")
+ability_name = "Eco del Passato"
+description = "Panfilo usa l'ultima Abilità Attiva standard usata dal bersaglio, pagandone il costo maggiorato (+10 Sanità). Panfilo sceglie i bersagli dell'abilità copiata."
+sanity_cost = 10
+cooldown_rounds = 8
+target_type = 2
+activation_phase = 0
+special_requirements = Array[String](["[\"COPIES_LAST_ABILITY\", \"VARIABLE_COST_PLUS_10\"]"])
+metadata/_custom_type_script = "uid://b48u8osnloib3"

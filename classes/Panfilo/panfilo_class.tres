@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharacterClassData" load_steps=5 format=3 uid="uid://camo834ol5bjj"]
+
+[ext_resource type="Resource" uid="uid://ba6fk08ccyx1v" path="res://classes/Elissa/elissa_volonta_indomita.tres" id="1_tjh8k"]
+[ext_resource type="Resource" uid="uid://plevjllmhqbj" path="res://classes/Elissa/elissa_riscatto_nobile.tres" id="2_1db70"]
+[ext_resource type="Resource" uid="uid://btn5b0uhpoow8" path="res://classes/Elissa/elissa_orgoglio_nobile.tres" id="3_ochgn"]
+[ext_resource type="Script" uid="uid://7estnaxfnoe1" path="res://scripts/character_class_data.gd" id="4_p5iqw"]
+
+[resource]
+script = ExtResource("4_p5iqw")
+display_name = "La Dama di Ferro"
+character_name = "Elissa"
+class_description = "Incarna una volontà di ferro e un orgoglio indomito di fronte all'orrore. Resiste alle manipolazioni, sopporta il dolore e si rialza dopo ogni caduta, aggrappata alla sua dignità."
+active_ability_1 = ExtResource("1_tjh8k")
+active_ability_2 = ExtResource("2_1db70")
+passive_ability = ExtResource("3_ochgn")
+metadata/_custom_type_script = "uid://7estnaxfnoe1"

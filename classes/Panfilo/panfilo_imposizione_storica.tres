@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActiveAbilityData" load_steps=2 format=3 uid="uid://bu1xfb6ii5f8r"]
+
+[ext_resource type="Script" uid="uid://b48u8osnloib3" path="res://scripts/active_ability_data.gd" id="1_hj5g6"]
+
+[resource]
+script = ExtResource("1_hj5g6")
+ability_name = "Imposizione Storica"
+description = "Il bersaglio (un giocatore adiacente a scelta) è obbligato a tentare lo scambio con Panfilo (e viceversa). Regole del Re si applicano."
+sanity_cost = 30
+cooldown_rounds = 7
+target_type = 1
+activation_phase = 1
+special_requirements = Array[String]([])
+metadata/_custom_type_script = "uid://b48u8osnloib3"

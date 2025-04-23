@@ -13,7 +13,7 @@ class_name ActiveAbilityData
 @export var cooldown_rounds: int = 3
 
 # Definiamo alcuni tipi di bersaglio comuni
-enum TargetType { SELF, OTHER_PLAYER, ADJACENT_LEFT, ADJACENT_RIGHT, ADJACENT_BOTH, ALL_PLAYERS, NONE }
+enum TargetType { SELF, ADJACENT_SINGLE , OTHER_PLAYER, ADJACENT_LEFT, ADJACENT_RIGHT, ADJACENT_BOTH, ALL_PLAYERS, NONE }
 @export var target_type: TargetType = TargetType.NONE
 
 # Definiamo alcune condizioni/fasi di attivazione
