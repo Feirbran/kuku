@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActiveAbilityData" load_steps=2 format=3 uid="uid://bwppv8f5xq024"]
+
+[ext_resource type="Script" uid="uid://b48u8osnloib3" path="res://scripts/active_ability_data.gd" id="1_rpnpa"]
+
+[resource]
+script = ExtResource("1_rpnpa")
+ability_name = "Lingua Annodata"
+description = "L'abilità Passiva del bersaglio è disabilitata per il round corrente E il round successivo."
+sanity_cost = 25
+cooldown_rounds = 8
+target_type = 1
+activation_phase = 0
+special_requirements = Array[String]([])
+metadata/_custom_type_script = "uid://b48u8osnloib3"

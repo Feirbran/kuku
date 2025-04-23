@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActiveAbilityData" load_steps=2 format=3 uid="uid://c81l5qp55tms2"]
+
+[ext_resource type="Script" uid="uid://b48u8osnloib3" path="res://scripts/active_ability_data.gd" id="1_t4e2p"]
+
+[resource]
+script = ExtResource("1_t4e2p")
+ability_name = "Paragone Pungente"
+description = "Il bersaglio rivela (solo a Lauretta) se la sua carta è Superiore, Inferiore o Uguale a quella di Lauretta."
+sanity_cost = 10
+cooldown_rounds = 3
+target_type = 1
+activation_phase = 1
+special_requirements = Array[String](["[\"REQUIRES_CARD_A_2_3_4\"]"])
+metadata/_custom_type_script = "uid://b48u8osnloib3"

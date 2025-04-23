@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="PassiveAbilityData" load_steps=2 format=3 uid="uid://dnus7agl4ci1"]
+
+[ext_resource type="Script" uid="uid://8c70c423wr1x" path="res://scripts/passive_ability_data.gd" id="1_1hafv"]
+
+[resource]
+script = ExtResource("1_1hafv")
+ability_name = "Scetticismo"
+description = "Ha una piccola probabilità (es. 25%) di ignorare gli effetti di un Jolly positivo (\"Mano di Dio\") usato su di lei da altri giocatori (non da sé stessa)."
+trigger_event = 0
+passive_parameters = {
+"Passive Parameters": "{ \"effect_to_ignore\": \"Mano_di_Dio\", \"ignore_chance\": 25 }",
+"sanity_gain_on_kq_safe": 5
+}
+metadata/_custom_type_script = "uid://8c70c423wr1x"

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharacterClassData" load_steps=5 format=3 uid="uid://cbkfauun8cyw0"]
+
+[ext_resource type="Resource" uid="uid://bwppv8f5xq024" path="res://classes/Lauretta/lauretta_lingua_annodata.tres" id="1_rain1"]
+[ext_resource type="Resource" uid="uid://c81l5qp55tms2" path="res://classes/Lauretta/lauretta_paragone_pungente.tres" id="2_4l7nt"]
+[ext_resource type="Resource" uid="uid://dnus7agl4ci1" path="res://classes/Lauretta/lauretta_scetticismo.tres" id="3_uo6vx"]
+[ext_resource type="Script" uid="uid://7estnaxfnoe1" path="res://scripts/character_class_data.gd" id="4_dffog"]
+
+[resource]
+script = ExtResource("4_dffog")
+display_name = "L'Arguta"
+character_name = "Lauretta"
+class_description = "Armata di uno spirito tagliente e di un cinismo affilato. Si diverte a smontare le sicurezze altrui, silenziando le loro capacità innate e pungolando le loro debolezze nascoste."
+active_ability_1 = ExtResource("1_rain1")
+active_ability_2 = ExtResource("2_4l7nt")
+passive_ability = ExtResource("3_uo6vx")
+metadata/_custom_type_script = "uid://7estnaxfnoe1"
