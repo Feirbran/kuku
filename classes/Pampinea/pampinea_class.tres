@@ -9,7 +9,7 @@
 script = ExtResource("1_eo8xk")
 display_name = "La Comandante"
 character_name = "Pampinea"
-class_description = "Leader naturale, raccoglie informazioni ed esercita controllo."
+class_description = "Cerca disperatamente di mantenere l'ordine nel caos crescente. Usa la sua autorità per scrutare le intenzioni altrui e dirigere il flusso del gioco, ma a quale prezzo?"
 active_ability_1 = ExtResource("1_wyljh")
 active_ability_2 = ExtResource("2_q5dgx")
 passive_ability = ExtResource("3_cr4ky")

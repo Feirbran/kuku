@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharacterClassData" load_steps=5 format=3 uid="uid://c1ry17hbjiosl"]
+
+[ext_resource type="Resource" uid="uid://b1ikrp7mgm73n" path="res://classes/Filostrato/filostrato_tuffo_nel_vuoto.tres" id="1_1bcnt"]
+[ext_resource type="Resource" uid="uid://cb1r2b3wjsx2c" path="res://classes/Filostrato/filostrato_annuncio_funesto.tres" id="2_y28gu"]
+[ext_resource type="Resource" uid="uid://dc0kape5hjuof" path="res://classes/Filostrato/filostrato_rassegnazione.tres" id="3_o2l76"]
+[ext_resource type="Script" uid="uid://7estnaxfnoe1" path="res://scripts/character_class_data.gd" id="4_gabrf"]
+
+[resource]
+script = ExtResource("4_gabrf")
+display_name = "Il Disilluso"
+character_name = "Filostrato"
+class_description = "Convinto che ogni speranza sia perduta, gioca con il destino e la disperazione. Abbraccia il rischio dell'oblio e lancia funeste profezie, trovando un perverso conforto sull'orlo del baratro."
+active_ability_1 = ExtResource("1_1bcnt")
+active_ability_2 = ExtResource("2_y28gu")
+passive_ability = ExtResource("3_o2l76")
+metadata/_custom_type_script = "uid://7estnaxfnoe1"

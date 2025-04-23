@@ -7,9 +7,9 @@
 
 [resource]
 script = ExtResource("4_aijmt")
-display_name = "L'Osservatrice"
-character_name = "Filomena"
-class_description = "Osserva in silenzio, cercando schemi nella follia. Accumula intuizioni per prevedere il futuro o bloccare le mosse altrui, sopravvivendo grazie a una mente fredda e calcolatrice."
+display_name = "L'Attrice"
+character_name = "Emilia"
+class_description = "Ossessionata dalla perfezione e terrorizzata dall'imperfezione fisica. Usa l'inganno e l'alterazione per proteggere sé stessa e la sua immagine, costi quel che costi."
 active_ability_1 = ExtResource("1_kc7ib")
 active_ability_2 = ExtResource("2_lwksy")
 passive_ability = ExtResource("3_31gp0")

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActiveAbilityData" load_steps=2 format=3 uid="uid://b1ikrp7mgm73n"]
+
+[ext_resource type="Script" uid="uid://b48u8osnloib3" path="res://scripts/active_ability_data.gd" id="1_mirad"]
+
+[resource]
+script = ExtResource("1_mirad")
+ability_name = "Tuffo Nel Vuoto"
+description = "Non vede la sua carta fino a fine round. Se sopravvive, +40 Sanità. Se perde dito, -15 standard + -15 penalità (totale -30)."
+sanity_cost = 5
+cooldown_rounds = 2
+target_type = 0
+activation_phase = 2
+special_requirements = Array[String]([])
+metadata/_custom_type_script = "uid://b48u8osnloib3"

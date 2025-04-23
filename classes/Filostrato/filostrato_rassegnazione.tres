@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="PassiveAbilityData" load_steps=2 format=3 uid="uid://dc0kape5hjuof"]
+
+[ext_resource type="Script" uid="uid://8c70c423wr1x" path="res://scripts/passive_ability_data.gd" id="1_hbjn0"]
+
+[resource]
+script = ExtResource("1_hbjn0")
+ability_name = "Rassegnazione"
+description = "Filostrato subisce 0 Sanità quando vede un altro giocatore perdere un dito."
+trigger_event = 7
+passive_parameters = {
+"Passive Parameters": "{ \"effect\": \"ignore_witness_sanity_loss\" }",
+"sanity_gain_on_kq_safe": 5
+}
+metadata/_custom_type_script = "uid://8c70c423wr1x"
