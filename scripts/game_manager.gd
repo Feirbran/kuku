@@ -9,13 +9,13 @@ class_name GameManager
 @export var pass_button: Button						# Bottone Passa (normale)
 @export var swap_to_deck_button: Button				# Bottone Scambia con Mazzo (Mazziere)
 @export var pass_as_dealer_button: Button			# Bottone Passa (Mazziere)
-@export var player_lives_labels: Array[Label]		# Array per Label vite giocatori (Popolare nell'editor, Size 10)
+@export var player_info_labels: Array[Label]		# Array per Label Nome e vite giocatori (Popolare nell'editor, Size 10)
 @export var last_hand_labels: Array[Label]			# Opzionale: Array per Label nomi ultima mano (Popolare nell'editor, Size 10)
 @export var last_hand_textures: Array[TextureRect]	# Array per TextureRect ultima mano (Popolare nell'editor, Size 10)
 @export var deck_position_marker: Marker3D			# Marker per posizione mazzo centrale
 @export var player_nodes: Array[Node]				# Array per contenere i nodi Player0..9 (Popolare nell'editor, Size 10)
 @export var all_class_datas: Array[CharacterClassData] # <-- NUOVO: Array per contenere TUTTE le risorse *_class.tres (Popolare nell'editor, Size 10)
-@export var player_class_labels: Array[Label]
+@export var player0_sanity_label: Label # Label per la Sanità di Player 0
 
 @onready var cucu_notification_label: Label = %EffectLabelKUKU
 @onready var notification_timer: Timer = %Timer
@@ -43,8 +43,8 @@ func _ready():
     if card_scene == null: printerr("!!! ERRORE _ready: 'Card Scene' non assegnata!"); get_tree().quit(); return
     if player_nodes.size() != num_players: printerr("!!! ATTENZIONE _ready: 'player_nodes' non ha la dimensione corretta (%d vs %d)!" % [player_nodes.size(), num_players])
     if all_class_datas.size() != num_players: printerr("!!! ATTENZIONE _ready: 'all_class_datas' non ha la dimensione corretta (%d vs %d)!" % [all_class_datas.size(), num_players])
-    if player_lives_labels.size() != num_players and player_lives_labels.size() > 0: printerr("!!! ATTENZIONE _ready: Numero Label vite (%d) non corrisponde a num_players (%d)!" % [player_lives_labels.size(), num_players])
-    if player_class_labels.size() != num_players and player_class_labels.size() > 0: printerr("!!! ATTENZIONE _ready: Numero Label classi (%d) non corrisponde a num_players (%d)!" % [player_class_labels.size(), num_players])
+    if player_info_labels.size() != num_players and player_info_labels.size() > 0: printerr("!!! ATTENZIONE _ready: Numero Label vite (%d) non corrisponde a num_players (%d)!" % [player_info_labels.size(), num_players])
+    if player_info_labels.size() != num_players and player_info_labels.size() > 0: printerr("!!! ATTENZIONE _ready: Numero Label classi (%d) non corrisponde a num_players (%d)!" % [player_info_labels.size(), num_players])
 
     # Controlli bottoni
     if swap_button == null or pass_button == null or swap_to_deck_button == null or pass_as_dealer_button == null:
@@ -71,7 +71,10 @@ func _ready():
 
     # Avvio gioco differito
     call_deferred("start_game", num_players)
-
+    
+    
+    Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+    print("DEBUG: Mouse mode forzato a VISIBLE in GameManager._ready()")
 
 func _create_deck_visual_stack():
     for instance in deck_visual_instances:
@@ -163,7 +166,7 @@ func _reset_game():
         var new_player_data = {
             "id": i,
             "marker": player_marker,
-            "is_out": false, # Stato temporaneo, verrà sovrascritto/letto da Player.gd
+            "is_out": false, # Stato iniziale (verrà poi letto da Player.gd)
             "is_cpu": (i != 0),
             "card_data": [],
             "visual_cards": [],
@@ -187,6 +190,7 @@ func _reset_game():
         var available_classes = all_class_datas.duplicate()
         available_classes.shuffle()
 
+        # Loop per assegnare classe e connettere segnali
         for i in range(num_players):
             var player_node = player_nodes[i]
 
@@ -201,49 +205,76 @@ func _reset_game():
 
             # Connetti segnale per aggiornamento vite UI
             if player_node.has_signal("fingers_updated") and not player_node.is_connected("fingers_updated", Callable(self, "_on_player_fingers_updated")):
-                var err = player_node.connect("fingers_updated", Callable(self, "_on_player_fingers_updated"))
-                if err != OK: printerr("Errore connessione fingers_updated per Player ", i, ": Codice ", err)
+                var err_f = player_node.connect("fingers_updated", Callable(self, "_on_player_fingers_updated"))
+                if err_f != OK: printerr("Errore connessione fingers_updated per Player ", i, ": Codice ", err_f)
 
-            # TODO: Connetti altri segnali (es. player_eliminated a una funzione _on_player_eliminated per aggiornare players_data.is_out?)
+            # --- AGGIUNTO QUI: Connetti segnale SANITÀ SOLO per Player 0 ---
+            if i == 0: # Connetti solo per il giocatore umano (ID 0)
+                if player_node.has_signal("sanity_updated") and not player_node.is_connected("sanity_updated", Callable(self, "_on_player0_sanity_updated")):
+                    var err_s = player_node.connect("sanity_updated", Callable(self, "_on_player0_sanity_updated"))
+                    if err_s != OK: printerr("Errore connessione sanity_updated per Player 0: Codice ", err_s)
+            # --- FINE AGGIUNTO ---
 
-        print("Classi assegnate casualmente e segnali connessi.")
+            # TODO: Connetti altri segnali necessari qui (es. player_eliminated?)
 
-    # 6. Aggiorna UI iniziale Vite (leggendo dai Nodi Player)
-    if player_lives_labels.size() == player_nodes.size():
-        print("Aggiornamento label vite iniziale...")
-        for j in range(player_nodes.size()):
-            var player_node = player_nodes[j]
-            var label = player_lives_labels[j] if j < player_lives_labels.size() and is_instance_valid(player_lives_labels[j]) else null
+        print("Classi assegnate casualmente e segnali connessi.") # Spostato fuori dal loop
 
-            if label and is_instance_valid(player_node) and player_node.has_method("get_fingers_remaining"):
-                var current_lives = player_node.get_fingers_remaining()
-                label.text = "Vite P%d: %d" % [j, current_lives]
-                label.visible = not player_node.is_out # Legge stato is_out dal nodo Player
-            elif label:
-                label.visible = false
-    elif player_lives_labels.size() > 0:
-        printerr("ATTENZIONE _reset_game: Numero Label vite (%d) non corrisponde ai nodi Player (%d)!" % [player_lives_labels.size(), player_nodes.size()])
-
-    # 7. Aggiorna UI iniziale Classi (leggendo dai Nodi Player)
-    if player_class_labels.size() == player_nodes.size():
-        print("Aggiornamento label classi iniziale...")
-        for i in range(player_nodes.size()):
+    # --- Stampa Assegnazione Classi (Già presente nel tuo codice) ---
+    print("\n--- ASSEGNAZIONE PERSONAGGI GIOCATORI ---")
+    if player_nodes.size() == num_players:
+        for i in range(num_players):
             var p_node = player_nodes[i]
-            var c_label = player_class_labels[i] if i < player_class_labels.size() and is_instance_valid(player_class_labels[i]) else null
+            if is_instance_valid(p_node) and p_node.class_data != null:
+                var nome_personaggio = p_node.class_data.character_name
+                var etichetta_tipo = "(CPU)"
+                if i < players_data.size() and not players_data[i].is_cpu:
+                    etichetta_tipo = "(Umano)"
+                elif i >= players_data.size():
+                    etichetta_tipo = "(?)"
+                print("  Player %d %s: %s" % [i, etichetta_tipo, nome_personaggio])
+            else:
+                print("  Player %d: (Errore - Dati classe non disponibili)" % i)
+    else:
+        print("  ERRORE: Impossibile stampare assegnazione - numero nodi player non corretto.")
+    print("---------------------------------------")
 
-            if c_label and is_instance_valid(p_node):
-                if p_node.class_data != null:
-                    c_label.text = "P%d: %s" % [i, p_node.class_data.character_name] # Mostra Nome Personaggio
-                    c_label.visible = not p_node.is_out
-                else:
-                    c_label.text = "P%d: ?" % i
-                    c_label.visible = not p_node.is_out
-            elif c_label:
-                c_label.visible = false
-    elif player_class_labels.size() > 0:
-         printerr("ATTENZIONE _reset_game: Numero Label classi (%d) non corrisponde ai nodi Player (%d)!" % [player_class_labels.size(), player_nodes.size()])
+# 6. Aggiorna UI iniziale COMBINATA (Nome + Vite)
+    #    Usa l'array player_info_labels (o player_lives_labels se non rinominato)
+    if player_info_labels.size() == player_nodes.size(): 
+        print("Aggiornamento label INFO iniziale (Nome + Vite)...") 
+        # Questo loop usa 'j' come indice
+        for j in range(player_nodes.size()): 
+            # Definiamo la variabile per questo loop come 'player_node' usando l'indice 'j'
+            var player_node = player_nodes[j] 
+            var info_label = player_info_labels[j] if j < player_info_labels.size() and is_instance_valid(player_info_labels[j]) else null 
+            
+            # Controlla la validità della label e del NODO di questo ciclo ('player_node')
+            if info_label and is_instance_valid(player_node):
+                var char_name = "Player %d" % j # Default
+                var current_lives = -1
+                var is_player_out = true 
 
-    # 8. Aggiorna UI iniziale Ultima Mano
+                # Accedi ai dati e metodi usando 'player_node' (la variabile di QUESTO loop)
+                if player_node.class_data != null: 
+                    char_name = player_node.class_data.character_name # <-- CORRETTO
+                    
+                if player_node.has_method("get_fingers_remaining"): 
+                    current_lives = player_node.get_fingers_remaining() # <-- CORRETTO
+                    
+                is_player_out = player_node.is_out # <-- CORRETTO
+
+                # Formatta il testo combinato
+                info_label.text = "%s: %d Vite" % [char_name, current_lives] 
+                info_label.visible = not is_player_out # Imposta visibilità
+                
+            elif info_label:
+                info_label.visible = false # Nascondi se nodo player non valido
+                
+    elif player_info_labels.size() > 0: # Usa il nome dell'array corretto qui
+        printerr("ATTENZIONE _reset_game: Numero Label info (%d) non corrisponde ai nodi Player (%d)!" % [player_info_labels.size(), player_nodes.size()])
+        
+        
+    # 7. Aggiorna UI iniziale Ultima Mano (era Blocco 8)
     if last_hand_textures.size() == players_data.size():
         print("Resetting UI ultima mano...")
         for k in range(last_hand_textures.size()):
@@ -254,9 +285,10 @@ func _reset_game():
     elif last_hand_textures.size() > 0:
         printerr("ATTENZIONE _reset_game: Numero TextureRect ultima mano (%d) non corrisponde ai giocatori (%d)!" % [last_hand_textures.size(), players_data.size()])
 
-    # 9. Fine Reset
+    # 8. Fine Reset (era Blocco 9)
     print("Reset game completato.")
 
+# FINE DELLA FUNZIONE _reset_game
 
 # --- Gestione Round ---
 
@@ -964,8 +996,8 @@ func _on_notification_timer_timeout():
 
 func _on_player_fingers_updated(p_id: int, p_fingers: int):
     # print("HANDLER: Ricevuto fingers_updated da Player ", p_id, ". Dita rimaste: ", p_fingers) # Debug opzionale
-    if p_id >= 0 and p_id < player_lives_labels.size():
-        var label = player_lives_labels[p_id]
+    if p_id >= 0 and p_id < player_info_labels.size():
+        var label = player_info_labels[p_id]
         if is_instance_valid(label):
             label.text = "Vite P%d: %d" % [p_id, p_fingers]
             # Considera aggiornare visibilità basata su p_fingers o stato is_out del nodo player
@@ -973,5 +1005,62 @@ func _on_player_fingers_updated(p_id: int, p_fingers: int):
             # if is_instance_valid(p_node): label.visible = not p_node.is_out
         else: printerr("HANDLER: Label vite per Player ", p_id, " non valida!")
     else: printerr("HANDLER: ID Player ", p_id, " non valido per l'array delle label vite.")
+
+
+# _________________________ABILITà DA QUI IN POI____________________________________________
+
+# Restituisce gli ID dei giocatori attivi a sinistra e destra di un dato ID
+# Ritorna un array: [id_sinistra, id_destra] (-1 se un vicino non è valido/attivo)
+func get_adjacent_players(p_id: int) -> Array[int]:
+    # Chiama le funzioni helper che già avevamo e che usano player_nodes
+    # per trovare i vicini attivi.
+    var left_id = get_player_to_left(p_id)  # Dovrebbe già esistere
+    var right_id = get_player_to_right(p_id) # Dovrebbe già esistere
+    # print("DEBUG GM: Adiacenti per P%d -> Sx:%d, Dx:%d" % [p_id, left_id, right_id]) # Debug opzionale
+    return [left_id, right_id]
+
+
+# Restituisce l'oggetto CardData del giocatore specificato
+# Ritorna null se l'indice non è valido, il giocatore non ha dati carta, 
+# o i dati non sono un oggetto CardData valido.
+func get_player_card_data(p_id: int) -> CardData:
+    # Chiama la funzione helper interna che già esisteva e leggeva da players_data
+    # Passiamo un contesto generico per il log di errore interno (se presente)
+    var card: CardData = _get_valid_carddata_from_player(p_id, "GM_get_card_request")
+    # print("DEBUG GM: Richiesta carta P%d -> %s" % [p_id, get_card_name(card)]) # Debug opzionale
+    return card
+
+func _unhandled_input(event):
+    # Attiva Abilità 1 di Player 0 premendo F1 (solo se è il suo turno)
+    if event.is_action_pressed("ui_accept") and current_player_index == 0 and current_state == GameState.PLAYER_TURN : # Usa un tasto dedicato, es. F1 mappato in Input Map
+         print("DEBUG: Tentativo attivazione Abilità 1 per Player 0...")
+         if player_nodes.size() > 0 and is_instance_valid(player_nodes[0]):
+             # Chiama la funzione nel Player, passando -1 come target (non serve per Sguardo Circolare)
+             var success = player_nodes[0].try_use_active_ability(1, -1) 
+             if success:
+                 print("DEBUG: try_use_active_ability(1) ha restituito true.")
+             else:
+                 print("DEBUG: try_use_active_ability(1) ha restituito false (controllare condizioni).")
+                
+                
+func _on_player0_sanity_updated(p_id: int, p_sanity: int):
+    # Questo handler riceve l'update solo per Player 0 (p_id sarà 0)
+    # print("HANDLER: Ricevuto sanity_updated da Player 0. Sanità: ", p_sanity) # Debug opzionale
+    
+    # Controlla se la label esportata è valida
+    if is_instance_valid(player0_sanity_label):
+        # Aggiorna il testo della label usando il formato percentuale
+        # NOTA: In GDScript, per stampare un carattere '%', devi scrivere '%%'
+        player0_sanity_label.text = "Sanità: %d%%" % p_sanity # Es: "Sanità: 85%"
+        
+        # OPZIONALE: Cambia colore testo in base alla percentuale
+        if p_sanity < 30:
+            player0_sanity_label.modulate = Color.ORANGE # O Color.RED
+        else:
+            player0_sanity_label.modulate = Color.WHITE # Colore normale
+            
+    else:
+        printerr("HANDLER: player0_sanity_label non valida!")
+
 
 #endregion

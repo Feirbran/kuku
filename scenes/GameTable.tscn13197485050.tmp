@@ -41,20 +41,19 @@ size = Vector3(0.121094, 0.262756, 0.236023)
 [node name="DeckPositionMarker" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.00376326, 0.00255762, 0)
 
-[node name="GameManager" type="Node3D" parent="." node_paths=PackedStringArray("swap_button", "pass_button", "swap_to_deck_button", "pass_as_dealer_button", "player_info_labels", "last_hand_labels", "last_hand_textures", "deck_position_marker", "player_nodes", "player0_sanity_label")]
+[node name="GameManager" type="Node3D" parent="." node_paths=PackedStringArray("swap_button", "pass_button", "swap_to_deck_button", "pass_as_dealer_button", "player_lives_labels", "last_hand_labels", "last_hand_textures", "deck_position_marker", "player_nodes")]
 script = ExtResource("1_fukfw")
 card_scene = ExtResource("2_qffgw")
-swap_button = NodePath("../HUD/UIMainContainer/HUMAN/SwapButton")
-pass_button = NodePath("../HUD/UIMainContainer/HUMAN/PassaTurno")
-swap_to_deck_button = NodePath("../HUD/UIMainContainer/HUMAN/SwapToDeck")
-pass_as_dealer_button = NodePath("../HUD/UIMainContainer/HUMAN/PassAsDealer")
-player_info_labels = [NodePath("../HUD/UIMainContainer/Player0"), NodePath("../HUD/UIMainContainer/CPU/Player1"), NodePath("../HUD/UIMainContainer/CPU/Player2"), NodePath("../HUD/UIMainContainer/CPU/Player3"), NodePath("../HUD/UIMainContainer/CPU/Player4"), NodePath("../HUD/UIMainContainer/CPU/Player5"), NodePath("../HUD/UIMainContainer/CPU/Player6"), NodePath("../HUD/UIMainContainer/CPU/Player7"), NodePath("../HUD/UIMainContainer/CPU/Player8"), NodePath("../HUD/UIMainContainer/CPU/Player9")]
+swap_button = NodePath("../HUD/UIMainContainer/HBoxContainer/SwapButton")
+pass_button = NodePath("../HUD/UIMainContainer/HBoxContainer/PassaTurno")
+swap_to_deck_button = NodePath("../HUD/UIMainContainer/HBoxContainer/SwapToDeck")
+pass_as_dealer_button = NodePath("../HUD/UIMainContainer/HBoxContainer/PassAsDealer")
+player_lives_labels = [NodePath("../HUD/UIMainContainer/Player0_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player1_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player2_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player3_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player4_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player5_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player6_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player7_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player8_Lives"), NodePath("../HUD/UIMainContainer/HBoxContainer2/Player9_Lives")]
 last_hand_labels = [NodePath("../HUD/UIMainContainer/LastHandDisplay/P0_LastHand/P0_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P1_LastHand/P1_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P2_LastHand/P2_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P3_LastHand/P3_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P4_LastHand/P4_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P5_LastHand/P5_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P6_LastHand/P6_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P7_LastHand/P7_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P8_LastHand/P8_LastHand_Label"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P9_LastHand/P9_LastHand_Label")]
 last_hand_textures = [NodePath("../HUD/UIMainContainer/LastHandDisplay/P0_LastHand/P0_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P1_LastHand/P1_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P2_LastHand/P2_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P3_LastHand/P3_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P4_LastHand/P4_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P5_LastHand/P5_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P6_LastHand/P6_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P7_LastHand/P7_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P8_LastHand/P8_LastHand_Texture"), NodePath("../HUD/UIMainContainer/LastHandDisplay/P9_LastHand/P9_LastHand_Texture")]
 deck_position_marker = NodePath("../DeckPositionMarker")
 player_nodes = [NodePath("../PlayerPositions/Player1"), NodePath("../PlayerPositions/Player2"), NodePath("../PlayerPositions/Player3"), NodePath("../PlayerPositions/Player4"), NodePath("../PlayerPositions/Player5"), NodePath("../PlayerPositions/Player6"), NodePath("../PlayerPositions/Player7"), NodePath("../PlayerPositions/Player8"), NodePath("../PlayerPositions/Player9"), NodePath("../PlayerPositions/Player10")]
 all_class_datas = Array[ExtResource("3_mmidy")]([ExtResource("4_cdhf1"), ExtResource("5_5sq4u"), ExtResource("6_rukyq"), ExtResource("7_lncae"), ExtResource("8_b20bg"), ExtResource("9_ohkfo"), ExtResource("10_5vvai"), ExtResource("11_bt048"), ExtResource("12_cucdf"), ExtResource("13_4u8qh")])
-player0_sanity_label = NodePath("../HUD/UIMainContainer/Sanità P0")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-0.999986, -0.00135518, 0.00505762, 0, 0.965926, 0.258819, -0.00523604, 0.258815, -0.965913, 1.89527, 2.19672, -11.6445)
@@ -127,38 +126,31 @@ offset_top = 958.0
 offset_right = 828.0
 offset_bottom = 998.0
 
-[node name="HUMAN" type="HBoxContainer" parent="HUD/UIMainContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HUD/UIMainContainer"]
 layout_mode = 0
 offset_top = 8.0
 offset_right = 466.0
 offset_bottom = 40.0
 
-[node name="PassaTurno" type="Button" parent="HUD/UIMainContainer/HUMAN"]
+[node name="PassaTurno" type="Button" parent="HUD/UIMainContainer/HBoxContainer"]
 layout_mode = 2
 action_mode = 0
 text = "Passa Turno "
 
-[node name="SwapButton" type="Button" parent="HUD/UIMainContainer/HUMAN"]
+[node name="SwapButton" type="Button" parent="HUD/UIMainContainer/HBoxContainer"]
 layout_mode = 2
 action_mode = 0
 text = "Scambia"
 
-[node name="SwapToDeck" type="Button" parent="HUD/UIMainContainer/HUMAN"]
+[node name="SwapToDeck" type="Button" parent="HUD/UIMainContainer/HBoxContainer"]
 layout_mode = 2
 text = "Mazziere Scambio"
 
-[node name="PassAsDealer" type="Button" parent="HUD/UIMainContainer/HUMAN"]
+[node name="PassAsDealer" type="Button" parent="HUD/UIMainContainer/HBoxContainer"]
 layout_mode = 2
 text = "Mazziere Passa"
 
-[node name="Sanità P0" type="Label" parent="HUD/UIMainContainer"]
-layout_mode = 0
-offset_left = -787.0
-offset_top = -881.0
-offset_right = -666.0
-offset_bottom = -858.0
-
-[node name="Player0" type="Label" parent="HUD/UIMainContainer"]
+[node name="Player0_Lives" type="Label" parent="HUD/UIMainContainer"]
 layout_mode = 2
 offset_left = -787.0
 offset_top = -903.0
@@ -166,7 +158,7 @@ offset_right = -730.0
 offset_bottom = -880.0
 text = "Human"
 
-[node name="CPU" type="HBoxContainer" parent="HUD/UIMainContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="HUD/UIMainContainer"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = -19.35
@@ -178,31 +170,31 @@ offset_top = 9.0
 offset_right = 62.0
 offset_bottom = 9.0
 
-[node name="Player1" type="Label" parent="HUD/UIMainContainer/CPU"]
+[node name="Player1_Lives" type="Label" parent="HUD/UIMainContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="Player2" type="Label" parent="HUD/UIMainContainer/CPU"]
+[node name="Player2_Lives" type="Label" parent="HUD/UIMainContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="Player3" type="Label" parent="HUD/UIMainContainer/CPU"]
+[node name="Player3_Lives" type="Label" parent="HUD/UIMainContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="Player4" type="Label" parent="HUD/UIMainContainer/CPU"]
+[node name="Player4_Lives" type="Label" parent="HUD/UIMainContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="Player5" type="Label" parent="HUD/UIMainContainer/CPU"]
+[node name="Player5_Lives" type="Label" parent="HUD/UIMainContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="Player6" type="Label" parent="HUD/UIMainContainer/CPU"]
+[node name="Player6_Lives" type="Label" parent="HUD/UIMainContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="Player7" type="Label" parent="HUD/UIMainContainer/CPU"]
+[node name="Player7_Lives" type="Label" parent="HUD/UIMainContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="Player8" type="Label" parent="HUD/UIMainContainer/CPU"]
+[node name="Player8_Lives" type="Label" parent="HUD/UIMainContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="Player9" type="Label" parent="HUD/UIMainContainer/CPU"]
+[node name="Player9_Lives" type="Label" parent="HUD/UIMainContainer/HBoxContainer2"]
 layout_mode = 2
 
 [node name="LastHandDisplay" type="VBoxContainer" parent="HUD/UIMainContainer"]
@@ -354,7 +346,7 @@ transform = Transform3D(0.998637, -0.0521965, 0, 0.0521965, 0.998637, 0, 0, 0, 1
 shape = SubResource("BoxShape3D_3pf80")
 
 [connection signal="ready" from="." to="GameManager" method="_on_game_table_ready"]
-[connection signal="pressed" from="HUD/UIMainContainer/HUMAN/PassaTurno" to="GameManager" method="_on_pass_turn_button_pressed"]
-[connection signal="pressed" from="HUD/UIMainContainer/HUMAN/SwapButton" to="GameManager" method="_on_swap_button_pressed"]
-[connection signal="pressed" from="HUD/UIMainContainer/HUMAN/SwapToDeck" to="GameManager" method="_on_swap_to_deck_pressed"]
-[connection signal="pressed" from="HUD/UIMainContainer/HUMAN/PassAsDealer" to="GameManager" method="_on_pass_as_dealer_pressed"]
+[connection signal="pressed" from="HUD/UIMainContainer/HBoxContainer/PassaTurno" to="GameManager" method="_on_pass_turn_button_pressed"]
+[connection signal="pressed" from="HUD/UIMainContainer/HBoxContainer/SwapButton" to="GameManager" method="_on_swap_button_pressed"]
+[connection signal="pressed" from="HUD/UIMainContainer/HBoxContainer/SwapToDeck" to="GameManager" method="_on_swap_to_deck_pressed"]
+[connection signal="pressed" from="HUD/UIMainContainer/HBoxContainer/PassAsDealer" to="GameManager" method="_on_pass_as_dealer_pressed"]
