@@ -19,9 +19,15 @@ class_name GameManager
 
 @onready var cucu_notification_label: Label = %EffectLabelKUKU
 @onready var notification_timer: Timer = %Timer
+
+@export var day_label: Label
+@export var round_label: Label
 # --- Fine Export ---
 
 # --- Variabili Interne ---
+var total_rounds_played: int = 0 # Contatore totale round giocati dall'inizio
+var current_round_in_day: int = 0 # Contatore round all'interno del giorno corrente (da 1 a ROUNDS_PER_DAY)
+var current_day: int = 1         # Giorno corrente (da 1 a MAX_DAYS)
 var player_positions_node: Node3D = null
 var num_players: int = 10 
 var dealer_index: int = 0
@@ -34,10 +40,13 @@ var deck_visual_instances: Array[Node3D] = []
 
 enum GameState { SETUP, DEALING, PLAYER_TURN, DEALER_SWAP, REVEALING, END_ROUND, GAME_OVER }
 var current_state: GameState = GameState.SETUP
+#Gestione giorni
+const MAX_DAYS: int = 10         # Durata massima partita in Giorni
+const ROUNDS_PER_DAY: int = 10   # Numero di Round per Giorno
+signal day_started(new_day_number) # Emetteremo questo segnale all'inizio di un nuovo giorno
 
-# Assicurati che DeckSetupScene sia un Autoload o accessibile
-# var DeckSetupScene # = Autoload o get_node(...)
-
+#INIZIO FUNC
+    
 func _ready():
     # Controlli essenziali all'avvio
     if card_scene == null: printerr("!!! ERRORE _ready: 'Card Scene' non assegnata!"); get_tree().quit(); return
@@ -153,31 +162,22 @@ func _reset_game():
         printerr("ERRORE CRITICO _reset_game: PlayerPositions non valido!"); return
     var markers = player_positions_node.get_children()
     if markers.size() < num_players:
-        printerr("ERRORE CRITICO _reset_game: Non ci sono abbastanza Marker3D (%d) per %d giocatori!" % [markers.size(), num_players])
-        return
+        printerr("ERRORE CRITICO _reset_game: Non ci sono abbastanza Marker3D (%d) per %d giocatori!" % [markers.size(), num_players]); return
 
     for i in range(num_players):
         var player_marker = markers[i] if i < markers.size() else null
         if not player_marker is Marker3D:
-            printerr("ATTENZIONE _reset_game: Elemento %d in PlayerPositions non è Marker3D!" % i)
-            player_marker = null
+            printerr("ATTENZIONE _reset_game: Elemento %d in PlayerPositions non è Marker3D!" % i); player_marker = null
 
-        # Dizionario SENZA stato dinamico (vite, sanità, is_out verranno da Player.gd)
         var new_player_data = {
-            "id": i,
-            "marker": player_marker,
-            "is_out": false, # Stato iniziale (verrà poi letto da Player.gd)
-            "is_cpu": (i != 0),
-            "card_data": [],
-            "visual_cards": [],
-            "has_swapped_this_round": false,
-            "last_card": null
+            "id": i, "marker": player_marker, "is_out": false,
+            "is_cpu": (i != 0), "card_data": [], "visual_cards": [],
+            "has_swapped_this_round": false, "last_card": null
         }
         players_data.append(new_player_data)
 
     if players_data.size() != num_players:
-        printerr("ERRORE INASPETTATO _reset_game: Dimensione players_data (%d) != num_players (%d)!" % [players_data.size(), num_players])
-        return
+        printerr("ERRORE INASPETTATO _reset_game: Dimensione players_data (%d) != num_players (%d)!" % [players_data.size(), num_players]); return
     print("Dati base giocatori inizializzati. Numero elementi in players_data: %d" % players_data.size())
 
     # 5. Assegna Classi Casuali, ID e Connetti Segnali ai Nodi Player
@@ -190,107 +190,84 @@ func _reset_game():
         var available_classes = all_class_datas.duplicate()
         available_classes.shuffle()
 
-        # Loop per assegnare classe e connettere segnali
         for i in range(num_players):
             var player_node = player_nodes[i]
-
             if available_classes.is_empty(): printerr("ERRORE _reset_game: Finite le classi disponibili!"); break
             var chosen_class = available_classes.pop_front()
 
             if not is_instance_valid(player_node) or not player_node.has_method("assign_class"):
                 printerr("ERRORE _reset_game: Nodo Player %d non valido o manca assign_class()." % i); continue
 
-            # Chiama assign_class sul nodo Player
             player_node.assign_class(chosen_class, i)
 
-            # Connetti segnale per aggiornamento vite UI
+            # Connetti segnale vite
             if player_node.has_signal("fingers_updated") and not player_node.is_connected("fingers_updated", Callable(self, "_on_player_fingers_updated")):
                 var err_f = player_node.connect("fingers_updated", Callable(self, "_on_player_fingers_updated"))
                 if err_f != OK: printerr("Errore connessione fingers_updated per Player ", i, ": Codice ", err_f)
 
-            # --- AGGIUNTO QUI: Connetti segnale SANITÀ SOLO per Player 0 ---
-            if i == 0: # Connetti solo per il giocatore umano (ID 0)
+            # Connetti segnale sanità (solo P0)
+            if i == 0:
                 if player_node.has_signal("sanity_updated") and not player_node.is_connected("sanity_updated", Callable(self, "_on_player0_sanity_updated")):
                     var err_s = player_node.connect("sanity_updated", Callable(self, "_on_player0_sanity_updated"))
                     if err_s != OK: printerr("Errore connessione sanity_updated per Player 0: Codice ", err_s)
-            # --- FINE AGGIUNTO ---
 
-            # TODO: Connetti altri segnali necessari qui (es. player_eliminated?)
+        print("Classi assegnate casualmente e segnali connessi.")
 
-        print("Classi assegnate casualmente e segnali connessi.") # Spostato fuori dal loop
-
-    # --- Stampa Assegnazione Classi (Già presente nel tuo codice) ---
+    # --- Stampa Assegnazione Personaggi ---
     print("\n--- ASSEGNAZIONE PERSONAGGI GIOCATORI ---")
     if player_nodes.size() == num_players:
         for i in range(num_players):
             var p_node = player_nodes[i]
             if is_instance_valid(p_node) and p_node.class_data != null:
                 var nome_personaggio = p_node.class_data.character_name
-                var etichetta_tipo = "(CPU)"
-                if i < players_data.size() and not players_data[i].is_cpu:
-                    etichetta_tipo = "(Umano)"
-                elif i >= players_data.size():
-                    etichetta_tipo = "(?)"
+                var etichetta_tipo = "(CPU)" if i < players_data.size() and players_data[i].is_cpu else "(Umano)"
+                if i >= players_data.size(): etichetta_tipo = "(?)"
                 print("  Player %d %s: %s" % [i, etichetta_tipo, nome_personaggio])
-            else:
-                print("  Player %d: (Errore - Dati classe non disponibili)" % i)
-    else:
-        print("  ERRORE: Impossibile stampare assegnazione - numero nodi player non corretto.")
+            else: print("  Player %d: (Errore - Dati classe non disponibili)" % i)
+    else: print("  ERRORE: Impossibile stampare assegnazione - numero nodi player errato.")
     print("---------------------------------------")
 
-# 6. Aggiorna UI iniziale COMBINATA (Nome + Vite)
-    #    Usa l'array player_info_labels (o player_lives_labels se non rinominato)
-    if player_info_labels.size() == player_nodes.size(): 
-        print("Aggiornamento label INFO iniziale (Nome + Vite)...") 
-        # Questo loop usa 'j' come indice
-        for j in range(player_nodes.size()): 
-            # Definiamo la variabile per questo loop come 'player_node' usando l'indice 'j'
-            var player_node = player_nodes[j] 
-            var info_label = player_info_labels[j] if j < player_info_labels.size() and is_instance_valid(player_info_labels[j]) else null 
-            
-            # Controlla la validità della label e del NODO di questo ciclo ('player_node')
+    # 6. Aggiorna UI iniziale COMBINATA (Nome + Vite)
+    if player_info_labels.size() == player_nodes.size():
+        print("Aggiornamento label INFO iniziale (Nome + Vite)...")
+        for j in range(player_nodes.size()):
+            var player_node = player_nodes[j]
+            var info_label = player_info_labels[j] if j < player_info_labels.size() and is_instance_valid(player_info_labels[j]) else null
             if info_label and is_instance_valid(player_node):
-                var char_name = "Player %d" % j # Default
-                var current_lives = -1
-                var is_player_out = true 
+                var char_name = "P%d" % j; var current_lives = -1; var is_player_out = true
+                if player_node.class_data != null: char_name = player_node.class_data.character_name
+                if player_node.has_method("get_fingers_remaining"): current_lives = player_node.get_fingers_remaining()
+                is_player_out = player_node.is_out
+                info_label.text = "%s: %d Vite" % [char_name, current_lives]
+                info_label.visible = not is_player_out
+            elif info_label: info_label.visible = false
+    elif player_info_labels.size() > 0:
+        printerr("ATTENZIONE _reset_game: Numero Label info (%d) != nodi Player (%d)!" % [player_info_labels.size(), player_nodes.size()])
 
-                # Accedi ai dati e metodi usando 'player_node' (la variabile di QUESTO loop)
-                if player_node.class_data != null: 
-                    char_name = player_node.class_data.character_name # <-- CORRETTO
-                    
-                if player_node.has_method("get_fingers_remaining"): 
-                    current_lives = player_node.get_fingers_remaining() # <-- CORRETTO
-                    
-                is_player_out = player_node.is_out # <-- CORRETTO
-
-                # Formatta il testo combinato
-                info_label.text = "%s: %d Vite" % [char_name, current_lives] 
-                info_label.visible = not is_player_out # Imposta visibilità
-                
-            elif info_label:
-                info_label.visible = false # Nascondi se nodo player non valido
-                
-    elif player_info_labels.size() > 0: # Usa il nome dell'array corretto qui
-        printerr("ATTENZIONE _reset_game: Numero Label info (%d) non corrisponde ai nodi Player (%d)!" % [player_info_labels.size(), player_nodes.size()])
-        
-        
-    # 7. Aggiorna UI iniziale Ultima Mano (era Blocco 8)
-    if last_hand_textures.size() == players_data.size():
+    # 7. Aggiorna UI iniziale Ultima Mano
+    if last_hand_textures.size() == num_players and last_hand_labels.size() == num_players:
         print("Resetting UI ultima mano...")
-        for k in range(last_hand_textures.size()):
-            var texture_rect = last_hand_textures[k] if k < last_hand_textures.size() and is_instance_valid(last_hand_textures[k]) else null
+        for k in range(num_players):
+            var texture_rect = last_hand_textures[k] if is_instance_valid(last_hand_textures[k]) else null
             if texture_rect: texture_rect.visible = false
-            var name_label = last_hand_labels[k] if k < last_hand_labels.size() and is_instance_valid(last_hand_labels[k]) else null
+            var name_label = last_hand_labels[k] if is_instance_valid(last_hand_labels[k]) else null
             if name_label: name_label.text = "P%d:" % k
     elif last_hand_textures.size() > 0:
-        printerr("ATTENZIONE _reset_game: Numero TextureRect ultima mano (%d) non corrisponde ai giocatori (%d)!" % [last_hand_textures.size(), players_data.size()])
+        printerr("ATTENZIONE _reset_game: Disallineamento UI Ultima Mano!")
 
-    # 8. Fine Reset (era Blocco 9)
+    # --- AGGIUNTO: Inizializza Contatori e Label Giorno/Round ---
+    total_rounds_played = 0
+    current_day = 1
+    current_round_in_day = 0 # Mostrerà 0/10 inizialmente, poi 1/10 nel primo _end_round
+    print("Contatori Giorno/Round resettati. Giorno: %d" % current_day)
+    _update_day_label()   # Aggiorna label giorno
+    _update_round_label() # Aggiorna label round
+
+    # 8. Fine Reset (ex Blocco 9)
     print("Reset game completato.")
 
-# FINE DELLA FUNZIONE _reset_game
+# FINE FUNZIONE _reset_game
 
-# --- Gestione Round ---
 
 func _start_round():
     # Controlla giocatori attivi leggendo dai NODI PLAYER
@@ -712,14 +689,51 @@ func _end_round():
     if get_tree(): await get_tree().create_timer(2.0).timeout
 
     var old_dealer = dealer_index
-    dealer_index = get_next_active_player(dealer_index, false) # Usa la versione basata sui nodi
+    dealer_index = get_next_active_player(dealer_index, false)
 
     if dealer_index == -1:
         printerr("ERRORE _end_round: Impossibile trovare nuovo mazziere attivo!"); _handle_game_over(active_players_count); return
 
     print("Mazziere passa da %d a %d." % [old_dealer, dealer_index])
+
+    # --- Aggiornamento Contatori Round/Giorno ---
+    total_rounds_played += 1
+    current_round_in_day += 1
+
+    # --- AGGIUNTO: Aggiorna label round ---
+    _update_round_label() # Aggiorna la label con il nuovo numero di round nel giorno
+
+    print("Round Totali: %d | Round nel Giorno %d: %d/%d" % [total_rounds_played, current_day, current_round_in_day, ROUNDS_PER_DAY])
+
+    # Controlla se il giorno è finito
+    if current_round_in_day >= ROUNDS_PER_DAY:
+        print("--- FINE GIORNO %d ---" % current_day)
+        current_day += 1
+
+        # Aggiorna label nuovo giorno
+        _update_day_label() # Chiama l'aggiornamento per la label del giorno
+
+        # Controlla fine partita per giorni
+        if current_day > MAX_DAYS:
+            print("Raggiunto limite massimo di %d Giorni!" % MAX_DAYS); _handle_game_over(active_players_count); return
+
+        # Inizia nuovo giorno
+        current_round_in_day = 0 # Resetta contatore round per il nuovo giorno
+        print("--- INIZIO GIORNO %d ---" % current_day)
+        emit_signal("day_started", current_day) # Emetti segnale
+        print("Reset Cooldown Azioni Disperate...")
+        for p_node in player_nodes: # Resetta cooldown disperate
+            if is_instance_valid(p_node) and not p_node.is_out:
+                if p_node.has_method("reset_desperate_action_cooldown"):
+                    p_node.reset_desperate_action_cooldown(current_day)
+                else: printerr("Player ", p_node.player_id, " manca reset_desperate_action_cooldown()")
+
+    # --- FINE Aggiornamento Contatori Round/Giorno ---
+
+    # Avvia il prossimo round
     call_deferred("_start_round")
 
+# FINE FUNZIONE _end_round
 
 func reveal_all_cards():
     for i in range(player_nodes.size()):
@@ -1006,6 +1020,28 @@ func _on_player_fingers_updated(p_id: int, p_fingers: int):
         else: printerr("HANDLER: Label vite per Player ", p_id, " non valida!")
     else: printerr("HANDLER: ID Player ", p_id, " non valido per l'array delle label vite.")
 
+# Gestione Day / Round
+func _update_day_label():
+    if is_instance_valid(day_label):
+        # Mostra il giorno corrente e il totale massimo
+        day_label.text = "Giorno: %d / %d" % [current_day, MAX_DAYS]
+        day_label.visible = true # Assicura sia visibile
+    else:
+        # Questo errore non dovrebbe apparire se hai collegato la label nell'editor
+        printerr("ATTENZIONE: day_label non assegnata o non valida!")
+
+func _update_round_label():
+    if is_instance_valid(round_label):
+        # Mostra il round corrente nel giorno e il totale per giorno
+        round_label.text = "Round: %d / %d" % [current_round_in_day, ROUNDS_PER_DAY]
+        # Se current_round_in_day è 0 all'inizio, potresti voler mostrare 1?
+        # Alternativa:
+        # var display_round = 1 if current_round_in_day == 0 else current_round_in_day 
+        # round_label.text = "Round: %d / %d" % [display_round, ROUNDS_PER_DAY]
+        round_label.visible = true # Assicura sia visibile
+    else:
+        printerr("ATTENZIONE: round_label non assegnata o non valida!")
+        
 
 # _________________________ABILITà DA QUI IN POI____________________________________________
 
@@ -1061,6 +1097,5 @@ func _on_player0_sanity_updated(p_id: int, p_sanity: int):
             
     else:
         printerr("HANDLER: player0_sanity_label non valida!")
-
 
 #endregion

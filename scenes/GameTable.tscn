@@ -104,7 +104,7 @@ orientation = 1
 [node name="DeckPositionMarker" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.00376326, 0.00255762, 0)
 
-[node name="GameManager" type="Node3D" parent="." node_paths=PackedStringArray("swap_button", "pass_button", "swap_to_deck_button", "pass_as_dealer_button", "player_info_labels", "last_hand_labels", "last_hand_textures", "deck_position_marker", "player_nodes", "player0_sanity_label")]
+[node name="GameManager" type="Node3D" parent="." node_paths=PackedStringArray("swap_button", "pass_button", "swap_to_deck_button", "pass_as_dealer_button", "player_info_labels", "last_hand_labels", "last_hand_textures", "deck_position_marker", "player_nodes", "player0_sanity_label", "day_label", "round_label")]
 script = ExtResource("1_fukfw")
 card_scene = ExtResource("2_qffgw")
 swap_button = NodePath("../HUD/UIMainContainer/SwapButton")
@@ -118,6 +118,8 @@ deck_position_marker = NodePath("../DeckPositionMarker")
 player_nodes = [NodePath("../PlayerPositions/Player1"), NodePath("../PlayerPositions/Player2"), NodePath("../PlayerPositions/Player3"), NodePath("../PlayerPositions/Player4"), NodePath("../PlayerPositions/Player5"), NodePath("../PlayerPositions/Player6"), NodePath("../PlayerPositions/Player7"), NodePath("../PlayerPositions/Player8"), NodePath("../PlayerPositions/Player9"), NodePath("../PlayerPositions/Player10")]
 all_class_datas = Array[ExtResource("3_mmidy")]([ExtResource("4_cdhf1"), ExtResource("5_5sq4u"), ExtResource("6_rukyq"), ExtResource("7_lncae"), ExtResource("8_b20bg"), ExtResource("9_ohkfo"), ExtResource("10_5vvai"), ExtResource("11_bt048"), ExtResource("12_cucdf"), ExtResource("13_4u8qh")])
 player0_sanity_label = NodePath("../HUD/UIMainContainer/HUMAN/Sanità P0")
+day_label = NodePath("../HUD/day")
+round_label = NodePath("../HUD/round")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-0.999986, -0.00135518, 0.00505762, 0, 0.965926, 0.258819, -0.00523604, 0.258815, -0.965913, 1.89527, 2.19672, -11.6445)
@@ -423,6 +425,21 @@ uppercase = true
 
 [node name="Timer" type="Timer" parent="HUD"]
 unique_name_in_owner = true
+
+[node name="day" type="Label" parent="HUD"]
+offset_left = 804.0
+offset_top = 26.0
+offset_right = 1056.0
+offset_bottom = 49.0
+
+[node name="round" type="Label" parent="HUD"]
+anchors_preset = -1
+anchor_right = 0.01
+anchor_bottom = 0.022
+offset_left = 816.0
+offset_top = 54.0
+offset_right = 933.2
+offset_bottom = 54.472
 
 [node name="CardVisual" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.0712711, 0.997457, 0, -0.997457, 0.0712711, 0, -0.00125334, 0.00763856)
