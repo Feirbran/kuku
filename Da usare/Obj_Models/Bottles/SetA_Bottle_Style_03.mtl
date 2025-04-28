@@ -1,0 +1,14 @@
+# Blender 3.6.2 MTL File: 'Furntiure_Assets_Set_A_Active.blend'
+# www.blender.org
+
+newmtl SetA_PotionBottle_Style_03
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_PotionBottle_Style_03_BaseColor.png
+map_Ns C:/SetA_PotionBottle_Style_03_Roughness.png
+map_refl C:/SetA_PotionBottle_Style_03_Metallic.png
+map_Ke C:/SetA_PotionBottle_Style_03_Emission.png
+map_d C:/SetA_PotionBottle_Style_03_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_PotionBottle_Style_03_Normal.png

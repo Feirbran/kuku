@@ -1,0 +1,1202 @@
+# Blender 3.6.2 MTL File: 'Furntiure_Assets_Set_A_Active.blend'
+# www.blender.org
+
+newmtl Bamboo_Leaves.002
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd C:/TCom_Leaves_Bamboo01_1K_albedo.tif
+map_Ns C:/TCom_Leaves_Bamboo01_1K_roughness.tif
+map_d C:/TCom_Leaves_Bamboo01_1K_alpha.tif
+map_Bump -bm 1.000000 C:/TCom_Leaves_Bamboo01_1K_normal.tif
+
+newmtl Bamboo_Leaves.003
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd C:/TCom_Leaves_Bamboo01_1K_albedo.tif
+map_Ns C:/TCom_Leaves_Bamboo01_1K_roughness.tif
+map_d C:/TCom_Leaves_Bamboo01_1K_alpha.tif
+map_Bump -bm 1.000000 C:/TCom_Leaves_Bamboo01_1K_normal.tif
+
+newmtl Bamboo_Leaves.004
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd C:/TCom_Leaves_Bamboo01_1K_albedo.tif
+map_Ns C:/TCom_Leaves_Bamboo01_1K_roughness.tif
+map_d C:/TCom_Leaves_Bamboo01_1K_alpha.tif
+map_Bump -bm 1.000000 C:/TCom_Leaves_Bamboo01_1K_normal.tif
+
+newmtl Bowl_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/Bowl_Style_01_BaseColor.png
+map_Ns C:/Bowl_Style_01_Roughness.png
+map_refl C:/Bowl_Style_01_Metallic.png
+map_Ke C:/Bowl_Style_01_Emission.png
+map_d C:/Bowl_Style_01_Alpha.png
+map_Bump -bm 1.000000 C:/Bowl_Style_01_Normal.png
+
+newmtl Bowl_Style_01C
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/Bowl_Style_01_BaseColor.png
+map_Ns C:/Bowl_Style_01_Roughness.png
+map_refl C:/Bowl_Style_01_Metallic.png
+map_Ke C:/Bowl_Style_01_Emission.png
+map_d C:/Bowl_Style_01_Alpha.png
+map_Bump -bm 1.000000 C:/Bowl_Style_01_Normal.png
+
+newmtl Bowl_Style_01D
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/Bowl_Style_01_BaseColor.png
+map_Ns C:/Bowl_Style_01_Roughness.png
+map_refl C:/Bowl_Style_01_Metallic.png
+map_Ke C:/Bowl_Style_01_Emission.png
+map_d C:/Bowl_Style_01_Alpha.png
+map_Bump -bm 1.000000 C:/Bowl_Style_01_Normal.png
+
+newmtl Bowl_Style_01b
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/Bowl_Style_01_BaseColor.png
+map_Ns C:/Bowl_Style_01_Roughness.png
+map_refl C:/Bowl_Style_01_Metallic.png
+map_Ke C:/Bowl_Style_01_Emission.png
+map_d C:/Bowl_Style_01_Alpha.png
+map_Bump -bm 1.000000 C:/Bowl_Style_01_Normal.png
+
+newmtl Carpet_Comp_0001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Carpets_comp_01.png
+
+newmtl Container_Style_17B_2048
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Container_Style_17_BaseColor.png
+map_Ns C:/SetA_Container_Style_17_Roughness.png
+map_refl C:/SetA_Container_Style_17_Metallic.png
+map_Ke C:/SetA_Container_Style_17_Emission.png
+map_d C:/SetA_Container_Style_17_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Container_Style_17_Normal.png
+
+newmtl GRIDCHECK
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Ground_Soil_8.002
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/TCom_Ground_Soil8_2x2_1K_albedo.tif
+map_Ns C:/TCom_Ground_Soil8_2x2_1K_roughness.tif
+map_Bump -bm 1.000000 C:/TCom_Ground_Soil8_2x2_1K_normal.tif
+
+newmtl Lantern_Glass
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Lantern_GlasswithBase_Type_01_BaseColor.png
+map_Ns C:/Lantern_GlasswithBase_Type_01_Roughness.png
+map_Bump -bm 1.000000 C:/Lantern_GlasswithBase_Type_01_Normal.png
+
+newmtl Lantern_GlasswithBase_Type_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Lantern_GlasswithBase_Type_01_BaseColor.png
+map_Ns C:/Lantern_GlasswithBase_Type_01_Roughness.png
+map_Bump -bm 1.000000 C:/Lantern_GlasswithBase_Type_01_Normal.png
+
+newmtl Lantern_Top_Type_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Lantern_Top_Type_01_BaseColor.png
+map_Ns C:/Lantern_Top_Type_01_Roughness.png
+map_Bump -bm 1.000000 C:/Lantern_Top_Type_01_Normal.png
+
+newmtl Plant_Mint01B.001
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd C:/TCom_Plant_Mint01B_512_albedo.tif
+map_Ns C:/TCom_Plant_Mint01B_512_roughness.tif
+map_d C:/TCom_Plant_Mint01B_512_alpha.tif
+map_Bump -bm 1.000000 C:/TCom_Plant_Mint01B_512_normal.tif
+
+newmtl Plant_Mint01B.002
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd C:/TCom_Plant_Mint01B_512_albedo.tif
+map_Ns C:/TCom_Plant_Mint01B_512_roughness.tif
+map_d C:/TCom_Plant_Mint01B_512_alpha.tif
+map_Bump -bm 1.000000 C:/TCom_Plant_Mint01B_512_normal.tif
+
+newmtl PotPlant_Type_01.002
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/PotPlant_Type_01_BaseColor.png
+map_Ns C:/PotPlant_Type_01_Roughness.png
+map_refl C:/PotPlant_Type_01_Metallic.png
+map_Ke C:/PotPlant_Type_01_Emission.png
+map_d C:/PotPlant_Type_01_Alpha.png
+map_Bump -bm 0.200000 C:/PotPlant_Type_01_Normal.png
+
+newmtl Rough_Ceramics_Old.002
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/TCom_RoughCeramic_Old_1K_albedo.tif
+map_Ns C:/TCom_RoughCeramic_Old_1K_roughness.tif
+map_refl C:/TCom_RoughCeramic_Old_1K_metallic.tif
+map_Bump -bm 1.000000 C:/TCom_RoughCeramic_Old_1K_normal.tif
+
+newmtl SetA_BasketEmpty_Style_02
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_BasketEmpty_Style_02_BaseColor.png
+map_Ns C:/SetA_BasketEmpty_Style_02_Roughness.png
+map_refl C:/SetA_BasketEmpty_Style_02_Metallic.png
+map_Ke C:/SetA_BasketEmpty_Style_02_Emission.png
+map_d C:/SetA_BasketEmpty_Style_02_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_BasketEmpty_Style_02_Normal.png
+
+newmtl SetA_Basket_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Basket_Style_01_BaseColor.png
+map_Ns C:/SetA_Basket_Style_01_Roughness.png
+map_refl C:/SetA_Basket_Style_01_Metallic.png
+map_Ke C:/SetA_Basket_Style_01_Emission.png
+map_d C:/SetA_Basket_Style_01_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Basket_Style_01_Normal.png
+
+newmtl SetA_Book_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Book_Style_01_BaseColor.png
+map_Ns C:/Book_Style_01_Roughness.png
+map_Bump -bm 1.000000 C:/Book_Style_01_Normal.png
+
+newmtl SetA_Book_Style_02
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Book_Style_02_BaseColor.png
+map_Ns C:/Book_Style_02_Roughness.png
+map_Bump -bm 1.000000 C:/Book_Style_02_Normal.png
+
+newmtl SetA_Book_Style_03
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Book_Style_03_BaseColor.png
+map_Ns C:/Book_Style_03_Roughness.png
+map_Bump -bm 1.000000 C:/Book_Style_03_Normal.png
+
+newmtl SetA_Book_Style_04
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Book_Style_04_BaseColor.png
+map_Ns C:/Book_Style_04_Roughness.png
+map_Bump -bm 1.000000 C:/Book_Style_04_Normal.png
+
+newmtl SetA_Book_Style_05
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Book_Style_05_BaseColor.png
+map_Ns C:/SetA_Book_Style_05_Roughness.png
+map_refl C:/SetA_Book_Style_05_Metallic.png
+map_Ke C:/SetA_Book_Style_05_Emission.png
+map_d C:/SetA_Book_Style_05_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Book_Style_05_Normal.png
+
+newmtl SetA_Bottle_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Bottle_Type_01_BaseColor.png
+map_Ns C:/Bottle_Type_01_Roughness.png
+map_Bump -bm 1.000000 C:/Bottle_Type_01_Normal.png
+
+newmtl SetA_Bottle_Style_02
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Bottle_Style_02_BaseColor.png
+map_Ns C:/SetA_Bottle_Style_02_Roughness.png
+map_refl C:/SetA_Bottle_Style_02_Metallic.png
+map_Ke C:/SetA_Bottle_Style_02_Emission.png
+map_d C:/SetA_Bottle_Style_02_Alpha.png
+map_Bump -bm 0.500000 C:/SetA_Bottle_Style_02_Normal.png
+
+newmtl SetA_Bottle_Style_03
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Bottle_Style_03_BaseColor.png
+map_Ns C:/SetA_Bottle_Style_03_Roughness.png
+map_refl C:/SetA_Bottle_Style_03_Metallic.png
+map_Ke C:/SetA_Bottle_Style_03_Emission.png
+map_d C:/SetA_Bottle_Style_03_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Bottle_Style_03_Normal.png
+
+newmtl SetA_Bottle_Style_04
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl SetA_Bucket_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Bucket_Style_01_BaseColor.png
+map_Ns C:/SetA_Bucket_Style_01_Roughness.png
+map_refl C:/SetA_Bucket_Style_01_Metallic.png
+map_Ke C:/SetA_Bucket_Style_01_Emission.png
+map_d C:/SetA_Bucket_Style_01_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Bucket_Style_01_Normal.png
+
+newmtl SetA_Cabinet_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Cabinet_Style_01_BaseColor.png
+map_Ns C:/SetA_Cabinet_Style_01_Roughness.png
+map_refl C:/SetA_Cabinet_Style_01_Metallic.png
+map_Ke C:/SetA_Cabinet_Style_01_Emission.png
+map_d C:/SetA_Cabinet_Style_01_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Cabinet_Style_01_Normal.png
+
+newmtl SetA_Chair_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/SetA_Chair_Style_01_BaseColor.png
+map_Ns C:/SetA_Chair_Style_01_Roughness.png
+map_Bump -bm 0.200000 C:/SetA_Chair_Style_01_Normal.png
+
+newmtl SetA_Chair_Style_02
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/SetA_Chair_Style_02_BaseColor.png
+map_Ns C:/SetA_Chair_Style_02_Roughness.png
+map_Bump -bm 0.200000 C:/SetA_Chair_Style_02_Normal.png
+
+newmtl SetA_Chair_Style_02_Cushions
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/SetA_Chair_Style_02_Cushions_BaseColor.png
+map_Ns C:/SetA_Chair_Style_02_Cushions_Roughness.png
+map_Bump -bm 0.200000 C:/SetA_Chair_Style_02_Cushions_Normal.png
+
+newmtl SetA_Chair_Style_03
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/SetA_Chair_Style_03_BaseColor.png
+map_Ns C:/SetA_Chair_Style_03_Roughness.png
+map_Bump -bm 0.200000 C:/SetA_Chair_Style_03_Normal.png
+
+newmtl SetA_Chair_Style_03_Cushions
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/SetA_Chair_Style_03_Cushions_BaseColor.png
+map_Ns C:/SetA_Chair_Style_03_Cushions_Roughness.png
+map_Bump -bm 0.200000 C:/SetA_Chair_Style_03_Cushions_Normal.png
+
+newmtl SetA_Container_Style_04
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Container_Type_04_BaseColor.png
+map_Ns C:/Container_Type_04_Roughness.png
+map_Bump -bm 1.000000 C:/Container_Type_04_Normal.png
+
+newmtl SetA_Container_Style_05
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Container_Type_05_BaseColor.png
+map_Ns C:/Container_Type_05_Roughness.png
+map_Bump -bm 1.000000 C:/Container_Type_05_Normal.png
+
+newmtl SetA_Container_Style_06
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Container_Type_06_BaseColor.png
+map_Ns C:/Container_Type_06_Roughness.png
+map_Bump -bm 1.000000 C:/Container_Type_06_Normal.png
+
+newmtl SetA_Container_Style_07_Bttm
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Container_Type_07_Bttm_BaseColor.png
+map_Ns C:/Container_Type_07_Bttm_Roughness.png
+map_Bump -bm 1.000000 C:/Container_Type_07_Bttm_Normal.png
+
+newmtl SetA_Container_Style_07_Top
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Container_Type_07_Top_BaseColor.png
+map_Ns C:/Container_Type_07_Top_Roughness.png
+map_Bump -bm 1.000000 C:/Container_Type_07_Top_Normal.png
+
+newmtl SetA_Container_Style_08
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Container_Style_08_BaseColor.png
+map_Ns C:/SetA_Container_Style_08_Roughness.png
+map_refl C:/SetA_Container_Style_08_Metallic.png
+map_Ke C:/SetA_Container_Style_08_Emission.png
+map_d C:/SetA_Container_Style_08_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Container_Style_08_Normal.png
+
+newmtl SetA_Container_Style_09
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Container_Style_09_BaseColor.png
+map_Ns C:/SetA_Container_Style_09_Roughness.png
+map_refl C:/SetA_Container_Style_09_Metallic.png
+map_Ke C:/SetA_Container_Style_09_Emission.png
+map_d C:/SetA_Container_Style_09_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Container_Style_09_Normal.png
+
+newmtl SetA_Container_Style_10
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Container_Style_10_BaseColor.png
+map_Ns C:/SetA_Container_Style_10_Roughness.png
+map_refl C:/SetA_Container_Style_10_Metallic.png
+map_Ke C:/SetA_Container_Style_10_Emission.png
+map_d C:/SetA_Container_Style_10_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Container_Style_10_Normal.png
+
+newmtl SetA_Container_Style_11
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl SetA_Container_Style_12
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Container_Style_12_BaseColor.png
+map_Ns C:/SetA_Container_Style_12_Roughness.png
+map_refl C:/SetA_Container_Style_12_Metallic.png
+map_Ke C:/SetA_Container_Style_12_Emission.png
+map_d C:/SetA_Container_Style_12_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Container_Style_12_Normal.png
+
+newmtl SetA_Container_Style_13
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Container_Style_13_BaseColor.png
+map_Ns C:/SetA_Container_Style_13_Roughness.png
+map_refl C:/SetA_Container_Style_13_Metallic.png
+map_Ke C:/SetA_Container_Style_13_Emission.png
+map_d C:/SetA_Container_Style_13_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Container_Style_13_Normal.png
+
+newmtl SetA_Container_Style_14
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Container_Style_14_BaseColor.png
+map_Ns C:/SetA_Container_Style_14_Roughness.png
+map_refl C:/SetA_Container_Style_14_Metallic.png
+map_Ke C:/SetA_Container_Style_14_Emission.png
+map_d C:/SetA_Container_Style_14_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Container_Style_14_Normal.png
+
+newmtl SetA_Container_Style_15
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Container_Style_15_BaseColor.png
+map_Ns C:/SetA_Container_Style_15_Roughness.png
+map_refl C:/SetA_Container_Style_15_Metallic.png
+map_Ke C:/SetA_Container_Style_15_Emission.png
+map_d C:/SetA_Container_Style_15_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Container_Style_15_Normal.png
+
+newmtl SetA_Container_Style_16
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Container_Style_16_BaseColor.png
+map_Ns C:/SetA_Container_Style_16_Roughness.png
+map_refl C:/SetA_Container_Style_16_Metallic.png
+map_Ke C:/SetA_Container_Style_16_Emission.png
+map_d C:/SetA_Container_Style_16_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Container_Style_16_Normal.png
+
+newmtl SetA_Container_Style_17
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Container_Style_17_BaseColor.png
+map_Ns C:/SetA_Container_Style_17_Roughness.png
+map_refl C:/SetA_Container_Style_17_Metallic.png
+map_Ke C:/SetA_Container_Style_17_Emission.png
+map_d C:/SetA_Container_Style_17_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Container_Style_17_Normal.png
+
+newmtl SetA_Container_Style_18
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Container_Style_18_BaseColor.png
+map_Ns C:/SetA_Container_Style_18_Roughness.png
+map_refl C:/SetA_Container_Style_18_Metallic.png
+map_Ke C:/SetA_Container_Style_18_Emission.png
+map_d C:/SetA_Container_Style_18_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Container_Style_18_Normal.png
+
+newmtl SetA_Container_Style_19
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Container_Style_19_BaseColor.png
+map_Ns C:/SetA_Container_Style_19_Roughness.png
+map_refl C:/SetA_Container_Style_19_Metallic.png
+map_Ke C:/SetA_Container_Style_19_Emission.png
+map_d C:/SetA_Container_Style_19_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Container_Style_19_Normal.png
+
+newmtl SetA_ContinerPot_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/ContinerPot_Type_01_BaseColor.png
+map_Ns C:/ContinerPot_Type_01_Roughness.png
+map_Bump -bm 1.000000 C:/ContinerPot_Type_01_Normal.png
+
+newmtl SetA_Jug_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Jug_Style_01_BaseColor.png
+map_Ns C:/SetA_Jug_Style_01_Roughness.png
+map_refl C:/SetA_Jug_Style_01_Metallic.png
+map_Ke C:/SetA_Jug_Style_01_Emission.png
+map_d C:/SetA_Jug_Style_01_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Jug_Style_01_Normal.png
+
+newmtl SetA_Misc_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Misc_01_BaseColor.png
+map_Ns C:/SetA_Misc_01_Roughness.png
+map_refl C:/SetA_Misc_01_Metallic.png
+map_Ke C:/SetA_Misc_01_Emission.png
+map_d C:/SetA_Misc_01_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Misc_01_Normal.png
+
+newmtl SetA_Misc_02
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Misc_02_BaseColor.png
+map_Ns C:/SetA_Misc_02_Roughness.png
+map_refl C:/SetA_Misc_02_Metallic.png
+map_Ke C:/SetA_Misc_02_Emission.png
+map_d C:/SetA_Misc_02_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Misc_02_Normal.png
+
+newmtl SetA_Misc_03
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Misc_03_BaseColor.png
+map_Ns C:/SetA_Misc_03_Roughness.png
+map_refl C:/SetA_Misc_03_Metallic.png
+map_Ke C:/SetA_Misc_03_Emission.png
+map_d C:/SetA_Misc_03_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Misc_03_Normal.png
+
+newmtl SetA_Misc_04
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Misc_04_BaseColor.png
+map_Ns C:/SetA_Misc_04_Roughness.png
+map_refl C:/SetA_Misc_04_Metallic.png
+map_Ke C:/SetA_Misc_04_Emission.png
+map_d C:/SetA_Misc_04_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Misc_04_Normal.png
+
+newmtl SetA_Misc_05
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Misc_05_BaseColor.png
+map_Ns C:/SetA_Misc_05_Roughness.png
+map_refl C:/SetA_Misc_05_Metallic.png
+map_Ke C:/SetA_Misc_05_Emission.png
+map_d C:/SetA_Misc_05_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Misc_05_Normal.png
+
+newmtl SetA_Misc_06
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Misc_06_BaseColor.png
+map_Ns C:/SetA_Misc_06_Roughness.png
+map_refl C:/SetA_Misc_06_Metallic.png
+map_Ke C:/SetA_Misc_06_Emission.png
+map_d C:/SetA_Misc_06_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Misc_06_Normal.png
+
+newmtl SetA_Misc_07
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl SetA_Misc_08
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Misc_08_BaseColor.png
+map_Ns C:/SetA_Misc_08_Roughness.png
+map_refl C:/SetA_Misc_08_Metallic.png
+map_Ke C:/SetA_Misc_08_Emission.png
+map_d C:/SetA_Misc_08_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Misc_08_Normal.png
+
+newmtl SetA_Misc_09
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Misc_09_BaseColor.png
+map_Ns C:/SetA_Misc_09_Roughness.png
+map_refl C:/SetA_Misc_09_Metallic.png
+map_Ke C:/SetA_Misc_09_Emission.png
+map_d C:/SetA_Misc_09_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Misc_09_Normal.png
+
+newmtl SetA_Misc_09_Cross
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Misc_09_Cross_BaseColor.png
+map_Ns C:/SetA_Misc_09_Cross_Roughness.png
+map_refl C:/SetA_Misc_09_Cross_Metallic.png
+map_Ke C:/SetA_Misc_09_Cross_Emission.png
+map_d C:/SetA_Misc_09_Cross_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Misc_09_Cross_Normal.png
+
+newmtl SetA_Misc_11
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Misc_11_BaseColor.png
+map_Ns C:/SetA_Misc_11_Roughness.png
+map_refl C:/SetA_Misc_11_Metallic.png
+map_Ke C:/SetA_Misc_11_Emission.png
+map_d C:/SetA_Misc_11_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Misc_11_Normal.png
+
+newmtl SetA_Misc_12_Rope
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Misc_12_Rope_BaseColor.png
+map_Ns C:/SetA_Misc_12_Rope_Roughness.png
+map_refl C:/SetA_Misc_12_Rope_Metallic.png
+map_Ke C:/SetA_Misc_12_Rope_Emission.png
+map_d C:/SetA_Misc_12_Rope_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Misc_12_Rope_Normal.png
+
+newmtl SetA_Pot_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Pot_Style_01_BaseColor.png
+map_Ns C:/SetA_Pot_Style_01_Roughness.png
+map_refl C:/SetA_Pot_Style_01_Metallic.png
+map_Ke C:/SetA_Pot_Style_01_Emission.png
+map_d C:/SetA_Pot_Style_01_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Pot_Style_01_Normal.png
+
+newmtl SetA_PotionBottle_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_PotionBottle_Style_01_BaseColor.png
+map_Ns C:/SetA_PotionBottle_Style_01_Roughness.png
+map_refl C:/SetA_PotionBottle_Style_01_Metallic.png
+map_Ke C:/SetA_PotionBottle_Style_01_Emission.png
+map_d C:/SetA_PotionBottle_Style_01_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_PotionBottle_Style_01_Normal.png
+
+newmtl SetA_PotionBottle_Style_02
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_PotionBottle_Style_02_BaseColor.png
+map_Ns C:/SetA_PotionBottle_Style_02_Roughness.png
+map_refl C:/SetA_PotionBottle_Style_02_Metallic.png
+map_Ke C:/SetA_PotionBottle_Style_02_Emission.png
+map_d C:/SetA_PotionBottle_Style_02_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_PotionBottle_Style_02_Normal.png
+
+newmtl SetA_PotionBottle_Style_03
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_PotionBottle_Style_03_BaseColor.png
+map_Ns C:/SetA_PotionBottle_Style_03_Roughness.png
+map_refl C:/SetA_PotionBottle_Style_03_Metallic.png
+map_Ke C:/SetA_PotionBottle_Style_03_Emission.png
+map_d C:/SetA_PotionBottle_Style_03_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_PotionBottle_Style_03_Normal.png
+
+newmtl SetA_PotionBottle_Style_04
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_PotionBottle_Style_04_BaseColor.png
+map_Ns C:/SetA_PotionBottle_Style_04_Roughness.png
+map_refl C:/SetA_PotionBottle_Style_04_Metallic.png
+map_Ke C:/SetA_PotionBottle_Style_04_Emission.png
+map_d C:/SetA_PotionBottle_Style_04_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_PotionBottle_Style_04_Normal.png
+
+newmtl SetA_PotionBottle_Style_05
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_PotionBottle_Style_05_BaseColor.png
+map_Ns C:/SetA_PotionBottle_Style_05_Roughness.png
+map_refl C:/SetA_PotionBottle_Style_05_Metallic.png
+map_Ke C:/SetA_PotionBottle_Style_05_Emission.png
+map_d C:/SetA_PotionBottle_Style_05_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_PotionBottle_Style_05_Normal.png
+
+newmtl SetA_PottedPlant_Style_02
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_PottedPlant_Style_02_BaseColor.png
+map_Ns C:/SetA_PottedPlant_Style_02_Roughness.png
+map_refl C:/SetA_PottedPlant_Style_02_Metallic.png
+map_Ke C:/SetA_PottedPlant_Style_02_Emission.png
+map_d C:/SetA_PottedPlant_Style_02_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_PottedPlant_Style_02_Normal.png
+
+newmtl SetA_PottedPlant_Style_03
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_PottedPlant_Style_03_BaseColor.png
+map_Ns C:/SetA_PottedPlant_Style_03_Roughness.png
+map_refl C:/SetA_PottedPlant_Style_03_Metallic.png
+map_Ke C:/SetA_PottedPlant_Style_03_Emission.png
+map_d C:/SetA_PottedPlant_Style_03_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_PottedPlant_Style_03_Normal.png
+
+newmtl SetA_PottedPlant_Style_04
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_PottedPlant_Style_04_BaseColor.png
+map_Ns C:/SetA_PottedPlant_Style_04_Roughness.png
+map_refl C:/SetA_PottedPlant_Style_04_Metallic.png
+map_Ke C:/SetA_PottedPlant_Style_04_Emission.png
+map_d C:/SetA_PottedPlant_Style_04_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_PottedPlant_Style_04_Normal.png
+
+newmtl SetA_Shelve_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Shelve_Type_01_BaseColor.png
+map_Ns C:/Shelve_Type_01_Roughness.png
+map_Bump -bm 1.000000 C:/Shelve_Type_01_Normal.png
+
+newmtl SetA_Shelve_Style_02
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Shelve_Type_02_BaseColor.png
+map_Ns C:/Shelve_Type_02_Roughness.png
+map_Bump -bm 1.000000 C:/Shelve_Type_02_Normal.png
+
+newmtl SetA_Shelve_Style_03
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Shelve_Style_03_BaseColor.png
+map_Ns C:/SetA_Shelve_Style_03_Roughness.png
+map_refl C:/SetA_Shelve_Style_03_Metallic.png
+map_Ke C:/SetA_Shelve_Style_03_Emission.png
+map_d C:/SetA_Shelve_Style_03_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Shelve_Style_03_Normal.png
+
+newmtl SetA_Shelve_Style_04
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Shelve_Style_04_BaseColor.png
+map_Ns C:/SetA_Shelve_Style_04_Roughness.png
+map_refl C:/SetA_Shelve_Style_04_Metallic.png
+map_Ke C:/SetA_Shelve_Style_04_Emission.png
+map_d C:/SetA_Shelve_Style_04_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Shelve_Style_04_Normal.png
+
+newmtl SetA_Shelve_Style_05
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Shelve_Style_05_BaseColor.png
+map_Ns C:/SetA_Shelve_Style_05_Roughness.png
+map_refl C:/SetA_Shelve_Style_05_Metallic.png
+map_Ke C:/SetA_Shelve_Style_05_Emission.png
+map_d C:/SetA_Shelve_Style_05_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Shelve_Style_05_Normal.png
+
+newmtl SetA_Shelve_Style_06
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Shelve_Style_06_BaseColor.png
+map_Ns C:/SetA_Shelve_Style_06_Roughness.png
+map_refl C:/SetA_Shelve_Style_06_Metallic.png
+map_Ke C:/SetA_Shelve_Style_06_Emission.png
+map_d C:/SetA_Shelve_Style_06_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Shelve_Style_06_Normal.png
+
+newmtl SetA_Shelve_Style_06B
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Shelve_Style_06_BaseColor.png
+map_Ns C:/SetA_Shelve_Style_06_Roughness.png
+map_refl C:/SetA_Shelve_Style_06_Metallic.png
+map_Ke C:/SetA_Shelve_Style_06_Emission.png
+map_d C:/SetA_Shelve_Style_06_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Shelve_Style_06_Normal.png
+
+newmtl SetA_Stand_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Stand_Style_01_BaseColor.png
+map_Ns C:/SetA_Stand_Style_01_Roughness.png
+map_refl C:/SetA_Stand_Style_01_Metallic.png
+map_Ke C:/SetA_Stand_Style_01_Emission.png
+map_d C:/SetA_Stand_Style_01_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Stand_Style_01_Normal.png
+
+newmtl SetA_SupportBracket_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/SupportBracket_Type_01_BaseColor.png
+map_Ns C:/SupportBracket_Type_01_Roughness.png
+map_Bump -bm 1.000000 C:/SupportBracket_Type_01_Normal.png
+
+newmtl SetA_SupportShelf_Style_02
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/SupportShelf_Type_02_BaseColor.png
+map_Ns C:/SupportShelf_Type_02_Roughness.png
+map_Bump -bm 1.000000 C:/SupportShelf_Type_02_Normal.png
+
+newmtl SetA_SupportShelf_Style_04
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_SupportShelf_Style_04_BaseColor.png
+map_Ns C:/SetA_SupportShelf_Style_04_Roughness.png
+map_refl C:/SetA_SupportShelf_Style_04_Metallic.png
+map_Ke C:/SetA_SupportShelf_Style_04_Emission.png
+map_d C:/SetA_SupportShelf_Style_04_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_SupportShelf_Style_04_Normal.png
+
+newmtl SetA_SupportShelf_Style_05
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_SupportShelf_Style_05_BaseColor.png
+map_Ns C:/SetA_SupportShelf_Style_05_Roughness.png
+map_refl C:/SetA_SupportShelf_Style_05_Metallic.png
+map_Ke C:/SetA_SupportShelf_Style_05_Emission.png
+map_d C:/SetA_SupportShelf_Style_05_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_SupportShelf_Style_05_Normal.png
+
+newmtl SetA_SupportShelf_Style_05b
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_SupportShelf_Style_05_BaseColor.png
+map_Ns C:/SetA_SupportShelf_Style_05_Roughness.png
+map_refl C:/SetA_SupportShelf_Style_05_Metallic.png
+map_Ke C:/SetA_SupportShelf_Style_05_Emission.png
+map_d C:/SetA_SupportShelf_Style_05_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_SupportShelf_Style_05_Normal.png
+
+newmtl SetA_Table_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Table_Style_01_BaseColor.png
+map_Ns C:/SetA_Table_Style_01_Roughness.png
+map_refl C:/SetA_Table_Style_01_Metallic.png
+map_Ke C:/SetA_Table_Style_01_Emission.png
+map_d C:/SetA_Table_Style_01_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Table_Style_01_Normal.png
+
+newmtl SetA_Table_Style_01_Drawer
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Table_Style_01_Drawer_BaseColor.png
+map_Ns C:/SetA_Table_Style_01_Drawer_Roughness.png
+map_refl C:/SetA_Table_Style_01_Drawer_Metallic.png
+map_Ke C:/SetA_Table_Style_01_Drawer_Emission.png
+map_d C:/SetA_Table_Style_01_Drawer_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Table_Style_01_Drawer_Normal.png
+
+newmtl SetA_Table_Style_01b
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Table_Style_01_BaseColor.png
+map_Ns C:/SetA_Table_Style_01_Roughness.png
+map_refl C:/SetA_Table_Style_01_Metallic.png
+map_Ke C:/SetA_Table_Style_01_Emission.png
+map_d C:/SetA_Table_Style_01_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Table_Style_01_Normal.png
+
+newmtl SetA_Table_Style_01b_Drawer
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Table_Style_01_Drawer_BaseColor.png
+map_Ns C:/SetA_Table_Style_01_Drawer_Roughness.png
+map_refl C:/SetA_Table_Style_01_Drawer_Metallic.png
+map_Ke C:/SetA_Table_Style_01_Drawer_Emission.png
+map_d C:/SetA_Table_Style_01_Drawer_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Table_Style_01_Drawer_Normal.png
+
+newmtl SetA_WallCandleHolder_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_WallCandleHolder_Style_01_BaseColor.png
+map_Ns C:/SetA_WallCandleHolder_Style_01_Roughness.png
+map_refl C:/SetA_WallCandleHolder_Style_01_Metallic.png
+map_Ke C:/SetA_WallCandleHolder_Style_01_Emission.png
+map_d C:/SetA_WallCandleHolder_Style_01_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_WallCandleHolder_Style_01_Normal.png
+
+newmtl SetA_WallOrnament_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_WallOrnament_Style_01_BaseColor.png
+map_Ns C:/SetA_WallOrnament_Style_01_Roughness.png
+map_refl C:/SetA_WallOrnament_Style_01_Metallic.png
+map_Ke C:/SetA_WallOrnament_Style_01_Emission.png
+map_d C:/SetA_WallOrnament_Style_01_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_WallOrnament_Style_01_Normal.png
+
+newmtl SetA_WallOrnament_Style_02
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_WallOrnament_Style_02_BaseColor.png
+map_Ns C:/SetA_WallOrnament_Style_02_Roughness.png
+map_refl C:/SetA_WallOrnament_Style_02_Metallic.png
+map_Ke C:/SetA_WallOrnament_Style_02_Emission.png
+map_d C:/SetA_WallOrnament_Style_02_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_WallOrnament_Style_02_Normal.png
+
+newmtl SetA_WallSymbol_Var_A
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/SetA_WallSymbol_Var_A_Albedo.png
+map_Ns C:/SetA_WallSymbol_Var_A_Rgh.png
+map_Bump -bm 1.000000 C:/SetA_WallSymbol_Var_A_Nrm.png
+
+newmtl SetA_WallSymbol_Var_B.001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Set_A_Container_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Container_Type_02_BaseColor.png
+map_Ns C:/Container_Type_02_Roughness.png
+map_Bump -bm 1.000000 C:/Container_Type_02_Normal.png
+
+newmtl Set_A_Container_Style_02
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Container_Type_03_BaseColor.png
+map_Ns C:/Container_Type_03_Roughness.png
+map_Bump -bm 1.000000 C:/Container_Type_03_Normal.png
+
+newmtl SupportShelf_Type_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/SupportShelf_Type_01_BaseColor.png
+map_Ns C:/SupportShelf_Type_01_Roughness.png
+map_Bump -bm 1.000000 C:/SupportShelf_Type_01_Normal.png
+
+newmtl Wall
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.442676 0.633055 0.757644
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Wood_Bark_BarkBeech.002
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/TCom_Wood_BarkBeech1_1K_albedo.tif
+map_Ns C:/TCom_Wood_BarkBeech1_1K_roughness.tif
+map_Bump -bm 1.000000 C:/TCom_Wood_BarkBeech1_1K_normal.tif
+
+newmtl Wood_Type_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Wood_Type_01_BaseColor.png
+map_Ns C:/Wood_Type_01_Roughness.png
+map_refl C:/Wood_Type_01_Metallic.png
+map_Bump -bm 1.000000 C:/Wood_Type_01_Normal.png

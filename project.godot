@@ -24,6 +24,10 @@ window/size/viewport_width=1980
 window/size/viewport_height=1024
 window/handheld/orientation=6
 
+[filesystem]
+
+import/blender/enabled=false
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

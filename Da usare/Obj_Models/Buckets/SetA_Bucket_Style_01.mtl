@@ -1,0 +1,14 @@
+# Blender 3.6.2 MTL File: 'Furntiure_Assets_Set_A_Active.blend'
+# www.blender.org
+
+newmtl SetA_Bucket_Style_01
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+illum 2
+map_Kd C:/SetA_Bucket_Style_01_BaseColor.png
+map_Ns C:/SetA_Bucket_Style_01_Roughness.png
+map_refl C:/SetA_Bucket_Style_01_Metallic.png
+map_Ke C:/SetA_Bucket_Style_01_Emission.png
+map_d C:/SetA_Bucket_Style_01_Alpha.png
+map_Bump -bm 1.000000 C:/SetA_Bucket_Style_01_Normal.png

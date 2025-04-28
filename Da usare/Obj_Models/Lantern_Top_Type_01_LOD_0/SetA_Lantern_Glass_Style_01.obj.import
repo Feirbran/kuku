@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://din08tfg27aad"
+path="res://.godot/imported/SetA_Lantern_Glass_Style_01.obj-4d68276befbf0843207344d21ad93497.mesh"
+
+[deps]
+
+files=["res://.godot/imported/SetA_Lantern_Glass_Style_01.obj-4d68276befbf0843207344d21ad93497.mesh"]
+
+source_file="res://Da usare/Obj_Models/Lantern_Top_Type_01_LOD_0/SetA_Lantern_Glass_Style_01.obj"
+dest_files=["res://.godot/imported/SetA_Lantern_Glass_Style_01.obj-4d68276befbf0843207344d21ad93497.mesh", "res://.godot/imported/SetA_Lantern_Glass_Style_01.obj-4d68276befbf0843207344d21ad93497.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

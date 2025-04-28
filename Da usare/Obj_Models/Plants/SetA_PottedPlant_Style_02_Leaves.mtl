@@ -1,0 +1,13 @@
+# Blender 3.6.2 MTL File: 'Furntiure_Assets_Set_A_Active.blend'
+# www.blender.org
+
+newmtl Plant_Mint01B.002
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd C:/TCom_Plant_Mint01B_512_albedo.tif
+map_Ns C:/TCom_Plant_Mint01B_512_roughness.tif
+map_d C:/TCom_Plant_Mint01B_512_alpha.tif
+map_Bump -bm 1.000000 C:/TCom_Plant_Mint01B_512_normal.tif

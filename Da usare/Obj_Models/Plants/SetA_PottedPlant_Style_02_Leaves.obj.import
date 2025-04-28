@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://b0qgyt7daoqt7"
+path="res://.godot/imported/SetA_PottedPlant_Style_02_Leaves.obj-8ae30caa62ac5e72a07a11fa15f2269e.mesh"
+
+[deps]
+
+files=["res://.godot/imported/SetA_PottedPlant_Style_02_Leaves.obj-8ae30caa62ac5e72a07a11fa15f2269e.mesh"]
+
+source_file="res://Da usare/Obj_Models/Plants/SetA_PottedPlant_Style_02_Leaves.obj"
+dest_files=["res://.godot/imported/SetA_PottedPlant_Style_02_Leaves.obj-8ae30caa62ac5e72a07a11fa15f2269e.mesh", "res://.godot/imported/SetA_PottedPlant_Style_02_Leaves.obj-8ae30caa62ac5e72a07a11fa15f2269e.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
