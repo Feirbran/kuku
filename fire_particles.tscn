@@ -1,0 +1,71 @@
+[gd_scene load_steps=9 format=3 uid="uid://3u1kfw2gbsar"]
+
+[ext_resource type="Texture2D" uid="uid://cfn6tdotquyyd" path="res://Da usare/vecteezy_smoke-concept-design_9375041.png" id="1_by1ht"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_svl11"]
+transparency = 1
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.772549, 0.141176, 0.0705882, 1)
+albedo_texture = ExtResource("1_by1ht")
+emission_enabled = true
+emission = Color(0.297653, 0.0234568, 0, 1)
+emission_energy_multiplier = 16.51
+billboard_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_svl11"]
+offsets = PackedFloat32Array(0, 0.441176, 1)
+colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_srqyl"]
+gradient = SubResource("Gradient_svl11")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_srqyl"]
+lifetime_randomness = 0.46
+particle_flag_align_y = true
+emission_shape_scale = Vector3(0.1, 0.1, 0.1)
+emission_shape = 1
+emission_sphere_radius = 1.0
+gravity = Vector3(0, 2, 0)
+color_ramp = SubResource("GradientTexture1D_srqyl")
+
+[sub_resource type="QuadMesh" id="QuadMesh_dp12e"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dp12e"]
+render_priority = -1
+transparency = 1
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.2484, 0.2484, 0.2484, 1)
+albedo_texture = ExtResource("1_by1ht")
+emission = Color(1, 0.960784, 0, 1)
+emission_energy_multiplier = 0.36
+billboard_mode = 1
+grow = true
+grow_amount = 0.1
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_mypao"]
+lifetime_randomness = 0.46
+particle_flag_align_y = true
+emission_shape_offset = Vector3(0, 0.375, 0)
+emission_shape_scale = Vector3(0.1, 0.1, 0.1)
+emission_shape = 1
+emission_sphere_radius = 1.0
+gravity = Vector3(0, 2, 0)
+color_ramp = SubResource("GradientTexture1D_srqyl")
+turbulence_noise_strength = 19.11
+
+[node name="Fire_Particles" type="Node3D"]
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.560219, 1.54428, -0.432631)
+material_override = SubResource("StandardMaterial3D_svl11")
+process_material = SubResource("ParticleProcessMaterial_srqyl")
+draw_pass_1 = SubResource("QuadMesh_dp12e")
+
+[node name="GPUParticles3D2" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.560219, 1.54428, -0.432631)
+material_override = SubResource("StandardMaterial3D_dp12e")
+lifetime = 0.95
+explosiveness = 0.15
+randomness = 1.0
+process_material = SubResource("ParticleProcessMaterial_mypao")
+draw_pass_1 = SubResource("QuadMesh_dp12e")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://c0qs8vb56ouna"]
+[gd_scene load_steps=40 format=3 uid="uid://c0qs8vb56ouna"]
 
 [ext_resource type="Script" uid="uid://cd3sdqm1fs1h5" path="res://scripts/game_manager.gd" id="1_fukfw"]
 [ext_resource type="Texture2D" uid="uid://ba6453cmnqx4y" path="res://assets/images/Old_Plywood_vigjfivg_1K_BaseColor.jpg" id="2_3pf80"]
@@ -24,6 +24,7 @@
 [ext_resource type="Texture2D" uid="uid://dddslm8n2b7as" path="res://Da usare/AATexture/Planks037B_1K-JPG/Planks037B_1K-JPG_NormalGL.jpg" id="19_n0g7x"]
 [ext_resource type="Texture2D" uid="uid://c2em761y7b2cn" path="res://Da usare/AATexture/Planks037B_1K-JPG/Planks037B_1K-JPG_Roughness.jpg" id="20_rdthf"]
 [ext_resource type="Texture2D" uid="uid://d0y75ee142ajj" path="res://Da usare/AATexture/Planks037B_1K-JPG/Planks037B_1K-JPG_NormalDX.jpg" id="21_uksar"]
+[ext_resource type="PackedScene" uid="uid://bltdjp33w628l" path="res://trn_chandelier.tscn" id="25_4u8qh"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qwkia"]
 
@@ -90,6 +91,8 @@ normal_texture = ExtResource("18_b20bg")
 ao_enabled = true
 ao_light_affect = 0.57
 ao_texture = ExtResource("17_lncae")
+subsurf_scatter_enabled = true
+refraction_enabled = true
 uv1_scale = Vector3(2, 2, 2)
 
 [sub_resource type="QuadMesh" id="QuadMesh_cdhf1"]
@@ -128,6 +131,7 @@ environment = SubResource("Environment_3pf80")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.590165, 0.708395, -0.387146, 0.335197, 0.221244, 0.915802, 0.734404, -0.670245, -0.106881, -5.29868, 17.7215, 3.22907)
+visible = false
 
 [node name="TableMesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 2, -0.526602, 0.229479, 0.84337)
@@ -457,6 +461,9 @@ mesh = SubResource("QuadMesh_cdhf1")
 [node name="Wall Short 2" type="MeshInstance3D" parent="Room"]
 transform = Transform3D(-63.3085, 8.74228e-08, 1.2668e-13, 0, -4.37114e-08, 33.1503, 5.53461e-06, 1, 1.44905e-06, 0, 9.72896, -38.4746)
 mesh = SubResource("QuadMesh_cdhf1")
+
+[node name="trn_Chandelier" parent="." instance=ExtResource("25_4u8qh")]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 10.1452, 7.23845, 1.05994)
 
 [connection signal="ready" from="." to="GameManager" method="_on_game_table_ready"]
 [connection signal="pressed" from="HUD/UIMainContainer/PassaTurno" to="GameManager" method="_on_pass_turn_button_pressed"]

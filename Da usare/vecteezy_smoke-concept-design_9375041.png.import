@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dx1pic5s31r78"
-path.s3tc="res://.godot/imported/trn_Chandelier_MetallicSmoothness.png-747bc4cf2c45cf126e1c30039e667c91.s3tc.ctex"
+uid="uid://cfn6tdotquyyd"
+path.s3tc="res://.godot/imported/vecteezy_smoke-concept-design_9375041.png-52fbdcca2d9dfe8cea03baeb707b04ac.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Da usare/soiTavern_fbx/Chandelier/trn_Chandelier_MetallicSmoothness.png"
-dest_files=["res://.godot/imported/trn_Chandelier_MetallicSmoothness.png-747bc4cf2c45cf126e1c30039e667c91.s3tc.ctex"]
+source_file="res://Da usare/vecteezy_smoke-concept-design_9375041.png"
+dest_files=["res://.godot/imported/vecteezy_smoke-concept-design_9375041.png-52fbdcca2d9dfe8cea03baeb707b04ac.s3tc.ctex"]
 
 [params]
 

@@ -1,0 +1,33 @@
+[gd_scene load_steps=7 format=3 uid="uid://bltdjp33w628l"]
+
+[ext_resource type="PackedScene" uid="uid://dd6tdhgv61psm" path="res://Da usare/soiTavern_fbx/Chandelier/trn_Chandelier.fbx" id="1_mnsk6"]
+[ext_resource type="Texture2D" uid="uid://b531efd151dt2" path="res://Da usare/rusty-metallic-textured-background_23-2148846074.webp" id="2_5pnm1"]
+[ext_resource type="Texture2D" uid="uid://dx1pic5s31r78" path="res://Da usare/soiTavern_fbx/Chandelier/trn_Chandelier_MetallicSmoothness.png" id="3_3bf44"]
+[ext_resource type="Texture2D" uid="uid://bw2fgoa72ghnu" path="res://Da usare/soiTavern_fbx/Chandelier/trn_Chandelier_Normal.png" id="4_qyes1"]
+[ext_resource type="PackedScene" uid="uid://3u1kfw2gbsar" path="res://fire_particles.tscn" id="5_5pnm1"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0rpdq"]
+albedo_color = Color(0.716296, 0.716296, 0.716296, 1)
+albedo_texture = ExtResource("2_5pnm1")
+metallic = 1.0
+metallic_texture = ExtResource("3_3bf44")
+normal_enabled = true
+normal_texture = ExtResource("4_qyes1")
+
+[node name="trn_Chandelier" instance=ExtResource("1_mnsk6")]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+
+[node name="trn_Chandelier" parent="." index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_0rpdq")
+
+[node name="Fire_Particles" parent="." index="1" instance=ExtResource("5_5pnm1")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0.0557101, -0.80232, -0.229251)
+
+[node name="Fire_Particles2" parent="." index="2" instance=ExtResource("5_5pnm1")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0.334303, -0.80232, 0.0455517)
+
+[node name="Fire_Particles3" parent="." index="3" instance=ExtResource("5_5pnm1")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0.0481292, -0.80232, 0.310878)
+
+[node name="Fire_Particles4" parent="." index="4" instance=ExtResource("5_5pnm1")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.215302, -0.80232, 0.0398662)
