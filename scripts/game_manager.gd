@@ -1030,17 +1030,17 @@ func get_player_card_data(p_id: int) -> CardData:
     # print("DEBUG GM: Richiesta carta P%d -> %s" % [p_id, get_card_name(card)]) # Debug opzionale
     return card
 
-func _unhandled_input(event):
-    # Attiva Abilità 1 di Player 0 premendo F1 (solo se è il suo turno)
-    if event.is_action_pressed("ui_accept") and current_player_index == 0 and current_state == GameState.PLAYER_TURN : # Usa un tasto dedicato, es. F1 mappato in Input Map
-         print("DEBUG: Tentativo attivazione Abilità 1 per Player 0...")
-         if player_nodes.size() > 0 and is_instance_valid(player_nodes[0]):
-             # Chiama la funzione nel Player, passando -1 come target (non serve per Sguardo Circolare)
-             var success = player_nodes[0].try_use_active_ability(1, -1) 
-             if success:
-                 print("DEBUG: try_use_active_ability(1) ha restituito true.")
-             else:
-                 print("DEBUG: try_use_active_ability(1) ha restituito false (controllare condizioni).")
+#func _unhandled_input(event):
+    ## Attiva Abilità 1 di Player 0 premendo F1 (solo se è il suo turno)
+    #if event.is_action_pressed("ui_accept") and current_player_index == 0 and current_state == GameState.PLAYER_TURN : # Usa un tasto dedicato, es. F1 mappato in Input Map
+         #print("DEBUG: Tentativo attivazione Abilità 1 per Player 0...")
+         #if player_nodes.size() > 0 and is_instance_valid(player_nodes[0]):
+             ## Chiama la funzione nel Player, passando -1 come target (non serve per Sguardo Circolare)
+             #var success = player_nodes[0].try_use_active_ability(1, -1) 
+             #if success:
+                 #print("DEBUG: try_use_active_ability(1) ha restituito true.")
+             #else:
+                 #print("DEBUG: try_use_active_ability(1) ha restituito false (controllare condizioni).")
                 
                 
 func _on_player0_sanity_updated(p_id: int, p_sanity: int):
