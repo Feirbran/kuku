@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 [gd_scene load_steps=40 format=3 uid="uid://c0qs8vb56ouna"]
+=======
+[gd_scene load_steps=41 format=3 uid="uid://c0qs8vb56ouna"]
+>>>>>>> Stashed changes
 
 [ext_resource type="Script" uid="uid://cd3sdqm1fs1h5" path="res://scripts/game_manager.gd" id="1_fukfw"]
 [ext_resource type="Texture2D" uid="uid://ba6453cmnqx4y" path="res://assets/images/Old_Plywood_vigjfivg_1K_BaseColor.jpg" id="2_3pf80"]
@@ -28,7 +32,18 @@
 [ext_resource type="PackedScene" uid="uid://bltdjp33w628l" path="res://trn_chandelier.tscn" id="25_4u8qh"]
 [ext_resource type="PackedScene" uid="uid://bqva600y03wvn" path="res://Lamp_Light.tscn" id="27_n0g7x"]
 
+<<<<<<< Updated upstream
 [sub_resource type="Environment" id="Environment_n0g7x"]
+=======
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_lbayw"]
+
+[sub_resource type="Sky" id="Sky_n0g7x"]
+sky_material = SubResource("PhysicalSkyMaterial_lbayw")
+
+[sub_resource type="Environment" id="Environment_lbayw"]
+background_mode = 2
+sky = SubResource("Sky_n0g7x")
+>>>>>>> Stashed changes
 
 [sub_resource type="BoxMesh" id="BoxMesh_qffgw"]
 size = Vector3(10, 0.2, 10)
@@ -69,7 +84,7 @@ normal_enabled = true
 normal_scale = 3.46
 normal_texture = ExtResource("21_uksar")
 ao_enabled = true
-ao_light_affect = 0.57
+ao_light_affect = 1.0
 ao_texture = SubResource("CompressedTexture2D_1hht8")
 subsurf_scatter_enabled = true
 refraction_enabled = true
@@ -98,6 +113,17 @@ orientation = 1
 
 [node name="GameTable" type="Node3D"]
 
+<<<<<<< Updated upstream
+=======
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_lbayw")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.999731, 0, 0.0231759, -0.0221529, -0.293823, -0.955603, 0.00680963, -0.95586, 0.293745, 18.6899, 206.844, -21.6972)
+visible = false
+light_energy = 0.158
+
+>>>>>>> Stashed changes
 [node name="DeckPositionMarker" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.00376326, 0.00255762, 0)
 
@@ -484,6 +510,20 @@ mesh = SubResource("QuadMesh_cdhf1")
 [node name="trn_Chandelier" parent="Lights" instance=ExtResource("25_4u8qh")]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0.169423, 13.9554, 0.0204459)
 visible = false
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.0727, 0)
+light_intensity_lumens = 4215.45
+light_temperature = 12688.0
+light_color = Color(0.579083, 0.245813, 3.85046e-07, 1)
+light_energy = 0.327
+light_indirect_energy = 11.585
+light_volumetric_fog_energy = 5.895
+light_specular = 0.668
+shadow_enabled = true
+distance_fade_begin = 344.93
+distance_fade_shadow = 4096.0
+omni_range = 26.326
 
 [node name="trn_Lamp" parent="Lights" instance=ExtResource("27_n0g7x")]
 transform = Transform3D(-1.11683e-07, 0, 2.555, 0, 2.555, 0, -2.555, 0, -1.11683e-07, -31.8273, 6.41047, 11.6742)
