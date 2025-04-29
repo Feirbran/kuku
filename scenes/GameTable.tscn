@@ -100,6 +100,10 @@ orientation = 1
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_lbayw")
 
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 8.26862, 0)
+light_energy = 0.0
+
 [node name="DeckPositionMarker" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.00376326, 0.00255762, 0)
 
@@ -500,8 +504,10 @@ transform = Transform3D(2.555, 0, -4.4673e-07, 0, 2.555, 0, 4.4673e-07, 0, 2.555
 [node name="trn_Lamp8" parent="Lights" instance=ExtResource("27_n0g7x")]
 transform = Transform3D(2.555, 0, -4.4673e-07, 0, 2.555, 0, 4.4673e-07, 0, 2.555, 17.5266, 6.41047, 33.6136)
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-light_energy = 0.0
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.89985, 0)
+light_color = Color(0.605744, 0.336451, 0.156377, 1)
+omni_range = 23.9347
 
 [connection signal="ready" from="." to="GameManager" method="_on_game_table_ready"]
 [connection signal="pressed" from="HUD/UIMainContainer/PassaTurno" to="GameManager" method="_on_pass_turn_button_pressed"]
