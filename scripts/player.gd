@@ -1,6 +1,6 @@
 # File: res://scripts/Player.gd
-# Versione completa con gestione stato (dita, sanità, is_out) 
-# e struttura base per attivazione abilità (inclusi costi sanità)
+# Versione completa con gestione stato (dita, sanità, is_out)
+# e struttura base per attivazione abilità/passive/cooldown
 
 extends Node3D
 
@@ -10,13 +10,13 @@ signal cooldown_updated(player_id, slot, remaining_rounds) # Quando un cooldown 
 signal fingers_updated(player_id, remaining_fingers)  # Quando le dita cambiano
 signal player_eliminated(player_id)                   # Quando il giocatore viene eliminato (dita <= 0)
 signal player_breakdown(player_id)                    # Quando la sanità arriva a 0
-# Aggiungi qui segnali specifici per abilità se necessario (es. per richiedere info al GM)
-signal request_adjacent_info(requesting_player_id) 
-signal request_card_info(requesting_player_id, target_player_id) 
-signal request_dealer_choice(requesting_player_id) 
+# Segnali per richiedere info/azioni al GameManager (usati dagli effetti delle abilità)
+signal request_adjacent_info(requesting_player_id)
+signal request_card_info(requesting_player_id, target_player_id)
+signal request_dealer_choice(requesting_player_id)
+# Aggiungi altri segnali specifici se necessario
 
 # --- Dati della Classe Assegnata ---
-# Verrà popolata da GameManager tramite assign_class()
 @export var class_data: CharacterClassData = null
 
 # --- Stato Dinamico del Giocatore ---
@@ -26,368 +26,353 @@ var current_sanity: int = 100         # Sanità iniziale
 var is_out: bool = false                # Se il giocatore è eliminato
 var active_ability_1_cooldown_timer: int = 0 # Round rimanenti per cooldown slot 1
 var active_ability_2_cooldown_timer: int = 0 # Round rimanenti per cooldown slot 2
-# TODO: Aggiungere qui variabili per token (Vengeance, Intuizione) se necessario
-# var vengeance_tokens: int = 0 
+var desperate_action_available: bool = true # Se l'azione disperata è utilizzabile
+
+# TODO: Aggiungere variabili per token e altri stati specifici delle classi
+# var vengeance_tokens: int = 0
 # var intuition_tokens: int = 0
-# TODO: Aggiungere qui variabile per stato breakdown
-# var is_in_breakdown: bool = false 
+# var amulet_charges: int = 0
+# var is_blinded: bool = false # Es. per Filostrato
+# var is_passive_muted: bool = false # Es. per Lauretta
+# var has_swap_immunity: bool = false # Es. per Elissa
+# var temp_rank_boost: int = 0 # Es. per Emilia
+# var peaceful_rounds_counter: int = 0 # Es. per Panfilo
+# var has_free_ability_charge: bool = false # Es. per Panfilo
+
 
 # --- Funzioni Base Godot ---
 
 func _ready():
-	# Codice eseguito all'avvio del nodo Player.
-	# Al momento non fa molto, l'inizializzazione principale avviene in assign_class.
-	# Potrebbe essere usato per ottenere riferimenti a nodi figli se Player.tscn diventasse più complesso.
-	pass
+    # Potremmo spostare l'inizializzazione che dipende da altri nodi qui, usando await ready
+    pass
 
 # --- Inizializzazione e Stato ---
 
-# Chiamata da GameManager all'inizio per configurare il giocatore
 func assign_class(new_class_data: CharacterClassData, id: int):
-	if new_class_data != null:
-		self.class_data = new_class_data
-		self.player_id = id
-		print("Player (ID ", player_id, ") assegnata classe: ", class_data.display_name)
-		
-		# Resetta stato iniziale del giocatore:
-		current_sanity = 100  # O valore base se diverso
-		active_ability_1_cooldown_timer = 0
-		active_ability_2_cooldown_timer = 0
-		fingers_remaining = 10 
-		is_out = false 
-		# TODO: Resettare altri stati come token, breakdown, ecc.
-		
-		# Connetti segnali specifici della classe (se necessario, esempio per Pampinea)
-		# if class_data.display_name == "La Comandante":
-			# TODO: Connetti al segnale day_started del GameManager
-			# if GameManager.has_signal("day_started"):
-			#     if not GameManager.is_connected("day_started", Callable(self,"_on_day_started")):
-			#         GameManager.day_started.connect(_on_day_started)
-			# else:
-			#     printerr("GameManager manca segnale day_started?")
-			# print("Connessione segnale per Prima Voce (Pampinea) - IMPLEMENTARE!")
+    if new_class_data != null:
+        self.class_data = new_class_data
+        self.player_id = id
+        print("Player (ID ", player_id, ") assegnata classe: ", class_data.character_name, " (", class_data.display_name, ")")
 
-		# Emetti segnali iniziali per aggiornare l'UI
-		emit_signal("sanity_updated", player_id, current_sanity)
-		emit_signal("cooldown_updated", player_id, 1, 0)
-		emit_signal("cooldown_updated", player_id, 2, 0)
-		emit_signal("fingers_updated", player_id, fingers_remaining) 
-	else:
-		printerr("Tentativo di assegnare una classe nulla al Player (ID ", id, ")")
+        # Resetta stato iniziale completo
+        current_sanity = 100  # O valore base specifico classe?
+        active_ability_1_cooldown_timer = 0
+        active_ability_2_cooldown_timer = 0
+        desperate_action_available = true
+        fingers_remaining = 10
+        is_out = false
+        # TODO: Resettare token, stati alterati, ecc.
+        # Esempio specifico per Neifile (basato sui parametri della sua passiva)
+        # if class_data.passive_ability and class_data.passive_ability.ability_name == "Amuleto della Speranza":
+        #     amulet_charges = class_data.passive_ability.passive_parameters.get("initial_charges", 0)
+        # else:
+        #     amulet_charges = 0
 
-func reset_desperate_action_cooldown(day_num: int):
-	# Usa il parametro 'day_num' invece di accedere a GameManager
-	print("Player (ID ", player_id, "): Cooldown Azione Disperata resettato (Inizio Giorno ", day_num, ")")
+        # Connessione segnali specifici classe (se necessario) - Esempio Pampinea
+        # if class_data.display_name == "La Comandante":
+        #     if GameManager and GameManager.has_signal("day_started"):
+        #         if not GameManager.is_connected("day_started", Callable(self,"_on_day_started")):
+        #             var err = GameManager.connect("day_started", Callable(self,"_on_day_started"))
+        #             if err != OK: printerr("Player ", player_id, ": Errore connessione day_started: ", err)
+        #     else: printerr("Player ", player_id, ": GameManager o segnale day_started non trovati.")
 
-	# Logica futura:
-	# desperate_action_available = true
-	# emit_signal("desperate_action_ready", player_id) 
-	pass 
+        # Emetti segnali iniziali per UI
+        emit_signal("sanity_updated", player_id, current_sanity)
+        emit_signal("cooldown_updated", player_id, 1, 0)
+        emit_signal("cooldown_updated", player_id, 2, 0)
+        emit_signal("fingers_updated", player_id, fingers_remaining)
+        # TODO: Emettere segnali per stato iniziale token/abilità disperata?
 
-	
-# Funzione per perdere una vita (chiamata da GameManager.lose_life)
+    else:
+        printerr("Tentativo di assegnare una classe nulla al Player (ID ", id, ")")
+
+
 func lose_finger():
-	if is_out: return # Se già fuori, non fare nulla
-		
-	if fingers_remaining > 0:
-		fingers_remaining -= 1
-		print("Player (ID ", player_id, ") ha perso un dito! Rimaste: ", fingers_remaining)
-		emit_signal("fingers_updated", player_id, fingers_remaining) # Notifica l'UI/GM
-		
-		# Controlla se il giocatore è eliminato ORA
-		if fingers_remaining <= 0:
-			_handle_elimination() 
-			
-		# TODO: Triggerare passive legate a perdita dito (es. Riscatto Nobile di Elissa)
-		# if class_data and class_data.active_ability_2 and class_data.active_ability_2.ability_name == "Riscatto Nobile":
-		#    # Attenzione: Era classificata come Attiva, ma triggerata qui
-		#    print("Player (ID ", player_id, ") attiva Riscatto Nobile!")
-		#    update_sanity(25) # Applico effetto direttamente o chiamo una _effect_ function?
-		#    pass
+    if is_out: return
+
+    # TODO: Gestire passive che PREVENGONO la perdita (es. Amuleto Neifile)
+    # Esempio Neifile:
+    # if class_data and class_data.passive_ability and class_data.passive_ability.ability_name == "Amuleto della Speranza":
+    #     if amulet_charges > 0:
+    #         amulet_charges -= 1
+    #         print("Player (ID ", player_id, ") usa una carica dell'Amuleto! Cariche rimaste: ", amulet_charges)
+    #         emit_signal("amulet_charge_used", player_id, amulet_charges) # Segnale per UI?
+    #         return # Perdita dito annullata
+
+    if fingers_remaining > 0:
+        fingers_remaining -= 1
+        print("Player (ID ", player_id, ") ha perso un dito! Rimaste: ", fingers_remaining)
+        emit_signal("fingers_updated", player_id, fingers_remaining)
+
+        if fingers_remaining <= 0:
+            _handle_elimination()
+        else:
+            # TODO: Gestire passive che si attivano DOPO aver perso un dito (es. Riscatto Nobile Elissa)
+            # if class_data and class_data.active_ability_2 and class_data.active_ability_2.ability_name == "Riscatto Nobile":
+            #     print("Player (ID ", player_id, ") attiva Riscatto Nobile!")
+            #     update_sanity(25) # Valore dall'abilità resource?
+            pass
 
 
-# Funzione Getter per le dita (usata da GameManager per UI)
 func get_fingers_remaining() -> int:
-	return fingers_remaining
+    return fingers_remaining
 
-# Funzione interna per gestire l'eliminazione
+
 func _handle_elimination():
-	if is_out: return # Evita doppie chiamate
-	print("!!!!!!!! Player (ID ", player_id, ") è stato ELIMINATO !!!!!!!!");
-	is_out = true # Imposta lo stato interno
-	emit_signal("player_eliminated", player_id) # Notifica il GameManager/altri
-	# Logica aggiuntiva opzionale (nascondere nodo, disattivare processi)
-	# visible = false 
-	# set_process(false)
-	pass
+    if is_out: return
+    print("!!!!!!!! Player (ID ", player_id, ") è stato ELIMINATO !!!!!!!!");
+    is_out = true
+    emit_signal("player_eliminated", player_id)
+    # Logica aggiuntiva (nascondi nodo, ecc.)
+    # visible = false
+    # set_process(false)
+    pass
 
 
 # --- Gestione Sanità ---
 
-# Funzione per modificare la sanità (usata da costi abilità, effetti, ecc.)
 func update_sanity(amount: int):
-	if is_out: return # Non cambia sanità se fuori gioco
-	
-	var old_sanity = current_sanity
-	current_sanity = clamp(current_sanity + amount, 0, 100) 
-	
-	if old_sanity != current_sanity:
-		print("Player (ID ", player_id, ") sanità aggiornata a: ", current_sanity, " (Cambiamento: ", amount, ")")
-		emit_signal("sanity_updated", player_id, current_sanity)
-		
-		# Controlla soglie critiche
-		if current_sanity < 30 and old_sanity >= 30: 
-			print("ATTENZIONE: Player (ID ", player_id, ") ha Sanità bassa!")
-			# TODO: Applicare effetti negativi/penalità?
-		elif current_sanity >= 30 and old_sanity < 30: 
-			print("INFO: Player (ID ", player_id, ") ha recuperato Sanità sufficiente.")
-			# TODO: Rimuovere effetti negativi?
-			
-		if current_sanity == 0 and old_sanity > 0: 
-			_handle_breakdown() 
+    if is_out: return
 
-# Funzione interna per gestire il breakdown da Sanità 0
+    var old_sanity = current_sanity
+    current_sanity = clamp(current_sanity + amount, 0, 100)
+
+    if old_sanity != current_sanity:
+        print("Player (ID ", player_id, ") sanità aggiornata a: ", current_sanity, " (Cambiamento: ", amount, ")")
+        emit_signal("sanity_updated", player_id, current_sanity)
+
+        if current_sanity < 30 and old_sanity >= 30:
+            print("ATTENZIONE: Player (ID ", player_id, ") ha Sanità bassa!")
+            # TODO: Applicare effetti negativi/penalità?
+        elif current_sanity >= 30 and old_sanity < 30:
+            print("INFO: Player (ID ", player_id, ") ha recuperato Sanità sufficiente.")
+            # TODO: Rimuovere effetti negativi?
+
+        if current_sanity == 0 and old_sanity > 0:
+            _handle_breakdown()
+
+
 func _handle_breakdown():
-	print("!!!!!! Player (ID ", player_id, ") ha avuto un BREAKDOWN (Sanità 0) !!!!!!")
-	emit_signal("player_breakdown", player_id)
-	# TODO: Implementare logica per perdita controllo, blocco skill, ecc.
-	# var is_in_breakdown = true 
-	pass
+    print("!!!!!! Player (ID ", player_id, ") ha avuto un BREAKDOWN (Sanità 0) !!!!!!")
+    emit_signal("player_breakdown", player_id)
+    # TODO: Implementare logica per perdita controllo, blocco skill, ecc.
+    # var is_in_breakdown = true
+    pass
 
 
-# --- Gestione Abilità Attive ---
+# --- Gestione Abilità Attive Standard ---
 
-# Tenta di usare l'abilità attiva nello slot specificato (1 o 2)
-# Chiamata da GameManager (su input UI o decisione CPU)
 func try_use_active_ability(slot: int, target_player_id: int = -1):
-	if is_out: print("Player ", player_id, " è fuori, non può usare abilità."); return false
-	# TODO: Controllare se è in breakdown? if is_in_breakdown: return false
-	
-	var ability_data: ActiveAbilityData
-	
-	# 1. Controlla classe caricata
-	if class_data == null:
-		printerr("Player (ID ", player_id, "): Classe non caricata!"); return false
+    if is_out: print("Player ", player_id, " è fuori."); return false
+    # TODO: if is_in_breakdown: print("Player ", player_id, " è in breakdown."); return false
 
-	# 2. Ottieni dati abilità richiesta
-	if slot == 1: ability_data = class_data.active_ability_1
-	elif slot == 2: ability_data = class_data.active_ability_2
-	else: printerr("Player (ID ", player_id, "): Slot abilità non valido: ", slot); return false
+    var ability_data: ActiveAbilityData
+    if class_data == null: printerr("Player ", player_id, ": Classe non caricata!"); return false
 
-	if ability_data == null:
-		printerr("Player (ID ", player_id, "): Slot ", slot, " vuoto per classe ", class_data.display_name); return false
+    if slot == 1: ability_data = class_data.active_ability_1
+    elif slot == 2: ability_data = class_data.active_ability_2
+    else: printerr("Player ", player_id, ": Slot ", slot, " non valido."); return false
 
-	# 3. TODO: Controlla Fase di Attivazione (richiede info da GameManager sullo stato attuale)
-	# var current_game_phase = GameManager.get_current_phase() # Ipotetico
-	# match ability_data.activation_phase:
-	#    ActiveAbilityData.ActivationPhase.BEFORE_ACTION_CONFIRM:
-	#        if current_game_phase != GameManager.GameState.PLAYER_TURN: return false # O fase specifica pre-conferma
-	#    ActiveAbilityData.ActivationPhase.ON_TURN_START:
-	#        # Questo tipo di attivazione andrebbe gestito altrove, non qui?
-	#        pass 
-	#    # ... ecc ...
+    if ability_data == null: printerr("Player ", player_id, ": Slot ", slot, " vuoto per classe ", class_data.display_name); return false
 
-	# 4. Controlla Cooldown
-	var current_cooldown_value = active_ability_1_cooldown_timer if slot == 1 else active_ability_2_cooldown_timer
-	if current_cooldown_value > 0:
-		print("Player (ID ", player_id, "): Abilità '", ability_data.ability_name, "' in cooldown per ", current_cooldown_value, " round.")
-		return false
+    # 1. Controlla Cooldown (Implementeremo logica completa dopo)
+    var current_cooldown = active_ability_1_cooldown_timer if slot == 1 else active_ability_2_cooldown_timer
+    if current_cooldown > 0:
+        print("Player ", player_id, ": Abilità '", ability_data.ability_name, "' in cooldown per ", current_cooldown, " round.")
+        return false
 
-	# 5. Controlla Costo Sanità
-	if current_sanity < ability_data.sanity_cost:
-		print("Player (ID ", player_id, "): Sanità insufficiente per '", ability_data.ability_name, "'. Richiesti: ", ability_data.sanity_cost, ", Hai: ", current_sanity)
-		return false
+    # 2. Controlla Costo Sanità
+    if current_sanity < ability_data.sanity_cost:
+        print("Player ", player_id, "): Sanità insufficiente per '", ability_data.ability_name, "'.")
+        return false
 
-	# 6. TODO: Controlla Bersaglio (se richiesto)
-	#    if ability_data.target_type == ActiveAbilityData.TargetType.OTHER_PLAYER and target_player_id == -1:
-	#        printerr("Player (ID ", player_id, "): Abilità '", ability_data.ability_name, "' richiede un bersaglio!")
-	#        return false
-	#    if ability_data.target_type == ActiveAbilityData.TargetType.ADJACENT_SINGLE and target_player_id == -1:
-	#        printerr("Player (ID ", player_id, "): Abilità '", ability_data.ability_name, "' richiede un bersaglio adiacente!")
-	#        return false
-	#    # ... altri controlli sul bersaglio (es. non fuori gioco?) ...
+    # 3. TODO: Controlla Fase Attivazione (richiede info da GameManager)
+    #    var current_game_phase = GameManager.get_current_phase()
+    #    if not _check_activation_phase(ability_data.activation_phase, current_game_phase): return false
 
-	# 7. TODO: Controlla Requisiti Speciali (Token, Carte)
-	#    if ability_data.special_requirements.has("REQUIRES_INTUITION_TOKEN"):
-	#        if intuition_tokens <= 0: return false
-	#    if ability_data.special_requirements.has("REQUIRES_CARD_A_2_3_4"):
-	#        var my_card = GameManager.get_my_card(player_id) # Funzione ipotetica
-	#        if not my_card or not my_card.rank_name in ["A", "2", "3", "4"]: return false
-	#    # ... ecc ...
+    # 4. TODO: Controlla Bersaglio Valido (se richiesto dall'abilità)
+    #    if not _check_target(ability_data.target_type, target_player_id): return false
 
-	# --- Attivazione! ---
-	print("Player (ID ", player_id, ") attiva '", ability_data.ability_name, "'...")
+    # 5. TODO: Controlla Requisiti Speciali (Token, Carte specifiche)
+    #    if not _check_special_requirements(ability_data.special_requirements): return false
 
-	# 8. Paga Costo Sanità
-	if ability_data.sanity_cost > 0:
-		update_sanity(-ability_data.sanity_cost)
-		
-	# 9. TODO: Consuma Token se necessario
-	#    if ability_data.special_requirements.has("REQUIRES_INTUITION_TOKEN"):
-	#        intuition_tokens -= 1 
-	#        # Emetti segnale aggiornamento token?
+    # --- Attivazione! ---
+    print("Player ", player_id, " attiva '", ability_data.ability_name, "'...")
 
-	# 10. Imposta Cooldown (Implementeremo nel prossimo passo)
-	# if ability_data.cooldown_rounds > 0:
-	#     if slot == 1: active_ability_1_cooldown_timer = ability_data.cooldown_rounds
-	#     elif slot == 2: active_ability_2_cooldown_timer = ability_data.cooldown_rounds
-	#     emit_signal("cooldown_updated", player_id, slot, ability_data.cooldown_rounds)
+    # 6. Paga Costo Sanità
+    if ability_data.sanity_cost > 0:
+        update_sanity(-ability_data.sanity_cost)
 
-	# 11. Esegui Effetto
-	_execute_ability_effect(ability_data, target_player_id)
-	
-	return true # Successo
+    # 7. TODO: Consuma Token se necessario
+    #    _consume_tokens(ability_data.special_requirements)
+
+    # 8. Imposta Cooldown (Implementeremo logica completa dopo)
+    if ability_data.cooldown_rounds > 0:
+        if slot == 1: active_ability_1_cooldown_timer = ability_data.cooldown_rounds
+        elif slot == 2: active_ability_2_cooldown_timer = ability_data.cooldown_rounds
+        emit_signal("cooldown_updated", player_id, slot, ability_data.cooldown_rounds)
+
+    # 9. Esegui Effetto
+    _execute_ability_effect(ability_data, target_player_id)
+
+    return true
 
 
-# Funzione "smistamento" per chiamare l'effetto specifico (Placeholder)
 func _execute_ability_effect(ability_data: ActiveAbilityData, target_id: int):
-	print(">>> ESECUZIONE EFFETTO per: ", ability_data.ability_name, " (Player ID ", player_id, ") Target ID: ", target_id)
-	
-	# Qui useremo 'match ability_data.ability_name:'
-	match ability_data.ability_name:
-		"Sguardo Circolare": _effect_sguardo_circolare() # Implementata sotto (placeholder)
-		"Interrogatorio Diretto": _effect_interrogatorio_diretto(target_id) # Implementata sotto (placeholder)
-		# Aggiungi qui i case per le altre abilità quando le implementi
-		_: printerr("Effetto non implementato per ", ability_data.ability_name)
+    print(">>> ESECUZIONE EFFETTO per: ", ability_data.ability_name, " (Player ID ", player_id, ") Target ID: ", target_id)
+    match ability_data.ability_name:
+        # Pampinea
+        "Sguardo Circolare": _effect_sguardo_circolare()
+        "Interrogatorio Diretto": _effect_interrogatorio_diretto(target_id)
+        # Dioneo
+        "Catena Infernale": _effect_catena_infernale()
+        "Puntura Cinica": _effect_puntura_cinica(target_id)
+        # Filomena
+        "Lampo d'Intuito": _effect_lampo_d_intuito() # Dovrà gestire la scelta
+        "Presagio": _effect_presagio(target_id)
+        # Emilia
+        "Messa in Scena": _effect_messa_in_scena()
+        "Ritocco Vitale": _effect_ritocco_vitale()
+        # Fiammetta
+        "Atto Disperato": _effect_atto_disperato()
+        "Rivalsa Ardente": _effect_rivalsa_ardente(target_id) # Target qui è ipotetico, gestito nello swap
+        # Filostrato
+        "Tuffo nel Vuoto": _effect_tuffo_nel_vuoto()
+        "Annuncio Funesto": _effect_annuncio_funesto()
+        # Lauretta
+        "Lingua Annodata": _effect_lingua_annodata(target_id)
+        "Paragone Pungente": _effect_paragone_pungente(target_id)
+        # Neifile
+        "Squarcio di Verità": _effect_squarcio_di_verita()
+        "Soffio Vitale": _effect_soffio_vitale(target_id)
+        # Elissa
+        "Volontà Indomita": _effect_volonta_indomita()
+        "Riscatto Nobile": _effect_riscatto_nobile() # Chiamata da lose_finger? O è attiva? Rivedere design
+        # Panfilo
+        "Imposizione Storica": _effect_imposizione_storica(target_id)
+        "Eco del Passato": _effect_eco_del_passato(target_id)
+        # Default
+        _: printerr("Effetto non implementato per ", ability_data.ability_name)
 
-# --- Implementazione Effetti Specifici (Placeholder) ---
 
-func _effect_sguardo_circolare():
-	print("TODO Player ", player_id, ": Implementa logica Sguardo Circolare")
-	# Emetti segnale al GameManager o UI per ottenere/mostrare info
-	# emit_signal("request_adjacent_info", player_id) 
-	pass 
+# --- Implementazione Effetti Specifici (TUTTI PLACEHOLDER) ---
 
-func _effect_interrogatorio_diretto(target_player_id: int):
-	if target_player_id == -1: printerr("Sguardo Circolare: Target non valido!"); return
-	print("TODO Player ", player_id, ": Implementa logica Interrogatorio Diretto su Target ", target_player_id)
-	# Emetti segnale al GameManager o UI per ottenere/mostrare info
-	# emit_signal("request_card_info", player_id, target_player_id)
-	pass
-	
-# Aggiungi qui altre funzioni _effect_...
+# PAMPINEA
+func _effect_sguardo_circolare(): print("TODO Player ", player_id, ": Implementa Sguardo Circolare"); emit_signal("request_adjacent_info", player_id)
+func _effect_interrogatorio_diretto(target_id): print("TODO Player ", player_id, ": Implementa Interrogatorio Diretto su ", target_id); emit_signal("request_card_info", player_id, target_id)
+# DIONEO
+func _effect_catena_infernale(): print("TODO Player ", player_id, ": Implementa Catena Infernale (segnale a GM)")
+func _effect_puntura_cinica(target_id): print("TODO Player ", player_id, ": Implementa Puntura Cinica su ", target_id); # GameManager.apply_sanity_damage(target_id, -25)?
+# FILOMENA
+func _effect_lampo_d_intuito(): print("TODO Player ", player_id, ": Implementa Lampo d'Intuito (gestire scelta UI)")
+func _effect_presagio(target_id): print("TODO Player ", player_id, ": Implementa Presagio su ", target_id)
+# EMILIA
+func _effect_messa_in_scena(): print("TODO Player ", player_id, ": Implementa Messa in Scena (imposta stato 'faking_kuku')")
+func _effect_ritocco_vitale(): print("TODO Player ", player_id, ": Implementa Ritocco Vitale (imposta stato 'temp_rank_boost')")
+# FIAMMETTA
+func _effect_atto_disperato(): print("TODO Player ", player_id, ": Implementa Atto Disperato (chiedi carta a GM, termina turno)")
+func _effect_rivalsa_ardente(target_id): print("TODO Player ", player_id, ": Implementa Rivalsa Ardente (imposta stato 'force_next_swap')") # Logica complessa nello scambio
+# FILOSTRATO
+func _effect_tuffo_nel_vuoto(): print("TODO Player ", player_id, ": Implementa Tuffo nel Vuoto (imposta stato 'is_blinded')")
+func _effect_annuncio_funesto(): print("TODO Player ", player_id, ": Implementa Annuncio Funesto (imposta stato 'predicted_finger_loss')")
+# LAURETTA
+func _effect_lingua_annodata(target_id): print("TODO Player ", player_id, ": Implementa Lingua Annodata su ", target_id); # GameManager.apply_status(target_id, "passive_muted", 2_rounds)?
+func _effect_paragone_pungente(target_id): print("TODO Player ", player_id, ": Implementa Paragone Pungente su ", target_id); # Richiedi carte, confronta, segnale UI
+# NEIFILE
+func _effect_squarcio_di_verita(): print("TODO Player ", player_id, ": Implementa Squarcio di Verità (segnale a GM/UI globale)")
+func _effect_soffio_vitale(target_id): print("TODO Player ", player_id, ": Implementa Soffio Vitale su ", target_id); # GameManager.apply_sanity_heal(target_id, 8)?
+# ELISSA
+func _effect_volonta_indomita(): print("TODO Player ", player_id, ": Implementa Volontà Indomita (imposta stato 'swap_immunity')")
+func _effect_riscatto_nobile(): print("TODO Player ", player_id, ": Implementa Riscatto Nobile (chiamato da lose_finger?)") # Probabilmente passiva triggerata
+# PANFILO
+func _effect_imposizione_storica(target_id): print("TODO Player ", player_id, ": Implementa Imposizione Storica su ", target_id); # Segnale a GM per forzare scambio
+func _effect_eco_del_passato(target_id): print("TODO Player ", player_id, ": Implementa Eco del Passato da ", target_id); # Chiedi ultima abilità a GM, attivala
 
 
-# --- Gestione Cooldown e Aggiornamenti Fine Round ---
+# --- Gestione Cooldown ---
 
-# Funzione per decrementare i cooldown (Chiamata da GameManager a inizio/fine round)
+# Chiamata da GameManager a inizio/fine round
 func decrement_cooldowns():
-	var changed1 = false
-	var changed2 = false
-	if active_ability_1_cooldown_timer > 0:
-		active_ability_1_cooldown_timer -= 1
-		changed1 = true
-	if active_ability_2_cooldown_timer > 0:
-		active_ability_2_cooldown_timer -= 1
-		changed2 = true
-		
-	# Emetti segnali solo se il cooldown è cambiato
-	if changed1: emit_signal("cooldown_updated", player_id, 1, active_ability_1_cooldown_timer)
-	if changed2: emit_signal("cooldown_updated", player_id, 2, active_ability_2_cooldown_timer)
+    var changed1 = false; var changed2 = false
+    if active_ability_1_cooldown_timer > 0: active_ability_1_cooldown_timer -= 1; changed1 = true
+    if active_ability_2_cooldown_timer > 0: active_ability_2_cooldown_timer -= 1; changed2 = true
+    if changed1: emit_signal("cooldown_updated", player_id, 1, active_ability_1_cooldown_timer)
+    if changed2: emit_signal("cooldown_updated", player_id, 2, active_ability_2_cooldown_timer)
+
+# Chiamata da GameManager all'inizio di ogni nuovo "Giorno"
+func reset_desperate_action_cooldown(day_num: int):
+    print("Player (ID ", player_id, "): Cooldown Azione Disperata resettato (Inizio Giorno ", day_num, ")")
+    desperate_action_available = true
+    # TODO: Emettere segnale per UI Azione Disperata?
+    pass
 
 
-# Funzione chiamata da GameManager alla fine del round (per passive, ecc.)
-# Nota: Potremmo aver bisogno di più info passate dal GM (es. chi ha perso dito)
+# --- Gestione Abilità Passive (Struttura Placeholder) ---
+
+# Chiamata da GameManager alla fine del round
 func end_of_round_update():
-	print("DEBUG Player ", player_id, ": Eseguo aggiornamenti fine round.")
-	# Qui possiamo gestire passive che triggerano a ROUND_END
-	if class_data and class_data.passive_ability:
-		var passive = class_data.passive_ability
-		if passive.trigger_event == PassiveAbilityData.TriggerEvent.ROUND_END:
-			# Chiama una funzione helper per gestire la logica della passiva specifica
-			_execute_passive_effect(passive)
+    # print("DEBUG Player ", player_id, ": Eseguo aggiornamenti fine round.")
+    # Qui gestiamo passive che triggerano su ROUND_END
+    if class_data and class_data.passive_ability:
+        var passive = class_data.passive_ability
+        if passive.trigger_event == PassiveAbilityData.TriggerEvent.ROUND_END:
+            _execute_passive_effect(passive)
 
-
-# --- Gestione Abilità Passive (Esempio Smistamento) ---
-
+# Smistamento per logica passiva
 func _execute_passive_effect(passive_data: PassiveAbilityData):
-	print(">>> ESECUZIONE PASSIVA per: ", passive_data.ability_name, " (Player ID ", player_id, ")")
-	match passive_data.ability_name:
-		"Intuito Macabro": _passive_intuito_macabro(passive_data)
-		"Favore Reale": _passive_favore_reale(passive_data)
-		"Flusso Narrativo": _passive_flusso_narrativo(passive_data)
-		# Aggiungi qui altri case per passive che triggerano su ROUND_END
-		_: print("Nessuna logica ROUND_END implementata per passiva ", passive_data.ability_name)
+    print(">>> ESECUZIONE PASSIVA per: ", passive_data.ability_name, " (Player ID ", player_id, ")")
+    match passive_data.ability_name:
+        # Filomena
+        "Intuito Macabro": _passive_intuito_macabro(passive_data)
+        # Emilia
+        "Favore Reale": _passive_favore_reale(passive_data)
+        # Panfilo
+        "Flusso Narrativo": _passive_flusso_narrativo(passive_data)
+        # Aggiungi qui altri case per passive che triggerano su ROUND_END
+        _: print("Nessuna logica ROUND_END implementata per passiva ", passive_data.ability_name)
+
 
 # --- Implementazione Logica Passiva Specifica (Placeholder) ---
 
-func _passive_intuito_macabro(p_data: PassiveAbilityData):
-	print("TODO Player ", player_id, ": Implementa logica Intuito Macabro (Filomena)")
-	# 1. Controlla se ha fatto una predizione valida su chi perdeva dito
-	#    (Richiede stato salvato della predizione e info dal GM su chi ha perso)
-	#    Se indovina -> update_sanity(p_data.passive_parameters.guess_sanity_reward)
-	# 2. Controlla se è sopravvissuto al round
-	#    var i_lost_finger = ... (chiedi a GM o controlla stato interno?)
-	#    if not i_lost_finger:
-	#        var my_card = ... (chiedi a GM?)
-	#        if my_card and get_card_value(my_card) in p_data.passive_parameters.token_gain_on_survival_ranks:
-	#           # Gain intuition token (se non al max)
-	#           print("Guadagnato Token Intuizione!")
-	pass
+func _passive_intuito_macabro(p_data: PassiveAbilityData): print("TODO Player ", player_id, ": Implementa logica Intuito Macabro")
+func _passive_favore_reale(p_data: PassiveAbilityData): print("TODO Player ", player_id, ": Implementa logica Favore Reale")
+func _passive_flusso_narrativo(p_data: PassiveAbilityData): print("TODO Player ", player_id, ": Implementa logica Flusso Narrativo")
 
-func _passive_favore_reale(p_data: PassiveAbilityData):
-	print("TODO Player ", player_id, ": Implementa logica Favore Reale (Emilia)")
-	# 1. Controlla se ha perso dito nel round (vedi sopra)
-	# 2. Se non ha perso, controlla la carta che aveva (last_card?)
-	#    var my_last_card = ... 
-	#    if my_last_card and my_last_card.rank_name in p_data.passive_parameters.condition_ranks:
-	#        update_sanity(p_data.passive_parameters.sanity_gain)
-	pass
-	
-func _passive_flusso_narrativo(p_data: PassiveAbilityData):
-	print("TODO Player ", player_id, ": Implementa logica Flusso Narrativo (Panfilo)")
-	# 1. Controlla se ha perso dito nel round
-	# 2. Se non ha perso, incrementa contatore peaceful_rounds_counter
-	# 3. Se ha perso, resetta contatore a 0
-	# 4. Se contatore >= p_data.passive_parameters.peaceful_rounds_needed:
-	#    # Concedi carica gratuita se non già presente (max 1)
-	#    # has_free_ability_charge = true
-	#    print("Ottenuta carica gratuita abilità!")
-	#    # Resetta contatore? O si resetta solo quando la carica viene usata? Da definire.
-	pass
-	
 # --- Altri Handler per Passive (Trigger diversi da ROUND_END) ---
+# Questi andrebbero connessi a segnali specifici del GameManager o chiamati da altre funzioni Player.gd
 
-# Esempio per Pampinea: connessa al segnale day_started del GM
-# func _on_day_started():
-#     if class_data and class_data.display_name == "La Comandante": 
+# func _on_day_started(day_num): # Connesso a GameManager.day_started SE Pampinea
+#     if class_data and class_data.passive_ability.ability_name == "Prima Voce":
 #         print("Player ", player_id, " (Pampinea): Attivazione Passiva 'Prima Voce'!")
 #         emit_signal("request_dealer_choice", player_id)
 
-# Esempio per Fiammetta: connessa a un ipotetico segnale card_received del GM o chiamata internamente
-# func _on_card_received(new_card: CardData):
+# func _on_card_received(new_card: CardData): # Chiamato quando riceve carta
 #     if class_data and class_data.passive_ability.ability_name == "Animo Ardente":
-#        var params = class_data.passive_ability.passive_parameters
-#        if new_card and new_card.rank_name == params.trigger_rank:
-#            if vengeance_tokens < params.max_tokens:
-#                vengeance_tokens += 1
-#                print("Player ", player_id, " guadagna Token Vengeance!")
-#                # Emetti segnale UI token?
+#          _passive_animo_ardente(new_card, class_data.passive_ability.passive_parameters)
 
-# Esempio per Filostrato: connessa a un ipotetico segnale other_player_lost_finger del GM
-# func _on_other_player_lost_finger(other_player_id: int, sanity_damage_to_apply: int):
+# func _passive_animo_ardente(card, params): print("TODO Player ", player_id, ": Implementa Animo Ardente")
+
+# func _on_other_player_lost_finger(other_player_id): # Connesso a segnale GM
 #     if class_data and class_data.passive_ability.ability_name == "Rassegnazione":
-#         print("Player ", player_id, " (Filostrato): Ignora perdita sanità per P", other_player_id)
-#         return 0 # Modifica il danno a 0
-#     else:
-#         return sanity_damage_to_apply # Danno normale
+#         _passive_rassegnazione() # Non serve danno sanità qui, l'effetto è non subirlo
 
-# Assicurati che questa funzione venga chiamata dal match in _execute_ability_effect
+# func _passive_rassegnazione(): print("TODO Player ", player_id, ": Implementa Rassegnazione")
 
-func _get_card_rank_category(card: CardData) -> String:
-	if card == null: return "N/A"
-	# Assumendo che CardData abbia 'rank_name' (String: "A".."K") e opz. 'is_jolly' (bool)
-	if card.has("is_jolly") and card.is_jolly: return "Jolly" 
-	
-	match card.rank_name:
-		"K": return "Re"
-		"Q": return "Regina/Cavallo" 
-		"J": return "Fante"
-		"A": return "Asso"
-		_: 
-			# Controlla se il rank è un numero valido come stringa
-			if card.rank_name.is_valid_int():
-				return "Numero"
-			else:
-				# Se non è un numero e non è una figura/asso/jolly, è sconosciuto
-				return "Sconosciuto (%s)" % card.rank_name 
+# func _on_targeted_by_effect(effect_data): # Connesso a segnale GM o chiamato da funzione apply_effect?
+#     if class_data and class_data.passive_ability.ability_name == "Scetticismo":
+#         _passive_scetticismo(effect_data, class_data.passive_ability.passive_parameters)
+
+# func _passive_scetticismo(effect, params): print("TODO Player ", player_id, ": Implementa Scetticismo")
+
+# func _on_sanity_lost(amount, source): # Connesso a segnale GM o chiamato da update_sanity?
+#     if class_data and class_data.passive_ability.ability_name == "Orgoglio Nobile":
+#         var reduction = _passive_orgoglio_nobile(amount, source, class_data.passive_ability.passive_parameters)
+#         return reduction # Ritorna la riduzione da applicare? Modello da definire.
+
+# func _passive_orgoglio_nobile(amount, source, params): print("TODO Player ", player_id, ": Implementa Orgoglio Nobile"); return 0
+
+
+# Nota: La gestione delle passive triggerate da eventi specifici (FINGER_LOST_OTHER, RECEIVED_CARD_TYPE, ecc.)
+# richiederà che il GameManager emetta segnali appropriati o che Player.gd controlli la passiva
+# all'interno delle funzioni rilevanti (es. check Animo Ardente quando si riceve una carta,
+# check Amuleto dentro lose_finger, check Rassegnazione quando arriva segnale da GM, ecc.).
