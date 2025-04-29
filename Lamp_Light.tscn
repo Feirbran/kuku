@@ -18,44 +18,42 @@ normal_texture = ExtResource("4_iqj0o")
 [node name="trn_Lamp" instance=ExtResource("1_rpmls")]
 
 [node name="trn_Lamp" parent="." index="0"]
-transform = Transform3D(2.345, 0, 0, 0, -1.02503e-07, 2.345, 0, -2.345, -1.02503e-07, 0, 0, 0)
+transform = Transform3D(2.345, 0, 0, 0, -1.02503e-07, 2.345, 0, -2.345, -1.02503e-07, 0, 0.156104, 0)
 material_override = SubResource("StandardMaterial3D_dq5gt")
 
 [node name="Fire_Particles" parent="." index="1" instance=ExtResource("5_x7ikb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.366192, -1.2633, 1.03911)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.366192, -1.34135, 1.03911)
 
 [node name="Fire_Particles2" parent="." index="2" instance=ExtResource("5_x7ikb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.563907, -0.838205, 1.03911)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.563907, -0.90139, 1.03911)
 
 [node name="Fire_Particles3" parent="." index="3" instance=ExtResource("5_x7ikb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.51171, -1.2633, 1.03911)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.51171, -1.32648, 1.03911)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="." index="4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.947807, 0, 0.665287)
 light_color = Color(1, 0.547333, 0.03, 1)
-light_energy = 109.47
-light_indirect_energy = 16.0
-light_volumetric_fog_energy = 16.0
-light_size = 100.0
+light_energy = 0.5
+light_size = 1.0
 light_specular = 0.0
 shadow_enabled = true
+distance_fade_begin = 212.46
+omni_range = 25.0187
 
 [node name="OmniLight3D2" type="OmniLight3D" parent="." index="5"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00893784, 0.546984, 0.665287)
 light_color = Color(1, 0.547333, 0.03, 1)
-light_energy = 109.47
-light_indirect_energy = 16.0
-light_volumetric_fog_energy = 16.0
-light_size = 100.0
+light_energy = 0.5
+light_size = 1.0
 light_specular = 0.0
 shadow_enabled = true
+omni_range = 24.7793
 
 [node name="OmniLight3D3" type="OmniLight3D" parent="." index="6"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.950026, 0, 0.665287)
 light_color = Color(1, 0.547333, 0.03, 1)
-light_energy = 16.0
-light_indirect_energy = 16.0
-light_volumetric_fog_energy = 16.0
-light_size = 22.0
+light_energy = 0.5
+light_size = 1.0
 shadow_enabled = true
 distance_fade_begin = 0.0
+omni_range = 25.6747
