@@ -18,16 +18,45 @@ normal_texture = ExtResource("4_qyes1")
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
 
 [node name="trn_Chandelier" parent="." index="0"]
+transform = Transform3D(0.58, 0, 0, 0, -2.53526e-08, 0.58, 0, -0.58, -2.53526e-08, 0, 0, 0)
 surface_material_override/0 = SubResource("StandardMaterial3D_0rpdq")
 
-[node name="Fire_Particles" parent="." index="1" instance=ExtResource("5_5pnm1")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0.0557101, -0.80232, -0.229251)
+[node name="OmniLight3D" type="OmniLight3D" parent="trn_Chandelier" index="0"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 1.77636e-15, 0, -1.77636e-15, 0.1, 0.00257854, 0.285227, -0.651126)
+light_color = Color(1, 0.685333, 0.41, 1)
+light_energy = 16.0
+light_size = 1.0
+shadow_enabled = true
 
-[node name="Fire_Particles2" parent="." index="2" instance=ExtResource("5_5pnm1")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0.334303, -0.80232, 0.0455517)
+[node name="OmniLight3D2" type="OmniLight3D" parent="trn_Chandelier" index="1"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 1.77636e-15, 0, -1.77636e-15, 0.1, 0.278466, -0.00613048, -0.651126)
+light_color = Color(1, 0.685333, 0.41, 1)
+light_energy = 16.0
+light_size = 1.0
+shadow_enabled = true
 
-[node name="Fire_Particles3" parent="." index="3" instance=ExtResource("5_5pnm1")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0.0481292, -0.80232, 0.310878)
+[node name="OmniLight3D3" type="OmniLight3D" parent="trn_Chandelier" index="2"]
+transform = Transform3D(0.172414, 0, 0, 0, 0.172414, 2.66454e-15, 0, -2.66454e-15, 0.172414, -0.268152, -0.000973624, -0.651126)
+light_color = Color(1, 0.685333, 0.41, 1)
+light_energy = 16.0
+light_size = 0.525
+shadow_enabled = true
 
-[node name="Fire_Particles4" parent="." index="4" instance=ExtResource("5_5pnm1")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.215302, -0.80232, 0.0398662)
+[node name="Fire_Particles" parent="trn_Chandelier" index="3" instance=ExtResource("5_5pnm1")]
+transform = Transform3D(0.1, 0, 0, 0, -1.19209e-08, -0.1, 0, 0.1, -1.19209e-08, 0.0557101, 0.229251, -0.80232)
+
+[node name="Fire_Particles2" parent="trn_Chandelier" index="4" instance=ExtResource("5_5pnm1")]
+transform = Transform3D(0.1, 0, 0, 0, -1.19209e-08, -0.1, 0, 0.1, -1.19209e-08, 0.334303, -0.0455516, -0.80232)
+
+[node name="Fire_Particles3" parent="trn_Chandelier" index="5" instance=ExtResource("5_5pnm1")]
+transform = Transform3D(0.1, 0, 0, 0, -1.19209e-08, -0.1, 0, 0.1, -1.19209e-08, 0.0481292, -0.310878, -0.80232)
+
+[node name="Fire_Particles4" parent="trn_Chandelier" index="6" instance=ExtResource("5_5pnm1")]
+transform = Transform3D(0.1, 0, 0, 0, -1.19209e-08, -0.1, 0, 0.1, -1.19209e-08, -0.215302, -0.0398661, -0.80232)
+
+[node name="OmniLight3D4" type="OmniLight3D" parent="trn_Chandelier" index="7"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 1.77636e-15, 0, -1.77636e-15, 0.1, 0.00773525, -0.292331, -0.651126)
+light_color = Color(1, 0.685333, 0.41, 1)
+light_energy = 16.0
+light_size = 0.525
+shadow_enabled = true

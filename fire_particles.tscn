@@ -64,6 +64,7 @@ draw_pass_1 = SubResource("QuadMesh_dp12e")
 [node name="GPUParticles3D2" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.560219, 1.54428, -0.432631)
 material_override = SubResource("StandardMaterial3D_dp12e")
+amount = 1
 lifetime = 0.95
 explosiveness = 0.15
 randomness = 1.0
