@@ -1,97 +1,114 @@
+# Kukù - Psychological Horror Card Game
 
-# 🃏 KUKU – Un gioco di carte narrativo ispirato al Decamerone
+*Kukù* è un videogioco multiplayer di carte ispirato al tradizionale gioco del Cucù, ambientato nella Firenze del 1348 durante l’epidemia di peste nera. In un’atmosfera tesa e claustrofobica, dieci nobili fiorentini si sfidano in una competizione rituale, dove perdere significa mutilazione... e la follia è sempre in agguato.
 
-Benvenuti in **Kuku**, un gioco di carte strategico e narrativo ambientato nella Firenze del 1300 durante l'epidemia di peste. Ispirato al *Decamerone* di Giovanni Boccaccio, il gioco trasporta i giocatori in un’epoca di panico, superstizione e racconti, dove ogni carta può cambiare il destino… o far perdere la sanità mentale.
+## 🎯 Obiettivo del Gioco
 
----
+Sopravvivere fino alla fine dei dieci giorni di isolamento, mantenendo la propria **sanità mentale** e almeno un dito intatto. Il gioco termina quando resta un solo giocatore o al termine del decimo giorno.
 
-## 🎭 Concept
+## 🎮 Gameplay
 
-Durante la peste nera, un gruppo di giovani nobili si ritira in campagna per sfuggire alla morte. Ma anche lontani dalla città, non possono fuggire dai racconti, dagli intrighi e dalle conseguenze delle loro azioni.
+- **Tipo di gioco:** Gioco di carte, Horror psicologico, Multiplayer
+- **Numero giocatori:** Fino a 10
+- **Motore:** [Godot Engine](https://godotengine.org/)
+- **Durata massima:** 10 Giorni (100 Round)
+- **Lingua:** Italiano
 
-- Ambientazione: Firenze, 1348
-- Ispirazione narrativa: *Decamerone*
-- Genere: Gioco di carte narrativo, visual novel, party game
-- Tono: Satirico, ironico, psicologico
+### Regole Base (Cucù)
+- Ogni giocatore riceve una carta.
+- A turno, può decidere se tenerla o scambiarla con il vicino.
+- Alla fine del round, chi ha la carta più bassa perde un dito (una vita).
+- Ogni 10 round si conclude un “giorno”.
 
----
+## 🧠 Sanità Mentale
 
-## 🛠️ Stato di sviluppo
+La **Sanità Mentale (SM)** è una risorsa vitale:
+- Serve per attivare abilità.
+- Scende in risposta a eventi, abilità e perdite.
+- A valori bassi (<30), influisce negativamente sul comportamento del personaggio.
+- A SM=0, il personaggio entra in **breakdown** e perde il controllo delle sue azioni.
 
-Il progetto è attivamente in sviluppo su **Godot 4**.
+## 🎭 Classi
 
-### ✅ Funzionalità attualmente presenti
+Ogni giocatore interpreta uno dei personaggi ispirati al *Decameron*.  
+Ogni classe dispone di:
+- **2 abilità attive** (con costo in SM e cooldown)
+- **1 abilità passiva**
+- **1 abilità disperata**, disponibile solo con SM bassa
 
-- 🎲 Turni dinamici per più giocatori
-- 🧠 Sistema base di **sanità mentale** (Mental Health)
-- 🃏 Carte con eventi, dialoghi e conseguenze multiple
-- 💬 Scelte narrative ramificate
-- 🔄 Gestione del mazzo, scarti e pescate
-- 🧑‍🤝‍🧑 Due giocatori gestiti separatamente (player0, player1)
-- 🖥️ Integrazione iniziale della UI per visualizzare parametri
+Le classi sono progettate per creare sinergie, bluff e caos psicologico.  
+Esempi di ruoli:
+- **La Comandante**: controlla la struttura del turno.
+- **L’Impostore**: può ingannare gli altri copiando le azioni.
+- **Il Visionario**: anticipa le mosse altrui.
 
-### 🧪 In sviluppo
+*(Per il dettaglio delle classi, vedi `docs/classes.md`)*
 
-- 🔧 Collegamento completo tra UI e dati del gioco
-- 🧩 Modularizzazione del codice (estrazione da `game_manager.gd`)
-- 📜 Altre carte e narrazioni storiche/surrealistiche
-- 🎨 Stile grafico coerente e immersivo
-- 🔊 Sonoro ambientale medievale
+## 🧩 Funzionalità
 
----
+### Implementate
+- Gestione round e timer
+- Sistema di sanità mentale
+- UI interattiva per abilità, classi e timer
+- Classi con cooldown, costi e abilità attivabili
+- Schermata di transizione tra i giorni
 
-## 🧠 Meccaniche principali
+### In sviluppo
+- Logica di scambio carte (Cucù)
+- Eliminazioni e fine partita
+- Gestione multiplayer
+- Mazzo completo da 168 carte
+- Effetti visivi e sonori reattivi allo stato mentale
+- Musiche dinamiche legate alla Sanità
 
-- **Sanità Mentale**: ogni scelta o evento può aumentare o ridurre la lucidità mentale del personaggio.
-- **Carte Evento**: attivano storie o scelte morali, con effetti immediati o a lungo termine.
-- **Turni**: i giocatori si alternano pescando carte, risolvendo eventi e prendendo decisioni.
-- **Narrativa Ramificata**: le scelte portano a dialoghi alternativi e conseguenze diverse, anche comiche o tragiche.
+## 📁 Struttura del progetto
 
----
+```
+kukù/
+├── assets/
+│   ├── audio/
+│   ├── cards/
+│   └── portraits/
+├── docs/
+│   └── classes.md
+├── scenes/
+│   ├── Game.tscn
+│   ├── Characters/
+│   └── UI/
+├── scripts/
+│   ├── game_logic.gd
+│   ├── classes/
+│   └── ui/
+└── README.md
+```
 
-## 📂 Struttura del progetto
+## ⚙️ Requisiti
 
-- `game_manager.gd` – Controlla il flusso generale del gioco
-- `card.gd` – Script base per le carte evento
-- `deck.gd` / `pile.gd` – Gestione mazzo e pila scarti
-- `player.gd` – Stato e proprietà dei giocatori
-- `UI/` – Contiene etichette, pulsanti, segnalatori della UI
-- `Main.tscn` – Scena principale
+- Godot Engine (versione 4.2+ consigliata)
+- Sistema operativo compatibile (Windows, macOS, Linux)
 
----
+## 🚀 Avvio rapido
 
-## 🐛 Problemi noti
+```bash
+git clone https://github.com/tuo-utente/kuku.git
+cd kuku
+godot .
+```
 
-- ❗ Etichette della sanità mentale non collegate correttamente alla scena (`player0_sanity_label`)
-- ❗ Variabili non riconosciute in alcuni ambiti (`mental_health`)
-- 🔧 File `game_manager.gd` molto esteso: si consiglia una futura separazione in più moduli
-- 🚧 Alcune carte non hanno ancora effetti completi
+## 👥 Crediti
 
----
-
-## 💡 Roadmap (Prossimi Obiettivi)
-
-- [ ] Collegamento dinamico tra dati e UI
-- [ ] Sviluppo della modalità storia
-- [ ] Disegno artistico per carte e sfondi
-- [ ] Implementazione effetti sonori e musica medievale
-- [ ] Testing multiplayer locale
-- [ ] Localizzazione ITA/ENG
-
-
----
+- **Ideazione e game design:** [Il tuo nome/team]
+- **Sviluppo:** [Collaboratori qui]
+- **Ispirazione narrativa:** *Il Decameron* di Giovanni Boccaccio
+- **Motore di gioco:** [Godot Engine](https://godotengine.org/)
 
 ## 📜 Licenza
 
-Questo progetto è distribuito sotto licenza **MIT**. Sentiti libero di usarlo, modificarlo e condividerlo.
+Questo progetto è distribuito sotto licenza **MIT**.  
+Sentiti libero di usarlo, modificarlo e contribuire... ma occhio alla follia.
 
 ---
 
-## 👤 Autori
-
-- 👑 **Feirbran** – Ideatore, sviluppatore principale, sceneggiatura
-- 🎨 Collaborazioni future aperte (grafica, suono, test)
-
----
-
-> *"Non con l’armi ma con le carte si combatte la peste."*
+> ⚠️ **Avvertenze:**  
+> Questo gioco affronta temi maturi, tra cui mutilazioni, malattia e deterioramento mentale.  
+> Non è adatto a un pubblico sensibile.
